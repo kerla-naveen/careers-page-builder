@@ -16,3 +16,4 @@ backend/.env
 # OS Files
 .DS_Store
 Thumbs.db
+frontend/.next/
