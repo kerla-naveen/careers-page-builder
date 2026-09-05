@@ -377,7 +377,7 @@ export default function JobsManagementPage() {
               alignItems: 'center',
               gap: '6px',
             }}>
-              <UilPalette size={16} /> Careers Page Editor
+              <UilPalette size={16} /> Careers Page
             </Link>
             <Link href="/jobs" style={{
               padding: '8px 16px',

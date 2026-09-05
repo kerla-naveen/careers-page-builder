@@ -211,16 +211,6 @@ export default function EditorTopBar({
           </span>
         )}
         
-        <button
-          className={styles.topBarBtn}
-          onClick={onOpenJobManager}
-          style={{ fontWeight: 600, color: '#2563eb', background: 'rgba(37, 99, 235, 0.08)', border: '1px solid rgba(37, 99, 235, 0.2)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-          title="Open Jobs Management Dashboard"
-          aria-label="Manage company jobs"
-        >
-          <UilBriefcase size={16} /> Manage Jobs
-        </button>
-
         <button 
           className={styles.saveBtn}
           onClick={onSave}
