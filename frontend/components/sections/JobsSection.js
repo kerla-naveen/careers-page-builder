@@ -365,11 +365,11 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                   </div>
 
                   <div className={styles.cardFooter}>
-                    <button
+                    <a
+                      href={`/companies/${companySlug}/jobs/${job.job_slug}`}
                       className={styles.applyBtn}
-                      onClick={() => alert(`Applying for position: ${job.title} (${job.department})`)}
                     >
-                      <span>View & Apply</span>
+                      <span>View Role & Apply</span>
                       <svg
                         className={styles.arrowIcon}
                         viewBox="0 0 24 24"
@@ -380,7 +380,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                         <line x1="5" y1="12" x2="19" y2="12" />
                         <polyline points="12 5 19 12 12 19" />
                       </svg>
-                    </button>
+                    </a>
                   </div>
                 </div>
               ))}

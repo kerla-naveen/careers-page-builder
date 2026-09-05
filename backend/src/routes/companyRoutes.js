@@ -249,6 +249,101 @@ router.get('/:slug/jobs', async (req, res) => {
 });
 
 /**
+ * @route   GET /api/companies/:slug/jobs/:job_slug
+ * @desc    Get single job details by company slug and job_slug for candidate page
+ * @access  Public
+ */
+router.get('/:slug/jobs/:job_slug', async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const jobSlug = req.params.job_slug;
+
+    const company = await Company.findOne({ slug });
+    if (!company) {
+      return res.status(404).json({ success: false, error: `Company '${slug}' not found` });
+    }
+
+    const job = await Job.findOne({ companySlug: slug, job_slug: jobSlug });
+    if (!job) {
+      return res.status(404).json({ success: false, error: `Job '${jobSlug}' not found` });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        company,
+        job,
+      },
+    });
+  } catch (error) {
+    console.error('Error in GET /companies/:slug/jobs/:job_slug:', error);
+    return res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+/**
+ * @route   POST /api/companies/:slug/jobs
+ * @desc    Create a new job posting for a company
+ * @access  Public (Recruiter Studio)
+ */
+router.post('/:slug/jobs', async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const company = await Company.findOne({ slug });
+
+    if (!company) {
+      return res.status(404).json({ success: false, error: `Company '${slug}' not found` });
+    }
+
+    const {
+      title,
+      department,
+      location,
+      work_policy,
+      employment_type,
+      experience_level,
+      job_type,
+      salary_range,
+      posted_days_ago,
+      description,
+      requirements,
+    } = req.body;
+
+    if (!title) {
+      return res.status(400).json({ success: false, error: 'Job Title is required' });
+    }
+
+    const generatedSlug = (title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.floor(1000 + Math.random() * 9000));
+
+    const newJob = await Job.create({
+      companyId: company._id,
+      companySlug: company.slug,
+      title,
+      job_slug: generatedSlug,
+      department: department || 'Engineering',
+      location: location || 'Remote',
+      work_policy: work_policy || 'Hybrid',
+      employment_type: employment_type || 'Full time',
+      experience_level: experience_level || 'Mid-level',
+      job_type: job_type || 'Permanent',
+      salary_range: salary_range || 'Competitive',
+      posted_days_ago: posted_days_ago || 0,
+      description: description || `We are looking for a highly skilled ${title} to join the ${department || 'team'} at ${company.name}.`,
+      requirements: requirements || `• Professional experience in ${department || 'this role'}.\n• Strong problem solving skills.\n• Excellent communication.`,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: 'Job posting created successfully!',
+      data: newJob,
+    });
+  } catch (error) {
+    console.error('Error in POST /companies/:slug/jobs:', error);
+    return res.status(500).json({ success: false, error: 'Failed to create job: ' + error.message });
+  }
+});
+
+/**
  * @route   PUT /api/companies/:slug
  * @desc    Update company brand theme, details, and sections by slug
  * @access  Public (Recruiter Dashboard)
@@ -346,6 +441,83 @@ router.delete('/:slug', async (req, res) => {
   } catch (error) {
     console.error('Error in DELETE /companies/:slug:', error);
     return res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+/**
+ * @route   PUT /api/companies/jobs/:id
+ * @desc    Update an existing job posting by ID
+ * @access  Public (Recruiter Studio)
+ */
+router.put('/jobs/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const job = await Job.findById(id);
+
+    if (!job) {
+      return res.status(404).json({ success: false, error: 'Job posting not found' });
+    }
+
+    const {
+      title,
+      department,
+      location,
+      work_policy,
+      employment_type,
+      experience_level,
+      job_type,
+      salary_range,
+      posted_days_ago,
+      description,
+      requirements,
+    } = req.body;
+
+    if (title !== undefined) job.title = title;
+    if (department !== undefined) job.department = department;
+    if (location !== undefined) job.location = location;
+    if (work_policy !== undefined) job.work_policy = work_policy;
+    if (employment_type !== undefined) job.employment_type = employment_type;
+    if (experience_level !== undefined) job.experience_level = experience_level;
+    if (job_type !== undefined) job.job_type = job_type;
+    if (salary_range !== undefined) job.salary_range = salary_range;
+    if (posted_days_ago !== undefined) job.posted_days_ago = posted_days_ago;
+    if (description !== undefined) job.description = description;
+    if (requirements !== undefined) job.requirements = requirements;
+
+    await job.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Job posting updated successfully!',
+      data: job,
+    });
+  } catch (error) {
+    console.error('Error in PUT /jobs/:id:', error);
+    return res.status(500).json({ success: false, error: 'Failed to update job: ' + error.message });
+  }
+});
+
+/**
+ * @route   DELETE /api/companies/jobs/:id
+ * @desc    Delete a job posting by ID
+ * @access  Public (Recruiter Studio)
+ */
+router.delete('/jobs/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await Job.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({ success: false, error: 'Job posting not found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Job posting deleted successfully!',
+    });
+  } catch (error) {
+    console.error('Error in DELETE /jobs/:id:', error);
+    return res.status(500).json({ success: false, error: 'Failed to delete job: ' + error.message });
   }
 });
 

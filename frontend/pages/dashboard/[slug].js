@@ -23,13 +23,29 @@ export default function RecruiterDashboard() {
   const [companiesList, setCompaniesList] = useState([]);
 
   // Dashboard UI States
-  const [activeTab, setActiveTab] = useState('design'); // 'design' | 'info' | 'content' | 'create'
+  const [activeTab, setActiveTab] = useState('design'); // 'design' | 'info' | 'content' | 'jobs' | 'create'
   const [viewMode, setViewMode] = useState('split'); // 'split' | 'edit' | 'preview'
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState('');
 
   // Add Section State
   const [newSectionType, setNewSectionType] = useState('CULTURE');
+
+  // Job Management Form State
+  const [editingJob, setEditingJob] = useState(null);
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+  const [jobForm, setJobForm] = useState({
+    title: '',
+    department: 'Engineering',
+    location: 'Remote',
+    work_policy: 'Hybrid',
+    employment_type: 'Full time',
+    experience_level: 'Mid-level',
+    job_type: 'Permanent',
+    salary_range: '$100,000 - $130,000',
+    description: '',
+    requirements: '',
+  });
 
   // Create Company Form State
   const [newCompanyForm, setNewCompanyForm] = useState({
@@ -212,7 +228,97 @@ export default function RecruiterDashboard() {
     setCompany((prev) => ({ ...prev, sections: newSections }));
   };
 
-  // Save changes via PUT API
+  // Job CRUD Handlers
+  const handleOpenCreateJob = () => {
+    setEditingJob(null);
+    setJobForm({
+      title: '',
+      department: 'Engineering',
+      location: 'Remote',
+      work_policy: 'Hybrid',
+      employment_type: 'Full time',
+      experience_level: 'Mid-level',
+      job_type: 'Permanent',
+      salary_range: '$110,000 - $140,000',
+      description: `We are looking for a talented team member to join our growing company. In this role, you will collaborate with cross-functional teams to build high-impact products.`,
+      requirements: `• 3+ years of relevant industry experience.\n• Strong technical or domain expertise.\n• Excellent teamwork and communication skills.`,
+    });
+    setIsJobModalOpen(true);
+  };
+
+  const handleOpenEditJob = (j) => {
+    setEditingJob(j);
+    setJobForm({
+      title: j.title || '',
+      department: j.department || 'Engineering',
+      location: j.location || 'Remote',
+      work_policy: j.work_policy || 'Hybrid',
+      employment_type: j.employment_type || 'Full time',
+      experience_level: j.experience_level || 'Mid-level',
+      job_type: j.job_type || 'Permanent',
+      salary_range: j.salary_range || 'Competitive',
+      description: j.description || '',
+      requirements: j.requirements || '',
+    });
+    setIsJobModalOpen(true);
+  };
+
+  const handleSaveJobSubmit = async (e) => {
+    e.preventDefault();
+    if (!jobForm.title) return alert('Job Title is required.');
+
+    try {
+      if (editingJob) {
+        // PUT update existing job
+        const res = await fetch(`http://127.0.0.1:5000/api/companies/jobs/${editingJob._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(jobForm),
+        });
+        const data = await res.json();
+        if (data.success) {
+          setToast(`🎉 Updated job "${jobForm.title}"!`);
+        } else alert(`Error: ${data.error}`);
+      } else {
+        // POST create new job
+        const res = await fetch(`http://127.0.0.1:5000/api/companies/${slug}/jobs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(jobForm),
+        });
+        const data = await res.json();
+        if (data.success) {
+          setToast(`🎉 Posted new job "${jobForm.title}"!`);
+        } else alert(`Error: ${data.error}`);
+      }
+
+      setIsJobModalOpen(false);
+      await loadCompanyData(slug);
+      setTimeout(() => setToast(''), 4000);
+    } catch (err) {
+      console.error('Error saving job:', err);
+      alert('Failed to save job posting.');
+    }
+  };
+
+  const handleDeleteJob = async (jobId, jobTitle) => {
+    if (!confirm(`Are you sure you want to delete job "${jobTitle}"?`)) return;
+    try {
+      const res = await fetch(`http://127.0.0.1:5000/api/companies/jobs/${jobId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success) {
+        setToast(`🗑️ Job "${jobTitle}" deleted.`);
+        await loadCompanyData(slug);
+        setTimeout(() => setToast(''), 3000);
+      }
+    } catch (err) {
+      console.error('Error deleting job:', err);
+    }
+  };
+
+  // Save Company settings via PUT API
   const handleSave = async () => {
     if (!company || !slug) return;
     setIsSaving(true);
@@ -428,25 +534,31 @@ export default function RecruiterDashboard() {
                 className={`${styles.tabBtn} ${activeTab === 'design' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('design')}
               >
-                🎨 Design & Fonts
+                🎨 Design
               </button>
               <button
                 className={`${styles.tabBtn} ${activeTab === 'info' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('info')}
               >
-                🏢 Info & Social
+                🏢 Info
               </button>
               <button
                 className={`${styles.tabBtn} ${activeTab === 'content' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('content')}
               >
-                📑 Content Builder
+                📑 Content
+              </button>
+              <button
+                className={`${styles.tabBtn} ${activeTab === 'jobs' ? styles.activeTab : ''}`}
+                onClick={() => setActiveTab('jobs')}
+              >
+                💼 Jobs ({jobs.length})
               </button>
               <button
                 className={`${styles.tabBtn} ${activeTab === 'create' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('create')}
               >
-                ➕ New Company
+                ➕ New
               </button>
             </div>
 
@@ -645,7 +757,7 @@ export default function RecruiterDashboard() {
             {activeTab === 'content' && (
               <div className={styles.panelSection}>
                 <div className={styles.panelHeaderRow}>
-                  <h3 className={styles.panelTitle}>📑 Deep Section & Content Builder</h3>
+                  <h3 className={styles.panelTitle}>📑 Deep Section Builder</h3>
                 </div>
 
                 {/* Add Section Bar */}
@@ -1018,7 +1130,57 @@ export default function RecruiterDashboard() {
               </div>
             )}
 
-            {/* TAB 4: Create New Company */}
+            {/* TAB 4: Full Jobs CRUD Studio */}
+            {activeTab === 'jobs' && (
+              <div className={styles.panelSection}>
+                <div className={styles.panelHeaderRow}>
+                  <h3 className={styles.panelTitle}>💼 Job Postings & JD Studio</h3>
+                  <button className={styles.addBtn} onClick={handleOpenCreateJob}>
+                    + Create New Job
+                  </button>
+                </div>
+
+                <div className={styles.arrayItemsContainer}>
+                  {jobs.length > 0 ? (
+                    jobs.map((j) => (
+                      <div key={j._id} className={styles.arrayCard}>
+                        <div className={styles.arrayCardHeader}>
+                          <span style={{ color: '#38bdf8', fontWeight: 700 }}>{j.department}</span>
+                          <div style={{ display: 'flex', gap: '0.4rem' }}>
+                            <button
+                              className={styles.reorderBtn}
+                              onClick={() => handleOpenEditJob(j)}
+                            >
+                              ✏️ Edit JD
+                            </button>
+                            <button
+                              className={styles.deleteBtn}
+                              onClick={() => handleDeleteJob(j._id, j.title)}
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </div>
+                        <h4 style={{ margin: '0.2rem 0 0.4rem 0', color: '#f8fafc', fontSize: '1.05rem' }}>
+                          {j.title}
+                        </h4>
+                        <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.8rem', opacity: 0.8 }}>
+                          <span>📍 {j.location}</span>
+                          <span>🏢 {j.work_policy}</span>
+                          <span style={{ color: '#4ade80' }}>💰 {j.salary_range}</span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p style={{ color: '#94a3b8', textAlign: 'center', padding: '1rem' }}>
+                      No active job postings. Click "+ Create New Job" above to post your first position!
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 5: Create New SaaS Company */}
             {activeTab === 'create' && (
               <form className={styles.panelSection} onSubmit={handleCreateCompanySubmit}>
                 <h3 className={styles.panelTitle}>➕ Launch New SaaS Company Portal</h3>
@@ -1117,6 +1279,171 @@ export default function RecruiterDashboard() {
           </section>
         )}
       </div>
+
+      {/* Job Create/Edit Modal */}
+      {isJobModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 200,
+            display: 'flex',
+            alignItems: 'center',
+            justify: 'center',
+            padding: '1.5rem',
+          }}
+        >
+          <div
+            style={{
+              background: '#0f172a',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '20px',
+              padding: '2rem',
+              maxWidth: '650px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              color: '#f8fafc',
+              fontFamily: 'Inter, sans-serif',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.4rem', margin: 0 }}>
+                {editingJob ? `✏️ Edit Job: ${editingJob.title}` : '💼 Post New Job Opportunity'}
+              </h3>
+              <button
+                onClick={() => setIsJobModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '1.2rem', cursor: 'pointer' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveJobSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Job Title *</label>
+                <input
+                  type="text"
+                  required
+                  className={styles.input}
+                  placeholder="e.g. Senior Full Stack Engineer"
+                  value={jobForm.title}
+                  onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Department</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="e.g. Engineering"
+                    value={jobForm.department}
+                    onChange={(e) => setJobForm({ ...jobForm, department: e.target.value })}
+                  />
+                </div>
+
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Location</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="e.g. Remote / Athens"
+                    value={jobForm.location}
+                    onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Work Policy</label>
+                  <select
+                    className={styles.select}
+                    value={jobForm.work_policy}
+                    onChange={(e) => setJobForm({ ...jobForm, work_policy: e.target.value })}
+                  >
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Remote">Remote</option>
+                    <option value="On-site">On-site</option>
+                  </select>
+                </div>
+
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Employment Type</label>
+                  <select
+                    className={styles.select}
+                    value={jobForm.employment_type}
+                    onChange={(e) => setJobForm({ ...jobForm, employment_type: e.target.value })}
+                  >
+                    <option value="Full time">Full time</option>
+                    <option value="Part time">Part time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Internship">Internship</option>
+                  </select>
+                </div>
+
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label}>Salary Range</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="e.g. $120k - $150k"
+                    value={jobForm.salary_range}
+                    onChange={(e) => setJobForm({ ...jobForm, salary_range: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Job Description (JD) *</label>
+                <textarea
+                  rows={6}
+                  required
+                  className={styles.textarea}
+                  placeholder="Full role responsibilities, team vision, and daily impact..."
+                  value={jobForm.description}
+                  onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
+                />
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Requirements & Qualifications</label>
+                <textarea
+                  rows={5}
+                  className={styles.textarea}
+                  placeholder="Bullet points of required experience, skills, and qualifications..."
+                  value={jobForm.requirements}
+                  onChange={(e) => setJobForm({ ...jobForm, requirements: e.target.value })}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setIsJobModalOpen(false)}
+                  style={{
+                    padding: '0.65rem 1.25rem',
+                    borderRadius: '10px',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    color: '#cbd5e1',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className={styles.saveBtn}>
+                  {editingJob ? '💾 Save Changes' : '🚀 Post Position'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
