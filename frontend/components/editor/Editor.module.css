@@ -819,3 +819,195 @@
     transform: rotate(360deg);
   }
 }
+
+/* Modal Overlay & Responsive Grids */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1.5rem;
+}
+
+.modalCard {
+  background: #ffffff;
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modalFormGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modalSelectsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVE REFINEMENTS (< 768px)
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* Modal Overlay & Card Mobile Adjustments */
+  .modalOverlay {
+    padding: 0.5rem;
+    align-items: flex-end;
+  }
+
+  .modalCard {
+    max-height: 95vh;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modalFormGrid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .modalSelectsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  /* TopBar Mobile Adaptation */
+  .topBar {
+    height: 52px;
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .topBarLeft {
+    gap: 8px;
+  }
+
+  .editorTitle {
+    font-size: 12px;
+  }
+
+  .topBarCenter {
+    display: none; /* Hide device viewport switcher on mobile devices */
+  }
+
+  .topBarRight {
+    gap: 6px;
+  }
+
+  .topBarBtn {
+    height: 28px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .saveBtn {
+    height: 28px;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .publishBtn {
+    height: 28px;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  /* Workspace Stacked Layout */
+  .workspace {
+    position: relative;
+    height: calc(100vh - 52px);
+    overflow: hidden;
+  }
+
+  /* Mobile Left Sidebar Drawer (Slide-Over Sheet) */
+  .leftSidebar {
+    position: fixed;
+    top: 52px;
+    bottom: 0;
+    left: 0;
+    width: 88vw;
+    max-width: 320px;
+    min-width: 0;
+    z-index: 500;
+    border-right: 1px solid #cbd5e1;
+    box-shadow: 4px 0 25px rgba(15, 23, 42, 0.15);
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .leftSidebar.mobileOpen {
+    transform: translateX(0);
+  }
+
+  /* Mobile Right Panel Bottom Sheet */
+  .rightPanel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    min-width: 100vw;
+    height: 60vh;
+    max-height: 80vh;
+    z-index: 600;
+    border-left: none;
+    border-top: 1px solid #cbd5e1;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.2);
+    transform: translateY(0);
+    animation: slideUpSheet 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes slideUpSheet {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* Canvas Area on Mobile */
+  .canvasArea {
+    width: 100vw;
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  .canvasContainer {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+  }
+
+  .canvasFrame {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Backdrop Overlay for Mobile Sheet/Drawer */
+  .mobileBackdrop {
+    position: fixed;
+    inset: 0;
+    top: 52px;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 450;
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+

@@ -77,6 +77,7 @@ export default function EditorTopBar({
   onRedo,
   viewportMode,
   onViewportChange,
+  onToggleMobileSidebar,
   onOpenJobManager,
   onSave,
   onPublish,
@@ -111,6 +112,17 @@ export default function EditorTopBar({
   return (
     <header className={styles.topBar}>
       <div className={styles.topBarLeft}>
+        {onToggleMobileSidebar && (
+          <button
+            className={styles.topBarBtn}
+            onClick={onToggleMobileSidebar}
+            style={{ fontWeight: 700, color: '#2563eb', border: '1px solid #bfdbfe', background: '#eff6ff' }}
+            title="Toggle Sections & Branding drawer"
+            aria-label="Toggle Sections Drawer"
+          >
+            ☰ Sections
+          </button>
+        )}
         <div className={styles.editorTitle}>
           <EditorIcon />
           <span style={{ fontWeight: 700, color: '#0f172a' }}>{company?.name || 'Careers Editor'}</span>

@@ -757,182 +757,339 @@ export default function JobsManagementPage() {
               )}
             </div>
           ) : (
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-                <thead>
-                  <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: '#475569', fontWeight: 600 }}>
-                    <th style={{ padding: '12px 16px', width: '40px' }}>
-                      <input
-                        type="checkbox"
-                        checked={allSelected}
-                        ref={(el) => el && (el.indeterminate = isSomeSelected)}
-                        onChange={handleSelectAll}
-                        style={{ cursor: 'pointer' }}
-                      />
-                    </th>
-                    <th style={{ padding: '12px 16px' }}>Job Title</th>
-                    <th style={{ padding: '12px 16px' }}>Department</th>
-                    <th style={{ padding: '12px 16px' }}>Location</th>
-                    <th style={{ padding: '12px 16px' }}>Employment Type</th>
-                    <th style={{ padding: '12px 16px' }}>Status</th>
-                    <th style={{ padding: '12px 16px', textAlign: 'right', minWidth: '220px' }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {jobs.map((job) => {
-                    const isSelected = selectedIds.includes(job._id);
-                    const badge = STATUS_BADGES[job.status] || STATUS_BADGES.DRAFT;
-                    const isMenuOpen = activeMenuJobId === job._id;
+            <>
+              {/* Responsive Styles for Jobs Page */}
+              <style jsx>{`
+                .jobs-table-container {
+                  display: block;
+                }
+                .jobs-cards-container {
+                  display: none;
+                }
+                @media (max-width: 767px) {
+                  .jobs-table-container {
+                    display: none;
+                  }
+                  .jobs-cards-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    padding: 12px;
+                  }
+                }
+              `}</style>
 
-                    return (
-                      <tr
-                        key={job._id}
-                        style={{
-                          borderBottom: '1px solid #f1f5f9',
-                          background: isSelected ? '#eff6ff' : '#ffffff',
-                          transition: 'background 0.15s',
-                        }}
-                      >
-                        {/* Checkbox */}
-                        <td style={{ padding: '14px 16px' }}>
+              {/* Desktop / Tablet Table View (>= 768px) */}
+              <div className="jobs-table-container" style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+                  <thead>
+                    <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: '#475569', fontWeight: 600 }}>
+                      <th style={{ padding: '12px 16px', width: '40px' }}>
+                        <input
+                          type="checkbox"
+                          checked={allSelected}
+                          ref={(el) => el && (el.indeterminate = isSomeSelected)}
+                          onChange={handleSelectAll}
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </th>
+                      <th style={{ padding: '12px 16px' }}>Job Title</th>
+                      <th style={{ padding: '12px 16px' }}>Department</th>
+                      <th style={{ padding: '12px 16px' }}>Location</th>
+                      <th style={{ padding: '12px 16px' }}>Employment Type</th>
+                      <th style={{ padding: '12px 16px' }}>Status</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'right', minWidth: '220px' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {jobs.map((job) => {
+                      const isSelected = selectedIds.includes(job._id);
+                      const badge = STATUS_BADGES[job.status] || STATUS_BADGES.DRAFT;
+
+                      return (
+                        <tr
+                          key={job._id}
+                          style={{
+                            borderBottom: '1px solid #f1f5f9',
+                            background: isSelected ? '#eff6ff' : '#ffffff',
+                            transition: 'background 0.15s',
+                          }}
+                        >
+                          {/* Checkbox */}
+                          <td style={{ padding: '14px 16px' }}>
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => handleSelectOne(job._id)}
+                              style={{ cursor: 'pointer' }}
+                            />
+                          </td>
+
+                          {/* Title & Clickable to Edit */}
+                          <td style={{ padding: '14px 16px' }}>
+                            <div
+                              onClick={() => handleOpenEditModal(job)}
+                              style={{
+                                fontWeight: 700,
+                                color: '#1e293b',
+                                cursor: 'pointer',
+                                display: 'inline-block',
+                              }}
+                            >
+                              <span style={{ transition: 'color 0.15s' }}>{job.title}</span>
+                            </div>
+                            <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
+                              {job.work_policy || 'Remote'} • Slug: /{job.job_slug}
+                            </div>
+                          </td>
+
+                          {/* Department */}
+                          <td style={{ padding: '14px 16px', color: '#334155', fontWeight: 500 }}>
+                            {job.department || 'Engineering'}
+                          </td>
+
+                          {/* Location */}
+                          <td style={{ padding: '14px 16px', color: '#475569' }}>
+                            📍 {job.location || 'Remote'}
+                          </td>
+
+                          {/* Employment Type */}
+                          <td style={{ padding: '14px 16px', color: '#475569' }}>
+                            {job.employment_type || 'Full time'}
+                          </td>
+
+                          {/* Status Badge */}
+                          <td style={{ padding: '14px 16px' }}>
+                            <span style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '4px 10px',
+                              borderRadius: '12px',
+                              fontSize: '12px',
+                              fontWeight: 600,
+                              background: badge.bg,
+                              color: badge.text,
+                              border: `1px solid ${badge.border}`,
+                            }}>
+                              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: badge.dot }} />
+                              {badge.label}
+                            </span>
+                          </td>
+
+                          {/* Inline Actions (Side-by-Side: View, Edit, Delete) */}
+                          <td style={{ padding: '14px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', justifyContent: 'flex-end' }}>
+                              <a
+                                href={`/companies/${companySlug}/jobs/${job.job_slug}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  padding: '6px 12px',
+                                  borderRadius: '6px',
+                                  border: '1px solid #cbd5e1',
+                                  background: '#ffffff',
+                                  color: '#334155',
+                                  fontSize: '12px',
+                                  fontWeight: 600,
+                                  textDecoration: 'none',
+                                  transition: 'all 0.15s',
+                                }}
+                                title="View public job webpage"
+                              >
+                                👁 View
+                              </a>
+
+                              <button
+                                onClick={() => handleOpenEditModal(job)}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  padding: '6px 12px',
+                                  borderRadius: '6px',
+                                  border: '1px solid #93c5fd',
+                                  background: '#eff6ff',
+                                  color: '#1d4ed8',
+                                  fontSize: '12px',
+                                  fontWeight: 600,
+                                  cursor: 'pointer',
+                                  transition: 'all 0.15s',
+                                }}
+                                title="Edit job details"
+                              >
+                                ✏️ Edit
+                              </button>
+
+                              <button
+                                onClick={() => setDeleteConfirmTarget({ type: 'single', id: job._id })}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  padding: '6px 12px',
+                                  borderRadius: '6px',
+                                  border: '1px solid #fca5a5',
+                                  background: '#fef2f2',
+                                  color: '#b91c1c',
+                                  fontSize: '12px',
+                                  fontWeight: 600,
+                                  cursor: 'pointer',
+                                  transition: 'all 0.15s',
+                                }}
+                                title="Delete job posting"
+                              >
+                                🗑 Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Jobs Cards Container (< 768px) */}
+              <div className="jobs-cards-container">
+                {jobs.map((job) => {
+                  const isSelected = selectedIds.includes(job._id);
+                  const badge = STATUS_BADGES[job.status] || STATUS_BADGES.DRAFT;
+
+                  return (
+                    <div
+                      key={job._id}
+                      style={{
+                        background: isSelected ? '#eff6ff' : '#ffffff',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        padding: '1rem',
+                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      {/* Top Row: Checkbox, Title & Status */}
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => handleSelectOne(job._id)}
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: 'pointer', marginTop: '3px' }}
                           />
-                        </td>
-
-                        {/* Title & Clickable to Edit */}
-                        <td style={{ padding: '14px 16px' }}>
-                          <div
-                            onClick={() => handleOpenEditModal(job)}
-                            style={{
-                              fontWeight: 700,
-                              color: '#1e293b',
-                              cursor: 'pointer',
-                              display: 'inline-block',
-                            }}
-                          >
-                            <span style={{ transition: 'color 0.15s' }}>{job.title}</span>
-                          </div>
-                          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
-                            {job.work_policy || 'Remote'} • Slug: /{job.job_slug}
-                          </div>
-                        </td>
-
-                        {/* Department */}
-                        <td style={{ padding: '14px 16px', color: '#334155', fontWeight: 500 }}>
-                          {job.department || 'Engineering'}
-                        </td>
-
-                        {/* Location */}
-                        <td style={{ padding: '14px 16px', color: '#475569' }}>
-                          📍 {job.location || 'Remote'}
-                        </td>
-
-                        {/* Employment Type */}
-                        <td style={{ padding: '14px 16px', color: '#475569' }}>
-                          {job.employment_type || 'Full time'}
-                        </td>
-
-                        {/* Status Badge */}
-                        <td style={{ padding: '14px 16px' }}>
-                          <span style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            padding: '4px 10px',
-                            borderRadius: '12px',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            background: badge.bg,
-                            color: badge.text,
-                            border: `1px solid ${badge.border}`,
-                          }}>
-                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: badge.dot }} />
-                            {badge.label}
-                          </span>
-                        </td>
-
-                        {/* Inline Actions (Side-by-Side: View, Edit, Delete) */}
-                        <td style={{ padding: '14px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', justifyContent: 'flex-end' }}>
-                            {/* View Button */}
-                            <a
-                              href={`/companies/${companySlug}/jobs/${job.job_slug}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                                padding: '6px 12px',
-                                borderRadius: '6px',
-                                border: '1px solid #cbd5e1',
-                                background: '#ffffff',
-                                color: '#334155',
-                                fontSize: '12px',
-                                fontWeight: 600,
-                                textDecoration: 'none',
-                                transition: 'all 0.15s',
-                              }}
-                              title="View public job webpage"
-                            >
-                              👁 View
-                            </a>
-
-                            {/* Edit Button */}
-                            <button
+                          <div>
+                            <h3
                               onClick={() => handleOpenEditModal(job)}
                               style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                                padding: '6px 12px',
-                                borderRadius: '6px',
-                                border: '1px solid #93c5fd',
-                                background: '#eff6ff',
-                                color: '#1d4ed8',
-                                fontSize: '12px',
-                                fontWeight: 600,
+                                fontSize: '1rem',
+                                fontWeight: 700,
+                                margin: 0,
+                                color: '#0f172a',
                                 cursor: 'pointer',
-                                transition: 'all 0.15s',
                               }}
-                              title="Edit job details"
                             >
-                              ✏️ Edit
-                            </button>
-
-                            {/* Delete Button */}
-                            <button
-                              onClick={() => setDeleteConfirmTarget({ type: 'single', id: job._id })}
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                                padding: '6px 12px',
-                                borderRadius: '6px',
-                                border: '1px solid #fca5a5',
-                                background: '#fef2f2',
-                                color: '#b91c1c',
-                                fontSize: '12px',
-                                fontWeight: 600,
-                                cursor: 'pointer',
-                                transition: 'all 0.15s',
-                              }}
-                              title="Delete job posting"
-                            >
-                              🗑 Delete
-                            </button>
+                              {job.title}
+                            </h3>
+                            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>
+                              {job.department || 'Engineering'} • {job.work_policy || 'Remote'}
+                            </div>
                           </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                        </div>
+
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          padding: '3px 8px',
+                          borderRadius: '12px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          background: badge.bg,
+                          color: badge.text,
+                          border: `1px solid ${badge.border}`,
+                          flexShrink: 0,
+                        }}>
+                          <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: badge.dot }} />
+                          {badge.label}
+                        </span>
+                      </div>
+
+                      {/* Location & Employment Details */}
+                      <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: '#475569', flexWrap: 'wrap' }}>
+                        <span>📍 {job.location || 'Remote'}</span>
+                        <span>•</span>
+                        <span>💼 {job.employment_type || 'Full time'}</span>
+                      </div>
+
+                      {/* Card Actions Row (Side-by-Side: View, Edit, Delete) */}
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        gap: '6px',
+                        paddingTop: '8px',
+                        borderTop: '1px solid #f1f5f9',
+                      }}>
+                        <a
+                          href={`/companies/${companySlug}/jobs/${job.job_slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            border: '1px solid #cbd5e1',
+                            background: '#ffffff',
+                            color: '#334155',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            textDecoration: 'none',
+                          }}
+                        >
+                          👁 View
+                        </a>
+
+                        <button
+                          onClick={() => handleOpenEditModal(job)}
+                          style={{
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            border: '1px solid #93c5fd',
+                            background: '#eff6ff',
+                            color: '#1d4ed8',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          ✏️ Edit
+                        </button>
+
+                        <button
+                          onClick={() => setDeleteConfirmTarget({ type: 'single', id: job._id })}
+                          style={{
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            border: '1px solid #fca5a5',
+                            background: '#fef2f2',
+                            color: '#b91c1c',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          🗑 Delete
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
 
           {/* Pagination Footer */}

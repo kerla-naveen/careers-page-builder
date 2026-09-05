@@ -116,28 +116,8 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(15, 23, 42, 0.75)',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 10000,
-      padding: '1.5rem',
-    }} onClick={onClose}>
-      <div style={{
-        background: '#ffffff',
-        width: '100%',
-        maxWidth: '720px',
-        maxHeight: '90vh',
-        borderRadius: '16px',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }} onClick={(e) => e.stopPropagation()}>
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
         
         {/* Header */}
         <div style={{
@@ -189,7 +169,7 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
           )}
 
           {/* Job Title & Location Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className={styles.modalFormGrid}>
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
                 Job Title *
@@ -217,7 +197,7 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
           </div>
 
           {/* Department & Salary Range Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className={styles.modalFormGrid}>
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
                 Department
@@ -247,7 +227,7 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
           </div>
 
           {/* Categorical Selects Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginBottom: '1.25rem' }}>
+          <div className={styles.modalSelectsGrid}>
             <div>
               <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>
                 Workplace

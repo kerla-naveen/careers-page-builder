@@ -43,6 +43,7 @@ export default function EditorLeftSidebar({
   onTabChange,
   updateCompany,
   onFocusBrandingArea,
+  isMobileOpen,
 }) {
   const [showSectionPicker, setShowSectionPicker] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState(null);
@@ -199,7 +200,7 @@ export default function EditorLeftSidebar({
   };
 
   return (
-    <div className={styles.leftSidebar}>
+    <div className={`${styles.leftSidebar} ${isMobileOpen ? styles.mobileOpen : ''}`}>
       {/* Sidebar Tabs */}
       <div className={styles.sidebarTabs}>
         <button

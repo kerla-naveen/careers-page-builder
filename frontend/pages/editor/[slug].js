@@ -18,6 +18,7 @@ export default function CareersEditorPage() {
   const { user, token, isLoading: isAuthLoading } = useAuth();
   const [brandingFocusArea, setBrandingFocusArea] = useState(null);
   const [isJobManagerOpen, setIsJobManagerOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const {
     company,
@@ -227,6 +228,7 @@ export default function CareersEditorPage() {
         onRedo={redo}
         viewportMode={viewportMode}
         onViewportChange={setViewportMode}
+        onToggleMobileSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
         onOpenJobManager={() => router.push('/jobs')}
         onSave={saveToBackend}
         onPublish={publishToBackend}
@@ -238,15 +240,30 @@ export default function CareersEditorPage() {
 
       {/* Main Workspace: Left Sidebar | Center Canvas | Right Panel */}
       <div className={styles.workspace}>
+        {/* Mobile Backdrop for Left Sidebar Drawer */}
+        {isMobileSidebarOpen && (
+          <div
+            className={styles.mobileBackdrop}
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+        )}
+
         <EditorLeftSidebar
           company={company}
           sections={company.sections || []}
           selectedSectionId={selectedSectionId}
-          onSelectSection={selectSection}
+          onSelectSection={(secId) => {
+            selectSection(secId);
+            setIsMobileSidebarOpen(false); // Auto-close drawer on mobile so recruiter sees preview!
+          }}
           activeTab={activeLeftTab}
           onTabChange={setActiveLeftTab}
           updateCompany={updateCompany}
-          onFocusBrandingArea={setBrandingFocusArea}
+          onFocusBrandingArea={(area) => {
+            setBrandingFocusArea(area);
+            setIsMobileSidebarOpen(false); // Auto-close drawer on mobile for branding selection too!
+          }}
+          isMobileOpen={isMobileSidebarOpen}
         />
 
         <EditorCanvas
