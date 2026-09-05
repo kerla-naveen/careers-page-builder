@@ -15,9 +15,24 @@ export default function Footer({ company }) {
             </p>
           </div>
           <div className={styles.links}>
-            <a href={company.website} target="_blank" rel="noopener noreferrer">Company Website</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            {company.website && (
+              <a href={company.website} target="_blank" rel="noopener noreferrer">Official Website</a>
+            )}
+            {company.socialLinks?.linkedin && (
+              <a href={company.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            )}
+            {company.socialLinks?.twitter && (
+              <a href={company.socialLinks.twitter} target="_blank" rel="noopener noreferrer">Twitter / X</a>
+            )}
+            {company.socialLinks?.github && (
+              <a href={company.socialLinks.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+            )}
+            {company.socialLinks?.glassdoor && (
+              <a href={company.socialLinks.glassdoor} target="_blank" rel="noopener noreferrer">Glassdoor</a>
+            )}
+            {company.socialLinks?.instagram && (
+              <a href={company.socialLinks.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+            )}
           </div>
         </div>
         <div className={styles.bottomBar}>

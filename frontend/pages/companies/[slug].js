@@ -23,8 +23,9 @@ export default function CompanyPage({ company, jobs, error }) {
   const brandStyles = {
     '--brand-primary': company.primaryColor || '#2563eb',
     '--brand-accent': company.accentColor || '#3b82f6',
-    '--brand-bg': company.backgroundColor || '#f8fafc',
-    '--brand-text': company.textColor || '#0f172a',
+    '--brand-bg': company.backgroundColor || '#0f172a',
+    '--brand-text': company.textColor || '#f8fafc',
+    fontFamily: company.fontFamily ? `'${company.fontFamily}', sans-serif` : "'Outfit', sans-serif",
   };
 
   // Generate JSON-LD Schema for Organization

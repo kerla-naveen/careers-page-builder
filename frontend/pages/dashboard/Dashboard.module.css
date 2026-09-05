@@ -12,8 +12,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background: rgba(15, 23, 42, 0.9);
+  padding: 0.85rem 2rem;
+  background: rgba(15, 23, 42, 0.95);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: sticky;
@@ -24,7 +24,7 @@
 .brandBrand {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .dashboardTitle {
@@ -100,7 +100,6 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  transition: background 0.2s ease;
 }
 
 .livePageLink:hover {
@@ -147,30 +146,21 @@
 }
 
 @keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
 }
 
 /* Main Split Screen Area */
 .mainContainer {
   display: grid;
   flex: 1;
-  grid-template-columns: 460px 1fr;
+  grid-template-columns: 520px 1fr;
   height: calc(100vh - 65px);
   overflow: hidden;
 }
 
-.fullEdit {
-  grid-template-columns: 1fr;
-}
-
-.fullPreview {
-  grid-template-columns: 1fr;
-}
+.fullEdit { grid-template-columns: 1fr; }
+.fullPreview { grid-template-columns: 1fr; }
 
 /* Left Editor Sidebar */
 .editorSidebar {
@@ -180,24 +170,57 @@
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
-.editorSidebar::-webkit-scrollbar {
-  width: 6px;
+.editorSidebar::-webkit-scrollbar { width: 6px; }
+.editorSidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
+
+/* Tabbed Navigation Bar in Sidebar */
+.tabNav {
+  display: flex;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 0.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0.25rem;
 }
 
-.editorSidebar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 3px;
+.tabBtn {
+  flex: 1;
+  padding: 0.5rem 0.25rem;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
 }
 
-/* Section Cards & Panels */
+.activeTab {
+  background: var(--brand-primary, #6366f1);
+  color: #ffffff;
+}
+
+/* Panels */
 .panelSection {
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.panelHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .panelTitle {
@@ -205,7 +228,7 @@
   font-size: 1.1rem;
   font-weight: 700;
   color: #f8fafc;
-  margin: 0 0 1rem 0;
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -216,11 +239,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  margin-bottom: 1rem;
-}
-
-.fieldGroup:last-child {
-  margin-bottom: 0;
 }
 
 .label {
@@ -232,7 +250,7 @@
   letter-spacing: 0.05em;
 }
 
-.input, .textarea {
+.input, .textarea, .select {
   width: 100%;
   padding: 0.65rem 0.85rem;
   background: rgba(255, 255, 255, 0.04);
@@ -245,13 +263,18 @@
   transition: border-color 0.2s ease;
 }
 
-.input:focus, .textarea:focus {
+.select option {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.input:focus, .textarea:focus, .select:focus {
   border-color: #6366f1;
 }
 
 .textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 90px;
 }
 
 /* Color Pickers Grid */
@@ -286,22 +309,51 @@
   color: #e2e8f0;
 }
 
-/* Section Manager List */
+/* Section Manager List & Add Bar */
 .sectionsList {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1rem;
+}
+
+.addSectionBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.addSectionSelect {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+  font-size: 0.85rem;
+}
+
+.addSectionSelect option { background: #0f172a; }
+
+.addBtn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: #10b981;
+  border: none;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
 }
 
 .sectionCard {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 1rem;
+  border-radius: 14px;
+  padding: 1.1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  transition: border-color 0.2s ease;
+  gap: 0.85rem;
 }
 
 .sectionCardHeader {
@@ -312,7 +364,7 @@
 
 .sectionTypeBadge {
   font-family: 'Outfit', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -325,7 +377,7 @@
 .cardControls {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .reorderBtn {
@@ -348,27 +400,35 @@
   cursor: not-allowed;
 }
 
+.deleteBtn {
+  padding: 0.25rem 0.5rem;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  color: #fca5a5;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.deleteBtn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
 /* Toggle Switch */
 .toggleSwitch {
   position: relative;
   display: inline-block;
-  width: 44px;
-  height: 24px;
+  width: 42px;
+  height: 22px;
 }
 
-.toggleSwitch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
+.toggleSwitch input { opacity: 0; width: 0; height: 0; }
 
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-color: rgba(255, 255, 255, 0.15);
   transition: 0.3s;
   border-radius: 24px;
@@ -377,8 +437,8 @@
 .slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
+  height: 16px;
+  width: 16px;
   left: 3px;
   bottom: 3px;
   background-color: white;
@@ -386,21 +446,61 @@
   border-radius: 50%;
 }
 
-.toggleSwitch input:checked + .slider {
-  background-color: #10b981;
-}
+.toggleSwitch input:checked + .slider { background-color: #10b981; }
+.toggleSwitch input:checked + .slider:before { transform: translateX(20px); }
 
-.toggleSwitch input:checked + .slider:before {
-  transform: translateX(20px);
-}
-
-/* Expand Content Accordion */
-.sectionContentForm {
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+/* Deep Array Item Cards (Stats, Values, Perks) */
+.arrayItemsContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.arrayCard {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.arrayCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.removeArrayItemBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+}
+
+.addArrayItemBtn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #818cf8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+}
+
+.addArrayItemBtn:hover {
+  background: rgba(99, 102, 241, 0.25);
 }
 
 /* Right Live Preview Panel */
