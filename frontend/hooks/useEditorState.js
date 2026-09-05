@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 
 const API_BASE = 'http://127.0.0.1:5000/api';
 
-export function useEditorState(slug) {
+export function useEditorState(slug, token) {
   // Company data
   const [company, setCompany] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -125,9 +125,12 @@ export function useEditorState(slug) {
     setIsSaving(true);
     setSaveError(null);
     try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const res = await fetch(`${API_BASE}/companies/${slug}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           name: company.name,
           primaryColor: company.primaryColor,
@@ -169,9 +172,12 @@ export function useEditorState(slug) {
     try {
       await saveToBackend();
 
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const res = await fetch(`${API_BASE}/companies/${slug}/publish`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
       const data = await res.json();
       if (data.success) {

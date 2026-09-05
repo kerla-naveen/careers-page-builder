@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const connectDB = require('./config/db');
 const companyRoutes = require('./routes/companyRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -20,6 +21,9 @@ app.get('/', (req, res) => {
     status: 'online',
     message: 'Careers Page Builder Backend API is running!',
     routes: [
+      'POST /api/auth/register',
+      'POST /api/auth/login',
+      'GET /api/auth/me',
       'GET /api/companies/:slug',
       'GET /api/companies/:slug/jobs',
     ],
@@ -27,6 +31,7 @@ app.get('/', (req, res) => {
 });
 
 // API Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/companies', companyRoutes);
 
 // Also expose direct /companies/:slug routes as alias

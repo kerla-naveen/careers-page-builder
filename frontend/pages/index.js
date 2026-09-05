@@ -33,7 +33,69 @@ export default function HomePage({ companies }) {
         />
       </Head>
 
-      <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '5rem 1.5rem', textAlign: 'center' }}>
+      <header style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '1.25rem 1.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            fontWeight: '700',
+            fontSize: '14px',
+          }}>
+            ⚡
+          </div>
+          <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: '1.1rem', color: '#f8fafc' }}>
+            Careers Builder
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <Link
+            href="/login"
+            style={{
+              padding: '0.5rem 1rem',
+              borderRadius: '8px',
+              color: '#94a3b8',
+              textDecoration: 'none',
+              fontSize: '0.9rem',
+              fontWeight: 500,
+              transition: 'color 0.2s',
+            }}
+          >
+            Recruiter Sign In
+          </Link>
+          <Link
+            href="/register"
+            style={{
+              padding: '0.55rem 1.1rem',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+              color: '#ffffff',
+              textDecoration: 'none',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              boxShadow: '0 2px 8px rgba(99, 102, 241, 0.25)',
+            }}
+          >
+            Register Company Page →
+          </Link>
+        </div>
+      </header>
+
+      <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '4rem 1.5rem', textAlign: 'center' }}>
         <span
           style={{
             display: 'inline-block',

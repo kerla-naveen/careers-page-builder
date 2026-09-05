@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Company = require('../models/Company');
 const Job = require('../models/Job');
+const { protect } = require('../middleware/auth');
+const checkCompanyOwnership = require('../middleware/checkCompanyOwnership');
 
 /**
  * @route   GET /api/companies
@@ -286,7 +288,7 @@ router.get('/:slug/jobs/:job_slug', async (req, res) => {
  * @desc    Create a new job posting for a company
  * @access  Public (Recruiter Studio)
  */
-router.post('/:slug/jobs', async (req, res) => {
+router.post('/:slug/jobs', protect, checkCompanyOwnership, async (req, res) => {
   try {
     const slug = req.params.slug.toLowerCase();
     const company = await Company.findOne({ slug });
@@ -348,7 +350,7 @@ router.post('/:slug/jobs', async (req, res) => {
  * @desc    Update company brand theme, details, and sections by slug
  * @access  Public (Recruiter Dashboard)
  */
-router.put('/:slug', async (req, res) => {
+router.put('/:slug', protect, checkCompanyOwnership, async (req, res) => {
   try {
     const slug = req.params.slug.toLowerCase();
     const company = await Company.findOne({ slug });
@@ -427,7 +429,7 @@ router.put('/:slug', async (req, res) => {
  * @desc    Publish draft changes to live candidate site
  * @access  Public (Recruiter Studio)
  */
-router.post('/:slug/publish', async (req, res) => {
+router.post('/:slug/publish', protect, checkCompanyOwnership, async (req, res) => {
   try {
     const slug = req.params.slug.toLowerCase();
     const company = await Company.findOne({ slug });

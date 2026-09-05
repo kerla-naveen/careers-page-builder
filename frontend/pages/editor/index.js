@@ -1,21 +1,20 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useAuth } from '../../context/AuthContext';
 
 export default function EditorIndex() {
   const router = useRouter();
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/api/companies')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.data.length > 0) {
-          router.replace(`/editor/${data.data[0].slug}`);
-        } else {
-          router.replace('/dashboard');
-        }
-      })
-      .catch(() => router.replace('/dashboard'));
-  }, [router]);
+    if (isLoading) return;
+
+    if (user && user.company && user.company.slug) {
+      router.replace(`/editor/${user.company.slug}`);
+    } else {
+      router.replace('/login');
+    }
+  }, [user, isLoading, router]);
 
   return null;
 }

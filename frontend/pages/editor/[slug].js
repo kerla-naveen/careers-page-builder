@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import styles from '../../components/editor/Editor.module.css';
 
+import { useAuth } from '../../context/AuthContext';
 import { useEditorState } from '../../hooks/useEditorState';
 import EditorTopBar from '../../components/editor/EditorTopBar';
 import EditorLeftSidebar from '../../components/editor/EditorLeftSidebar';
@@ -13,13 +14,13 @@ export default function CareersEditorPage() {
   const router = useRouter();
   const { slug } = router.query;
 
-  const [companiesList, setCompaniesList] = useState([]);
+  const { user, token, isLoading: isAuthLoading } = useAuth();
   const [brandingFocusArea, setBrandingFocusArea] = useState(null);
 
   const {
     company,
     jobs,
-    isLoading,
+    isLoading: isCompanyLoading,
     loadError,
     selectedSectionId,
     selectedSection,
@@ -41,25 +42,15 @@ export default function CareersEditorPage() {
     canRedo,
     toast,
     showToast,
-  } = useEditorState(slug);
+  } = useEditorState(slug, token);
 
-  // Load all companies for top bar switcher
+  // Route protection — redirect unauthenticated user to /login
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/api/companies')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setCompaniesList(data.data || []);
-        }
-      })
-      .catch((err) => console.error('Failed to fetch companies list:', err));
-  }, []);
-
-  const handleCompanyChange = (newSlug) => {
-    if (newSlug && newSlug !== slug) {
-      router.push(`/editor/${newSlug}`);
+    if (isAuthLoading) return;
+    if (!user) {
+      router.replace('/login');
     }
-  };
+  }, [user, isAuthLoading, router]);
 
   // Section Action Handlers for Canvas Toolbar
   const handleMoveSectionUp = (index) => {
@@ -133,7 +124,7 @@ export default function CareersEditorPage() {
     });
   };
 
-  if (isLoading) {
+  if (isAuthLoading || isCompanyLoading) {
     return (
       <div className={styles.editorLoading}>
         <Head>
@@ -143,6 +134,47 @@ export default function CareersEditorPage() {
         <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '14px' }}>
           Loading careers page editor...
         </p>
+      </div>
+    );
+  }
+
+  // Ownership Guard — recruiter can only edit their own company
+  if (user && user.company && slug && user.company.slug !== slug) {
+    return (
+      <div className={styles.editorLoading}>
+        <Head>
+          <title>Access Denied | Careers Editor</title>
+        </Head>
+        <div style={{
+          textAlign: 'center',
+          maxWidth: '440px',
+          padding: '32px 24px',
+          background: '#131926',
+          borderRadius: '16px',
+          border: '1px solid rgba(255,255,255,0.08)',
+        }}>
+          <p style={{ fontSize: '48px', marginBottom: '16px' }}>🚫</p>
+          <h2 style={{ color: '#f1f5f9', marginBottom: '8px', fontFamily: 'Outfit, sans-serif' }}>
+            Access Restricted
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '24px', lineHeight: 1.5 }}>
+            You are logged in as <strong>{user.name}</strong> ({user.company.name}). You do not have authorization to edit <strong>{slug}</strong>'s page.
+          </p>
+          <button
+            onClick={() => router.push(`/editor/${user.company.slug}`)}
+            style={{
+              padding: '10px 20px',
+              borderRadius: '8px',
+              border: 'none',
+              background: '#6366f1',
+              color: '#fff',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Go to My Company Editor ({user.company.name}) →
+          </button>
+        </div>
       </div>
     );
   }
@@ -187,8 +219,6 @@ export default function CareersEditorPage() {
       {/* Top Toolbar */}
       <EditorTopBar
         company={company}
-        companiesList={companiesList}
-        onCompanyChange={handleCompanyChange}
         canUndo={canUndo}
         canRedo={canRedo}
         onUndo={undo}

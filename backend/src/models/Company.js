@@ -51,6 +51,10 @@ const CompanySchema = new mongoose.Schema({
   publishedSections: [SectionSchema],
   isPublished: { type: Boolean, default: true },
   lastPublishedAt: { type: Date, default: Date.now },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 }, {
   timestamps: true,
 });

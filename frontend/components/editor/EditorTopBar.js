@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './Editor.module.css';
+import { useAuth } from '../../context/AuthContext';
 
 function formatRelativeTime(date) {
   if (!date) return '';
@@ -68,18 +69,8 @@ const MobileIcon = () => (
   </svg>
 );
 
-const ExternalLinkIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-    <polyline points="15 3 21 3 21 9" />
-    <line x1="10" y1="14" x2="21" y2="3" />
-  </svg>
-);
-
 export default function EditorTopBar({
   company,
-  companiesList = [],
-  onCompanyChange,
   canUndo,
   canRedo,
   onUndo,
@@ -94,6 +85,7 @@ export default function EditorTopBar({
   lastSavedAt
 }) {
   const [saveStatusText, setSaveStatusText] = useState('');
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const updateSaveStatus = () => {
@@ -109,9 +101,7 @@ export default function EditorTopBar({
     };
 
     updateSaveStatus();
-    // Update every minute for relative time if we're showing "last saved"
     const interval = setInterval(updateSaveStatus, 60000);
-    
     return () => clearInterval(interval);
   }, [isSaving, hasUnsavedChanges, lastSavedAt]);
 
@@ -122,25 +112,11 @@ export default function EditorTopBar({
       <div className={styles.topBarLeft}>
         <div className={styles.editorTitle}>
           <EditorIcon />
-          <span>{company?.name || 'Editor'}</span>
+          <span style={{ fontWeight: 700, color: '#0f172a' }}>{company?.name || 'Careers Editor'}</span>
+          <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 500, background: '#f1f5f9', padding: '2px 8px', borderRadius: '4px', border: '1px solid #e2e8f0' }}>
+            Recruiter Studio
+          </span>
         </div>
-        
-        <div className={styles.divider}></div>
-        
-        {companiesList && companiesList.length > 0 && (
-          <select 
-            className={styles.companySelector}
-            value={company?.slug || ''}
-            onChange={(e) => onCompanyChange && onCompanyChange(e.target.value)}
-            aria-label="Switch Company"
-          >
-            {companiesList.map(c => (
-              <option key={c.slug} value={c.slug}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        )}
       </div>
 
       <div className={styles.topBarCenter}>
@@ -241,6 +217,38 @@ export default function EditorTopBar({
             >
               Open Live Page ↗
             </Link>
+          </div>
+        )}
+
+        <div className={styles.divider}></div>
+
+        {/* User Account / Logout */}
+        {user && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '4px' }}>
+            <div style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: '#2563eb',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              fontWeight: '700',
+              textTransform: 'uppercase',
+            }}>
+              {user.name ? user.name[0] : 'R'}
+            </div>
+            <button
+              onClick={logout}
+              className={styles.topBarBtn}
+              title={`Logged in as ${user.email}. Click to log out.`}
+              aria-label="Log out"
+              style={{ color: '#ef4444' }}
+            >
+              Logout
+            </button>
           </div>
         )}
       </div>
