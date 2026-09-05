@@ -163,7 +163,7 @@ export default function HomePage({ companies }) {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <Link
-                  href={`/companies/${c.slug}`}
+                  href={`/companies/${c.slug}/careers`}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',

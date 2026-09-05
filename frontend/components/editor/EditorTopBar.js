@@ -198,7 +198,7 @@ export default function EditorTopBar({
             <button
               className={styles.topBarBtn}
               onClick={() => {
-                const publicUrl = `${window.location.origin}/companies/${company.slug}`;
+                const publicUrl = `${window.location.origin}/companies/${company.slug}/careers`;
                 navigator.clipboard.writeText(publicUrl);
                 if (onCopyPublicLink) onCopyPublicLink(publicUrl);
               }}
@@ -208,7 +208,7 @@ export default function EditorTopBar({
               📋 Copy Link
             </button>
             <a
-              href={`/companies/${company.slug}`}
+              href={`/companies/${company.slug}/careers`}
               className={styles.topBarBtn}
               aria-label="Open Live Careers Page"
               title="Open Live Careers Page"
