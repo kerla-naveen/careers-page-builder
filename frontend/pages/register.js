@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
+import { UilRocket, UilExclamationTriangle } from '@iconscout/react-unicons';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -75,7 +76,9 @@ export default function RegisterPage() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <span style={{
-            display: 'inline-block',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
             padding: '4px 12px',
             borderRadius: '20px',
             background: 'rgba(99, 102, 241, 0.15)',
@@ -87,7 +90,7 @@ export default function RegisterPage() {
             textTransform: 'uppercase',
             marginBottom: '1rem',
           }}>
-            🚀 Recruiter Onboarding
+            <UilRocket size={14} /> Recruiter Onboarding
           </span>
           <h1 style={{
             fontFamily: "'Outfit', sans-serif",
@@ -113,8 +116,11 @@ export default function RegisterPage() {
             borderRadius: '8px',
             fontSize: '13px',
             marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}>
-            ⚠️ {errorMessage}
+            <UilExclamationTriangle size={16} /> {errorMessage}
           </div>
         )}
 

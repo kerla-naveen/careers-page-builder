@@ -3,6 +3,24 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
 import JobEditorModal from '../components/editor/JobEditorModal';
+import {
+  UilBriefcase,
+  UilPalette,
+  UilPlus,
+  UilSearch,
+  UilEye,
+  UilPen,
+  UilTrashAlt,
+  UilRocket,
+  UilPauseCircle,
+  UilArchive,
+  UilInbox,
+  UilExclamationTriangle,
+  UilCheckCircle,
+  UilMapPin,
+  UilSync,
+  UilExternalLinkAlt,
+} from '@iconscout/react-unicons';
 
 const STATUS_BADGES = {
   PUBLISHED: { label: 'Published', bg: '#dcfce7', text: '#15803d', border: '#bbf7d0', dot: '#22c55e' },
@@ -286,7 +304,9 @@ export default function JobsManagementPage() {
     return (
       <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', fontFamily: 'Inter, sans-serif' }}>
         <div style={{ textAlign: 'center', color: '#64748b' }}>
-          <div style={{ fontSize: '24px', marginBottom: '8px' }}>⚡</div>
+          <div style={{ fontSize: '24px', marginBottom: '8px', display: 'flex', justifyContent: 'center' }}>
+            <UilSync size={28} className="animate-spin" />
+          </div>
           Loading Jobs Workspace...
         </div>
       </div>
@@ -317,7 +337,7 @@ export default function JobsManagementPage() {
           alignItems: 'center',
           gap: '8px',
         }}>
-          {toast.type === 'error' ? '⚠️' : '✓'} {toast.message}
+          {toast.type === 'error' ? <UilExclamationTriangle size={18} /> : <UilCheckCircle size={18} />} {toast.message}
         </div>
       )}
 
@@ -336,7 +356,9 @@ export default function JobsManagementPage() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '18px', color: '#0f172a', letterSpacing: '-0.02em' }}>
-            <span style={{ background: 'linear-gradient(135deg, #2563eb, #3b82f6)', color: '#fff', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' }}>💼</span>
+            <span style={{ background: 'linear-gradient(135deg, #2563eb, #3b82f6)', color: '#fff', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <UilBriefcase size={18} />
+            </span>
             {user?.company?.name || user?.companyName || 'Recruiter Portal'}
           </div>
 
@@ -355,7 +377,7 @@ export default function JobsManagementPage() {
               alignItems: 'center',
               gap: '6px',
             }}>
-              🎨 Careers Page Editor
+              <UilPalette size={16} /> Careers Page Editor
             </Link>
             <Link href="/jobs" style={{
               padding: '8px 16px',
@@ -369,7 +391,7 @@ export default function JobsManagementPage() {
               alignItems: 'center',
               gap: '6px',
             }}>
-              💼 Jobs
+              <UilBriefcase size={16} /> Jobs
             </Link>
           </nav>
         </div>
@@ -388,9 +410,12 @@ export default function JobsManagementPage() {
               border: '1px solid #cbd5e1',
               borderRadius: '6px',
               background: '#ffffff',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
             }}
           >
-            Live Site ↗
+            Live Site <UilExternalLinkAlt size={14} />
           </a>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -457,7 +482,7 @@ export default function JobsManagementPage() {
               transition: 'transform 0.15s, boxShadow 0.15s',
             }}
           >
-            <span style={{ fontSize: '16px', fontWeight: 700 }}>+</span> Create Job
+            <UilPlus size={18} /> Create Job
           </button>
         </div>
 
@@ -525,8 +550,8 @@ export default function JobsManagementPage() {
             
             {/* Search Input */}
             <div style={{ position: 'relative', flex: 1, minWidth: '220px' }}>
-              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '14px' }}>
-                🔍
+              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', display: 'flex', alignItems: 'center' }}>
+                <UilSearch size={16} />
               </span>
               <input
                 type="text"
@@ -653,9 +678,12 @@ export default function JobsManagementPage() {
                   fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
                 }}
               >
-                🚀 Publish
+                <UilRocket size={14} /> Publish
               </button>
 
               <button
@@ -670,9 +698,12 @@ export default function JobsManagementPage() {
                   fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
                 }}
               >
-                ⏸ Close
+                <UilPauseCircle size={14} /> Close
               </button>
 
               <button
@@ -687,9 +718,12 @@ export default function JobsManagementPage() {
                   fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
                 }}
               >
-                📦 Archive
+                <UilArchive size={14} /> Archive
               </button>
 
               <button
@@ -704,9 +738,12 @@ export default function JobsManagementPage() {
                   fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
                 }}
               >
-                🗑 Delete
+                <UilTrashAlt size={14} /> Delete
               </button>
             </div>
           </div>
@@ -722,16 +759,20 @@ export default function JobsManagementPage() {
         }}>
           {loading ? (
             <div style={{ padding: '4rem', textAlign: 'center', color: '#64748b' }}>
-              <div style={{ fontSize: '24px', marginBottom: '12px' }}>🔄</div>
+              <div style={{ fontSize: '24px', marginBottom: '12px', display: 'flex', justifyContent: 'center' }}>
+                <UilSync size={24} className="animate-spin" />
+              </div>
               Loading job postings...
             </div>
           ) : error ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: '#ef4444' }}>
-              ⚠️ {error}
+            <div style={{ padding: '3rem', textAlign: 'center', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <UilExclamationTriangle size={20} /> {error}
             </div>
           ) : jobs.length === 0 ? (
             <div style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-              <div style={{ fontSize: '48px', marginBottom: '1rem' }}>📭</div>
+              <div style={{ fontSize: '48px', marginBottom: '1rem', color: '#94a3b8', display: 'flex', justifyContent: 'center' }}>
+                <UilInbox size={48} />
+              </div>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 6px 0', color: '#1e293b' }}>
                 No jobs found
               </h3>
@@ -850,7 +891,9 @@ export default function JobsManagementPage() {
 
                           {/* Location */}
                           <td style={{ padding: '14px 16px', color: '#475569' }}>
-                            📍 {job.location || 'Remote'}
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                              <UilMapPin size={14} /> {job.location || 'Remote'}
+                            </span>
                           </td>
 
                           {/* Employment Type */}
@@ -900,7 +943,7 @@ export default function JobsManagementPage() {
                                 }}
                                 title="View public job webpage"
                               >
-                                👁 View
+                                <UilEye size={14} /> View
                               </a>
 
                               <button
@@ -921,7 +964,7 @@ export default function JobsManagementPage() {
                                 }}
                                 title="Edit job details"
                               >
-                                ✏️ Edit
+                                <UilPen size={14} /> Edit
                               </button>
 
                               <button
@@ -942,7 +985,7 @@ export default function JobsManagementPage() {
                                 }}
                                 title="Delete job posting"
                               >
-                                🗑 Delete
+                                <UilTrashAlt size={14} /> Delete
                               </button>
                             </div>
                           </td>
@@ -1021,9 +1064,13 @@ export default function JobsManagementPage() {
 
                       {/* Location & Employment Details */}
                       <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: '#475569', flexWrap: 'wrap' }}>
-                        <span>📍 {job.location || 'Remote'}</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <UilMapPin size={14} /> {job.location || 'Remote'}
+                        </span>
                         <span>•</span>
-                        <span>💼 {job.employment_type || 'Full time'}</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <UilBriefcase size={14} /> {job.employment_type || 'Full time'}
+                        </span>
                       </div>
 
                       {/* Card Actions Row (Side-by-Side: View, Edit, Delete) */}
@@ -1040,6 +1087,9 @@ export default function JobsManagementPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
                             padding: '6px 12px',
                             borderRadius: '6px',
                             border: '1px solid #cbd5e1',
@@ -1050,12 +1100,15 @@ export default function JobsManagementPage() {
                             textDecoration: 'none',
                           }}
                         >
-                          👁 View
+                          <UilEye size={14} /> View
                         </a>
 
                         <button
                           onClick={() => handleOpenEditModal(job)}
                           style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
                             padding: '6px 12px',
                             borderRadius: '6px',
                             border: '1px solid #93c5fd',
@@ -1066,12 +1119,15 @@ export default function JobsManagementPage() {
                             cursor: 'pointer',
                           }}
                         >
-                          ✏️ Edit
+                          <UilPen size={14} /> Edit
                         </button>
 
                         <button
                           onClick={() => setDeleteConfirmTarget({ type: 'single', id: job._id })}
                           style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
                             padding: '6px 12px',
                             borderRadius: '6px',
                             border: '1px solid #fca5a5',
@@ -1082,7 +1138,7 @@ export default function JobsManagementPage() {
                             cursor: 'pointer',
                           }}
                         >
-                          🗑 Delete
+                          <UilTrashAlt size={14} /> Delete
                         </button>
                       </div>
                     </div>

@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './Editor.module.css';
 import { useAuth } from '../../context/AuthContext';
+import {
+  UilPalette,
+  UilBriefcase,
+  UilRocket,
+  UilCopy,
+  UilExternalLinkAlt,
+  UilSignOutAlt,
+  UilLayers,
+  UilCheckCircle,
+} from '@iconscout/react-unicons';
 
 function formatRelativeTime(date) {
   if (!date) return '';
@@ -116,11 +126,11 @@ export default function EditorTopBar({
           <button
             className={styles.topBarBtn}
             onClick={onToggleMobileSidebar}
-            style={{ fontWeight: 700, color: '#2563eb', border: '1px solid #bfdbfe', background: '#eff6ff' }}
+            style={{ fontWeight: 700, color: '#2563eb', border: '1px solid #bfdbfe', background: '#eff6ff', display: 'flex', alignItems: 'center', gap: '4px' }}
             title="Toggle Sections & Branding drawer"
             aria-label="Toggle Sections Drawer"
           >
-            ☰ Sections
+            <UilLayers size={16} /> Sections
           </button>
         )}
         <div className={styles.editorTitle}>
@@ -132,16 +142,16 @@ export default function EditorTopBar({
           <Link
             href="/editor"
             className={styles.topBarBtn}
-            style={{ fontWeight: 600, color: '#2563eb', background: 'rgba(37, 99, 235, 0.1)' }}
+            style={{ fontWeight: 600, color: '#2563eb', background: 'rgba(37, 99, 235, 0.1)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
-            🎨 Careers Page
+            <UilPalette size={16} /> Careers Page
           </Link>
           <Link
             href="/jobs"
             className={styles.topBarBtn}
-            style={{ fontWeight: 600, color: '#475569' }}
+            style={{ fontWeight: 600, color: '#475569', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
-            💼 Jobs
+            <UilBriefcase size={16} /> Jobs
           </Link>
         </nav>
       </div>
@@ -204,11 +214,11 @@ export default function EditorTopBar({
         <button
           className={styles.topBarBtn}
           onClick={onOpenJobManager}
-          style={{ fontWeight: 600, color: '#2563eb', background: 'rgba(37, 99, 235, 0.08)', border: '1px solid rgba(37, 99, 235, 0.2)' }}
+          style={{ fontWeight: 600, color: '#2563eb', background: 'rgba(37, 99, 235, 0.08)', border: '1px solid rgba(37, 99, 235, 0.2)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           title="Open Jobs Management Dashboard"
           aria-label="Manage company jobs"
         >
-          💼 Manage Jobs
+          <UilBriefcase size={16} /> Manage Jobs
         </button>
 
         <button 
@@ -226,8 +236,9 @@ export default function EditorTopBar({
           disabled={isSaving}
           aria-label="Publish page live"
           title="Publish live to candidate site"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
         >
-          🚀 Publish Live
+          <UilRocket size={16} /> Publish Live
         </button>
         
         {company?.slug && (
@@ -241,8 +252,9 @@ export default function EditorTopBar({
               }}
               title="Copy public careers page link"
               aria-label="Copy public careers page link"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
             >
-              📋 Copy Link
+              <UilCopy size={16} /> Copy Link
             </button>
             <a
               href={`/companies/${company.slug}/careers`}
@@ -251,8 +263,9 @@ export default function EditorTopBar({
               title="Open Live Careers Page"
               target="_blank"
               rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
             >
-              Open Live Page ↗
+              Open Live Page <UilExternalLinkAlt size={14} />
             </a>
           </div>
         )}
@@ -282,9 +295,9 @@ export default function EditorTopBar({
               className={styles.topBarBtn}
               title={`Logged in as ${user.email}. Click to log out.`}
               aria-label="Log out"
-              style={{ color: '#ef4444' }}
+              style={{ color: '#ef4444', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
             >
-              Logout
+              <UilSignOutAlt size={16} /> Logout
             </button>
           </div>
         )}

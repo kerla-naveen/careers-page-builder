@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
+import { UilLockAlt, UilExclamationTriangle } from '@iconscout/react-unicons';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -70,7 +71,9 @@ export default function LoginPage() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <span style={{
-            display: 'inline-block',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
             padding: '4px 12px',
             borderRadius: '20px',
             background: 'rgba(99, 102, 241, 0.15)',
@@ -82,7 +85,7 @@ export default function LoginPage() {
             textTransform: 'uppercase',
             marginBottom: '1rem',
           }}>
-            🔐 Recruiter Portal
+            <UilLockAlt size={14} /> Recruiter Portal
           </span>
           <h1 style={{
             fontFamily: "'Outfit', sans-serif",
@@ -108,8 +111,11 @@ export default function LoginPage() {
             borderRadius: '8px',
             fontSize: '13px',
             marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}>
-            ⚠️ {errorMessage}
+            <UilExclamationTriangle size={16} /> {errorMessage}
           </div>
         )}
 

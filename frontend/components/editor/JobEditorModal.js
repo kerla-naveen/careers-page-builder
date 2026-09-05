@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Editor.module.css';
+import { UilExclamationTriangle, UilRocket } from '@iconscout/react-unicons';
 
 const WORK_POLICY_OPTIONS = ['Hybrid', 'Remote', 'On-site'];
 const EMPLOYMENT_TYPE_OPTIONS = ['Full time', 'Part time', 'Contract', 'Internship'];
@@ -163,8 +164,11 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
               borderRadius: '8px',
               fontSize: '13px',
               marginBottom: '1.25rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
             }}>
-              ⚠️ {error}
+              <UilExclamationTriangle size={16} /> {error}
             </div>
           )}
 
@@ -393,9 +397,12 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
                 fontSize: '13px',
                 cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 boxShadow: '0 2px 6px rgba(16, 185, 129, 0.25)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
               }}
             >
-              {isSubmitting ? 'Publishing...' : '🚀 Publish Live'}
+              {isSubmitting ? 'Publishing...' : <><UilRocket size={14} /> Publish Live</>}
             </button>
           </div>
         </div>

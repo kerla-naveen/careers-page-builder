@@ -3,18 +3,38 @@ import styles from './Editor.module.css';
 import { createNewSection } from '../../utils/sectionTemplates';
 import { THEME_PRESETS } from '../../utils/themePresets';
 import AddSectionModal from './AddSectionModal';
+import {
+  UilBars,
+  UilArrowUp,
+  UilArrowDown,
+  UilCopy,
+  UilEye,
+  UilEyeSlash,
+  UilTrashAlt,
+  UilPlus,
+  UilEstate,
+  UilInfoCircle,
+  UilSmile,
+  UilGift,
+  UilBriefcase,
+  UilUsersAlt,
+  UilCommentDots,
+  UilQuestionCircle,
+  UilMegaphone,
+  UilImage,
+} from '@iconscout/react-unicons';
 
 const SECTION_ICONS = {
-  HERO: '🏠',
-  ABOUT: 'ℹ️',
-  CULTURE: '🎭',
-  PERKS: '🎁',
-  JOBS: '💼',
-  TEAM: '👥',
-  TESTIMONIALS: '💬',
-  FAQ: '❓',
-  CTA: '📢',
-  GALLERY: '🖼️',
+  HERO: <UilEstate size={16} />,
+  ABOUT: <UilInfoCircle size={16} />,
+  CULTURE: <UilSmile size={16} />,
+  PERKS: <UilGift size={16} />,
+  JOBS: <UilBriefcase size={16} />,
+  TEAM: <UilUsersAlt size={16} />,
+  TESTIMONIALS: <UilCommentDots size={16} />,
+  FAQ: <UilQuestionCircle size={16} />,
+  CTA: <UilMegaphone size={16} />,
+  GALLERY: <UilImage size={16} />,
 };
 
 const AVAILABLE_SECTIONS = [
@@ -257,10 +277,13 @@ export default function EditorLeftSidebar({
                     onClick={() => onSelectSection(section._id)}
                   >
                     <div className={styles.sectionDragHandle} title="Drag to reorder section">
-                      ☰
+                      <UilBars size={14} />
                     </div>
 
-                    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className={styles.sectionIcon}>
+                        {SECTION_ICONS[section.type] || <UilEstate size={16} />}
+                      </span>
                       <span className={styles.sectionLabel} title={section.title || section.type}>
                         {section.title || section.type}
                       </span>
@@ -273,7 +296,7 @@ export default function EditorLeftSidebar({
                         title="Move Up"
                         disabled={index === 0}
                       >
-                        ↑
+                        <UilArrowUp size={12} />
                       </button>
                       <button
                         className={styles.sectionActionBtn}
@@ -281,28 +304,28 @@ export default function EditorLeftSidebar({
                         title="Move Down"
                         disabled={index === sections.length - 1}
                       >
-                        ↓
+                        <UilArrowDown size={12} />
                       </button>
                       <button
                         className={styles.sectionActionBtn}
                         onClick={(e) => handleDuplicateSection(e, index)}
                         title="Duplicate Section"
                       >
-                        📋
+                        <UilCopy size={12} />
                       </button>
                       <button
                         className={styles.sectionActionBtn}
                         onClick={(e) => handleVisibilityToggle(e, index)}
                         title="Toggle Visibility"
                       >
-                        {section.isVisible ? '👁️' : '👁️‍🗨️'}
+                        {section.isVisible ? <UilEye size={12} /> : <UilEyeSlash size={12} />}
                       </button>
                       <button
                         className={styles.sectionActionBtn}
                         onClick={(e) => handleDeleteSection(e, index)}
                         title="Delete Section"
                       >
-                        🗑️
+                        <UilTrashAlt size={12} />
                       </button>
                     </div>
                   </div>
@@ -314,7 +337,7 @@ export default function EditorLeftSidebar({
               className={styles.addSectionBtn}
               onClick={() => setShowSectionPicker(true)}
             >
-              + Add section
+              <UilPlus size={14} /> Add section
             </button>
 
             {/* Add Section Modal */}
