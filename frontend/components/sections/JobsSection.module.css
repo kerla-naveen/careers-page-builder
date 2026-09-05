@@ -521,3 +521,207 @@
     padding: 0.35rem 0.85rem;
   }
 }
+
+/* Job Description Modal Overlay */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContent {
+  background: var(--brand-bg, #0f172a);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 30px color-mix(in srgb, var(--brand-primary, #6366f1) 20%, transparent);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 720px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.75rem 2rem 1rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modalDeptBadge {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--brand-primary, #6366f1) 20%, transparent);
+  color: var(--brand-accent, #38bdf8);
+  border: 1px solid color-mix(in srgb, var(--brand-primary, #6366f1) 40%, transparent);
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.modalTitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--brand-text, #f8fafc);
+  margin: 0;
+}
+
+.closeModalBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--brand-text, #f8fafc);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.closeModalBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ef4444;
+}
+
+.modalMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalMetaPill {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--brand-text, #f8fafc) 80%, transparent);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.35rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalSalaryPill {
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.2);
+  background: rgba(74, 222, 128, 0.1);
+  font-weight: 600;
+}
+
+.modalBody {
+  padding: 1.75rem 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.modalSectionTitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--brand-accent, #38bdf8);
+  margin: 0 0 0.75rem 0;
+}
+
+.modalText {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--brand-text, #f8fafc) 85%, transparent);
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.modalReqList {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modalReqList li {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--brand-text, #f8fafc) 85%, transparent);
+  line-height: 1.5;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.25rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.closeModalFooterBtn {
+  padding: 0.6rem 1.25rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--brand-text, #f8fafc);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeModalFooterBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.externalApplyBtn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 10px;
+  background: var(--brand-primary, #6366f1);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.externalApplyBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+

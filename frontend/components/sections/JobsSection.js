@@ -138,6 +138,8 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
     setSelectedLocations([]);
   };
 
+  const [activeJobModal, setActiveJobModal] = useState(null);
+
   const totalActiveFilters =
     (searchTerm ? 1 : 0) +
     selectedDepts.length +
@@ -365,11 +367,11 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                   </div>
 
                   <div className={styles.cardFooter}>
-                    <a
-                      href={`/companies/${companySlug}/jobs/${job.job_slug}`}
+                    <button
                       className={styles.applyBtn}
+                      onClick={() => setActiveJobModal(job)}
                     >
-                      <span>View Role & Apply</span>
+                      <span>View Role Details</span>
                       <svg
                         className={styles.arrowIcon}
                         viewBox="0 0 24 24"
@@ -380,7 +382,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                         <line x1="5" y1="12" x2="19" y2="12" />
                         <polyline points="12 5 19 12 12 19" />
                       </svg>
-                    </a>
+                    </button>
                   </div>
                 </div>
               ))}
@@ -399,6 +401,86 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
             </div>
           )}
         </div>
+
+        {/* Job Details Modal Overlay */}
+        {activeJobModal && (
+          <div className={styles.modalBackdrop} onClick={() => setActiveJobModal(null)}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.modalHeader}>
+                <div>
+                  <span className={styles.modalDeptBadge}>{activeJobModal.department}</span>
+                  <h2 className={styles.modalTitle}>{activeJobModal.title}</h2>
+                </div>
+                <button
+                  className={styles.closeModalBtn}
+                  onClick={() => setActiveJobModal(null)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className={styles.modalMetaRow}>
+                {activeJobModal.location && (
+                  <span className={styles.modalMetaPill}>📍 {activeJobModal.location}</span>
+                )}
+                {activeJobModal.work_policy && (
+                  <span className={styles.modalMetaPill}>🏢 {activeJobModal.work_policy}</span>
+                )}
+                {activeJobModal.employment_type && (
+                  <span className={styles.modalMetaPill}>⏳ {activeJobModal.employment_type}</span>
+                )}
+                {activeJobModal.salary_range && (
+                  <span className={`${styles.modalMetaPill} ${styles.modalSalaryPill}`}>
+                    💰 {activeJobModal.salary_range}
+                  </span>
+                )}
+              </div>
+
+              <div className={styles.modalBody}>
+                {activeJobModal.description && (
+                  <div className={styles.modalSection}>
+                    <h4 className={styles.modalSectionTitle}>Role Description</h4>
+                    <p className={styles.modalText}>{activeJobModal.description}</p>
+                  </div>
+                )}
+
+                {activeJobModal.requirements && activeJobModal.requirements.length > 0 && (
+                  <div className={styles.modalSection}>
+                    <h4 className={styles.modalSectionTitle}>Key Requirements & Qualifications</h4>
+                    <ul className={styles.modalReqList}>
+                      {(Array.isArray(activeJobModal.requirements)
+                        ? activeJobModal.requirements
+                        : activeJobModal.requirements.split('\n')
+                      ).map((req, idx) => (
+                        <li key={idx}>{req.trim().replace(/^[•\-\*]\s*/, '')}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.modalFooter}>
+                <button
+                  className={styles.closeModalFooterBtn}
+                  onClick={() => setActiveJobModal(null)}
+                >
+                  Close
+                </button>
+
+                {activeJobModal.apply_url && (
+                  <a
+                    href={activeJobModal.apply_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.externalApplyBtn}
+                  >
+                    Apply on ATS Portal ↗
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
