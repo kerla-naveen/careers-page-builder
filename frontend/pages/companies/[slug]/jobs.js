@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import JobsSection from '../../../components/sections/JobsSection';
+import { generateJobListSchema } from '../../../utils/seoHelper';
 
 export default function DedicatedJobsPage({ company, jobs, error }) {
   if (error) {
@@ -23,14 +24,43 @@ export default function DedicatedJobsPage({ company, jobs, error }) {
     '--brand-text': company.textColor || '#f8fafc',
   };
 
+  // Generate JSON-LD Schema for Job Postings list
+  const jsonLdings = generateJobListSchema(company, jobs);
+
+  const pageTitle = `Open Roles & Vacancies — ${company.name} Careers`;
+  const metaDesc = `Browse ${jobs.length || ''} open job positions at ${company.name}. Filter by department, workplace policy, and location. Apply today!`;
+  const heroBanner = company.bannerUrl || company.logoUrl;
+
   return (
     <div style={brandStyles} className="min-h-screen">
       <Head>
-        <title>All Jobs & Roles — {company.name} Careers</title>
-        <meta
-          name="description"
-          content={`Browse and apply for all open job opportunities at ${company.name}.`}
-        />
+        {/* Primary Meta Tags */}
+        <title>{pageTitle}</title>
+        <meta name="title" content={pageTitle} />
+        <meta name="description" content={metaDesc} />
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={`${company.name} Careers`} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={metaDesc} />
+        {heroBanner && <meta property="og:image" content={heroBanner} />}
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={metaDesc} />
+        {heroBanner && <meta name="twitter:image" content={heroBanner} />}
+
+        {/* JSON-LD Structured Data for Google Job Indexing (JobPosting / ItemList) */}
+        {jsonLdings && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdings) }}
+          />
+        )}
       </Head>
 
       <Header company={company} />

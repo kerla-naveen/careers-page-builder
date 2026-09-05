@@ -7,6 +7,7 @@ import AboutSection from '../../components/sections/AboutSection';
 import CultureSection from '../../components/sections/CultureSection';
 import PerksSection from '../../components/sections/PerksSection';
 import JobsSection from '../../components/sections/JobsSection';
+import { generateCompanySchema } from '../../utils/seoHelper';
 
 export default function CompanyPage({ company, jobs, error }) {
   if (error) {
@@ -25,6 +26,14 @@ export default function CompanyPage({ company, jobs, error }) {
     '--brand-bg': company.backgroundColor || '#f8fafc',
     '--brand-text': company.textColor || '#0f172a',
   };
+
+  // Generate JSON-LD Schema for Organization
+  const jsonLd = generateCompanySchema(company, jobs);
+
+  // Page Meta Information
+  const pageTitle = `${company.name} Careers — Open Jobs & Company Culture`;
+  const metaDesc = company.description || `Explore open roles, benefits, culture, and career opportunities at ${company.name}.`;
+  const heroBanner = company.bannerUrl || company.logoUrl;
 
   // Helper to render sections dynamically
   const renderSection = (section, index) => {
@@ -87,8 +96,33 @@ export default function CompanyPage({ company, jobs, error }) {
   return (
     <div style={brandStyles} className="min-h-screen">
       <Head>
-        <title>{company.name} Careers</title>
-        <meta name="description" content={company.description || `Careers at ${company.name}`} />
+        {/* Primary Meta Tags */}
+        <title>{pageTitle}</title>
+        <meta name="title" content={pageTitle} />
+        <meta name="description" content={metaDesc} />
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={`${company.name} Careers`} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={metaDesc} />
+        {heroBanner && <meta property="og:image" content={heroBanner} />}
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={metaDesc} />
+        {heroBanner && <meta name="twitter:image" content={heroBanner} />}
+
+        {/* JSON-LD Structured Data for Search Engine rich snippets */}
+        {jsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        )}
       </Head>
 
       <Header company={company} />
