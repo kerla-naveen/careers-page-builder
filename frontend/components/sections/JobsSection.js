@@ -367,11 +367,13 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                   </div>
 
                   <div className={styles.cardFooter}>
-                    <button
+                    <a
+                      href={`/companies/${companySlug}/jobs/${job.job_slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className={styles.applyBtn}
-                      onClick={() => setActiveJobModal(job)}
                     >
-                      <span>View Role Details</span>
+                      <span>View Role Details ↗</span>
                       <svg
                         className={styles.arrowIcon}
                         viewBox="0 0 24 24"
@@ -382,7 +384,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                         <line x1="5" y1="12" x2="19" y2="12" />
                         <polyline points="12 5 19 12 12 19" />
                       </svg>
-                    </button>
+                    </a>
                   </div>
                 </div>
               ))}
