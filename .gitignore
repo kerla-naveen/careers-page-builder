@@ -5,6 +5,8 @@ frontend/node_modules/
 
 # Logs & Data
 *.log
+*.log.*
+.~lock*
 data/
 backend/data/
 

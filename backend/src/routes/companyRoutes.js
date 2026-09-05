@@ -394,7 +394,7 @@ router.put('/:slug', async (req, res) => {
     if (isPublished !== undefined) company.isPublished = isPublished;
 
     if (Array.isArray(sections)) {
-      company.sections = sections.map((sec, idx) => ({
+      const normalized = sections.map((sec, idx) => ({
         type: sec.type,
         title: sec.title || '',
         subtitle: sec.subtitle || '',
@@ -402,6 +402,8 @@ router.put('/:slug', async (req, res) => {
         orderIndex: sec.orderIndex !== undefined ? sec.orderIndex : idx,
         isVisible: sec.isVisible !== undefined ? sec.isVisible : true,
       }));
+      company.sections = normalized;
+      company.draftSections = normalized;
     }
 
     await company.save();
@@ -417,6 +419,40 @@ router.put('/:slug', async (req, res) => {
       success: false,
       error: 'Failed to update company settings: ' + error.message,
     });
+  }
+});
+
+/**
+ * @route   POST /api/companies/:slug/publish
+ * @desc    Publish draft changes to live candidate site
+ * @access  Public (Recruiter Studio)
+ */
+router.post('/:slug/publish', async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const company = await Company.findOne({ slug });
+
+    if (!company) {
+      return res.status(404).json({ success: false, error: `Company '${slug}' not found` });
+    }
+
+    if (company.draftSections && company.draftSections.length > 0) {
+      company.publishedSections = company.draftSections;
+      company.sections = company.draftSections;
+    }
+    company.isPublished = true;
+    company.lastPublishedAt = new Date();
+
+    await company.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Careers page published successfully!',
+      data: company,
+    });
+  } catch (error) {
+    console.error('Error in POST /companies/:slug/publish:', error);
+    return res.status(500).json({ success: false, error: 'Failed to publish: ' + error.message });
   }
 });
 

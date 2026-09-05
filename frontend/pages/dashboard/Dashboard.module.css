@@ -509,6 +509,8 @@
   overflow-y: auto;
   position: relative;
   height: 100%;
+  isolation: isolate;
+  transform: translateZ(0);
 }
 
 .previewHeader {

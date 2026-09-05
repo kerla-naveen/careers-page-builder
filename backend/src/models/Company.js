@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const SectionSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['HERO', 'ABOUT', 'CULTURE', 'PERKS', 'JOBS'],
+    enum: ['HERO', 'ABOUT', 'CULTURE', 'PERKS', 'JOBS', 'TEAM', 'TESTIMONIALS', 'FAQ', 'CTA', 'GALLERY'],
     required: true,
   },
   title: { type: String, required: true },
@@ -47,7 +47,10 @@ const CompanySchema = new mongoose.Schema({
     facebook: { type: String, default: '' },
   },
   sections: [SectionSchema],
+  draftSections: [SectionSchema],
+  publishedSections: [SectionSchema],
   isPublished: { type: Boolean, default: true },
+  lastPublishedAt: { type: Date, default: Date.now },
 }, {
   timestamps: true,
 });
