@@ -76,6 +76,7 @@ export default function CompanyPage({ company, jobs, error }) {
             title={section.title}
             subtitle={section.subtitle}
             jobs={jobs}
+            companySlug={company.slug}
           />
         );
       default:
