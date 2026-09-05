@@ -1,38 +1,59 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styles from './Header.module.css';
 
-export default function Header({ company }) {
+export default function Header({ company, showRecruiterLink = false }) {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 30);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleViewJobsClick = () => {
+    const el = document.getElementById('jobs-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      router.push(`/companies/${company.slug || 'workable'}#jobs-section`);
+    }
+  };
+
+  const websiteUrl = company.websiteUrl || company.website;
+
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
-        <div className={styles.logoContainer}>
-          {company.logoUrl ? (
-            <img src={company.logoUrl} alt={`${company.name} logo`} className={styles.logoImage} />
-          ) : (
-            <span className={styles.logoText}>{company.name}</span>
-          )}
-        </div>
+        <Link href={`/companies/${company.slug || 'workable'}`} className={styles.logoLink}>
+          <div className={styles.logoContainer}>
+            {company.logoUrl ? (
+              <img src={company.logoUrl} alt={`${company.name} logo`} className={styles.logoImage} />
+            ) : (
+              <span className={styles.logoText}>{company.name}</span>
+            )}
+          </div>
+        </Link>
+
         <nav className={styles.nav}>
-          <a href={`/dashboard/${company.slug || 'workable'}`} className={styles.navLink} style={{ color: 'var(--brand-accent)' }}>
-            ⚙️ Recruiter Studio
-          </a>
-          <a href={company.website} target="_blank" rel="noopener noreferrer" className={styles.navLink}>
-            Company Website
-          </a>
-          <button className={styles.navButton} onClick={() => {
-            document.getElementById('jobs-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}>
-            View Jobs
+          {showRecruiterLink && (
+            <Link href={`/dashboard/${company.slug || 'workable'}`} className={styles.navLink} style={{ color: 'var(--brand-accent)' }}>
+              ⚙️ Studio
+            </Link>
+          )}
+
+          {websiteUrl && (
+            <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className={styles.navLink}>
+              Company Site ↗
+            </a>
+          )}
+
+          <button className={styles.navButton} onClick={handleViewJobsClick}>
+            View All Openings
           </button>
         </nav>
       </div>
