@@ -171,27 +171,57 @@ router.get('/:slug', async (req, res) => {
 });
 
 /**
+ * Helper: Generate unique URL-safe job slug for a company
+ */
+async function generateUniqueJobSlug(companySlug, title, location, excludeJobId = null) {
+  const raw = `${title}-${location || 'remote'}`;
+  let baseSlug = raw
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  if (!baseSlug) baseSlug = 'job-posting';
+
+  let slug = baseSlug;
+  let counter = 1;
+  while (true) {
+    const existing = await Job.findOne({ companySlug, job_slug: slug });
+    if (!existing || (excludeJobId && existing._id.toString() === excludeJobId.toString())) {
+      break;
+    }
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+  return slug;
+}
+
+/**
+ * Helper: Calculate relative days ago from published_at timestamp
+ */
+function computeDaysAgo(publishedAt) {
+  if (!publishedAt) return 0;
+  const diffMs = Date.now() - new Date(publishedAt).getTime();
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  return days >= 0 ? days : 0;
+}
+
+/**
  * @route   GET /api/companies/:slug/jobs
- * @desc    Get all open jobs for a company by slug (supports search & multi-field filtering)
+ * @desc    Get PUBLISHED jobs for candidate careers page with filters
  * @access  Public
  */
 router.get('/:slug/jobs', async (req, res) => {
   try {
     const slug = req.params.slug.toLowerCase();
-
-    // Verify company exists
     const company = await Company.findOne({ slug });
     if (!company) {
-      return res.status(404).json({
-        success: false,
-        error: `Company with slug '${slug}' not found`,
-      });
+      return res.status(404).json({ success: false, error: `Company with slug '${slug}' not found` });
     }
 
     const { search, work_policy, department, employment_type, location, experience_level } = req.query;
 
-    // Build filter query object
-    const filterQuery = { companySlug: slug };
+    // Build filter query object — ONLY fetch PUBLISHED jobs for candidate view
+    const filterQuery = { companySlug: slug, status: 'PUBLISHED' };
 
     if (search) {
       const searchRegex = new RegExp(search, 'i');
@@ -202,57 +232,74 @@ router.get('/:slug/jobs', async (req, res) => {
       ];
     }
 
-    if (work_policy) {
-      filterQuery.work_policy = { $in: work_policy.split(',') };
-    }
+    if (work_policy) filterQuery.work_policy = { $in: work_policy.split(',') };
+    if (department) filterQuery.department = { $in: department.split(',') };
+    if (employment_type) filterQuery.employment_type = { $in: employment_type.split(',') };
+    if (location) filterQuery.location = { $in: location.split(',') };
+    if (experience_level) filterQuery.experience_level = { $in: experience_level.split(',') };
 
-    if (department) {
-      filterQuery.department = { $in: department.split(',') };
-    }
+    const jobs = await Job.find(filterQuery).sort({ published_at: -1, createdAt: -1 });
 
-    if (employment_type) {
-      filterQuery.employment_type = { $in: employment_type.split(',') };
-    }
+    // Format output with dynamically computed posted_days_ago
+    const formattedJobs = jobs.map((job) => {
+      const jObj = job.toObject();
+      jObj.posted_days_ago = computeDaysAgo(job.published_at || job.createdAt);
+      return jObj;
+    });
 
-    if (location) {
-      filterQuery.location = { $in: location.split(',') };
-    }
+    const allPublishedCompanyJobs = await Job.find({ companySlug: slug, status: 'PUBLISHED' })
+      .select('work_policy department employment_type location experience_level');
 
-    if (experience_level) {
-      filterQuery.experience_level = { $in: experience_level.split(',') };
-    }
-
-    // Query matching jobs
-    const jobs = await Job.find(filterQuery).sort({ createdAt: -1 });
-
-    // Compute filter facets for candidate UI
-    const allCompanyJobs = await Job.find({ companySlug: slug }).select('work_policy department employment_type location experience_level');
     const facets = {
-      work_policy: [...new Set(allCompanyJobs.map(j => j.work_policy))],
-      department: [...new Set(allCompanyJobs.map(j => j.department))],
-      employment_type: [...new Set(allCompanyJobs.map(j => j.employment_type))],
-      location: [...new Set(allCompanyJobs.map(j => j.location))],
-      experience_level: [...new Set(allCompanyJobs.map(j => j.experience_level))],
+      work_policy: [...new Set(allPublishedCompanyJobs.map((j) => j.work_policy).filter(Boolean))],
+      department: [...new Set(allPublishedCompanyJobs.map((j) => j.department).filter(Boolean))],
+      employment_type: [...new Set(allPublishedCompanyJobs.map((j) => j.employment_type).filter(Boolean))],
+      location: [...new Set(allPublishedCompanyJobs.map((j) => j.location).filter(Boolean))],
+      experience_level: [...new Set(allPublishedCompanyJobs.map((j) => j.experience_level).filter(Boolean))],
     };
 
     return res.status(200).json({
       success: true,
-      count: jobs.length,
+      count: formattedJobs.length,
       facets,
-      data: jobs,
+      data: formattedJobs,
     });
   } catch (error) {
     console.error('Error in GET /companies/:slug/jobs:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal Server Error',
+    return res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+/**
+ * @route   GET /api/companies/:slug/jobs/recruiter
+ * @desc    Get ALL company jobs for recruiter management dashboard (including DRAFT, PUBLISHED, UNPUBLISHED)
+ * @access  Private (Recruiter Owner)
+ */
+router.get('/:slug/jobs/recruiter', protect, checkCompanyOwnership, async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const jobs = await Job.find({ companySlug: slug }).sort({ createdAt: -1 });
+
+    const formattedJobs = jobs.map((job) => {
+      const jObj = job.toObject();
+      jObj.posted_days_ago = computeDaysAgo(job.published_at || job.createdAt);
+      return jObj;
     });
+
+    return res.status(200).json({
+      success: true,
+      count: formattedJobs.length,
+      data: formattedJobs,
+    });
+  } catch (error) {
+    console.error('Error in GET /companies/:slug/jobs/recruiter:', error);
+    return res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
 
 /**
  * @route   GET /api/companies/:slug/jobs/:job_slug
- * @desc    Get single job details by company slug and job_slug for candidate page
+ * @desc    Get single PUBLISHED job details by company slug and job_slug for candidate page
  * @access  Public
  */
 router.get('/:slug/jobs/:job_slug', async (req, res) => {
@@ -265,16 +312,23 @@ router.get('/:slug/jobs/:job_slug', async (req, res) => {
       return res.status(404).json({ success: false, error: `Company '${slug}' not found` });
     }
 
-    const job = await Job.findOne({ companySlug: slug, job_slug: jobSlug });
+    // Must be PUBLISHED for candidate view
+    const job = await Job.findOne({ companySlug: slug, job_slug: jobSlug, status: 'PUBLISHED' });
     if (!job) {
-      return res.status(404).json({ success: false, error: `Job '${jobSlug}' not found` });
+      return res.status(404).json({
+        success: false,
+        error: `Job '${jobSlug}' not found or is currently unpublished`,
+      });
     }
+
+    const jObj = job.toObject();
+    jObj.posted_days_ago = computeDaysAgo(job.published_at || job.createdAt);
 
     return res.status(200).json({
       success: true,
       data: {
         company,
-        job,
+        job: jObj,
       },
     });
   } catch (error) {
@@ -285,8 +339,8 @@ router.get('/:slug/jobs/:job_slug', async (req, res) => {
 
 /**
  * @route   POST /api/companies/:slug/jobs
- * @desc    Create a new job posting for a company
- * @access  Public (Recruiter Studio)
+ * @desc    Create a new job posting (DRAFT or PUBLISHED)
+ * @access  Private (Recruiter Owner)
  */
 router.post('/:slug/jobs', protect, checkCompanyOwnership, async (req, res) => {
   try {
@@ -306,42 +360,178 @@ router.post('/:slug/jobs', protect, checkCompanyOwnership, async (req, res) => {
       experience_level,
       job_type,
       salary_range,
-      posted_days_ago,
       description,
       requirements,
+      status,
     } = req.body;
 
-    if (!title) {
+    if (!title || !title.trim()) {
       return res.status(400).json({ success: false, error: 'Job Title is required' });
     }
 
-    const generatedSlug = (title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.floor(1000 + Math.random() * 9000));
+    const initialStatus = status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT';
+    const uniqueSlug = await generateUniqueJobSlug(slug, title, location);
 
     const newJob = await Job.create({
       companyId: company._id,
       companySlug: company.slug,
-      title,
-      job_slug: generatedSlug,
+      title: title.trim(),
+      job_slug: uniqueSlug,
       department: department || 'Engineering',
       location: location || 'Remote',
       work_policy: work_policy || 'Hybrid',
       employment_type: employment_type || 'Full time',
-      experience_level: experience_level || 'Mid-level',
+      experience_level: experience_level || 'Mid Level',
       job_type: job_type || 'Permanent',
       salary_range: salary_range || 'Competitive',
-      posted_days_ago: posted_days_ago || 0,
-      description: description || `We are looking for a highly skilled ${title} to join the ${department || 'team'} at ${company.name}.`,
-      requirements: requirements || `• Professional experience in ${department || 'this role'}.\n• Strong problem solving skills.\n• Excellent communication.`,
+      description: description || `We are looking for a highly skilled ${title} to join our team.`,
+      requirements: requirements || '',
+      status: initialStatus,
+      published_at: initialStatus === 'PUBLISHED' ? new Date() : null,
     });
+
+    const jObj = newJob.toObject();
+    jObj.posted_days_ago = computeDaysAgo(newJob.published_at);
 
     return res.status(201).json({
       success: true,
       message: 'Job posting created successfully!',
-      data: newJob,
+      data: jObj,
     });
   } catch (error) {
     console.error('Error in POST /companies/:slug/jobs:', error);
     return res.status(500).json({ success: false, error: 'Failed to create job: ' + error.message });
+  }
+});
+
+/**
+ * @route   PUT /api/companies/:slug/jobs/:id
+ * @desc    Update an existing job posting
+ * @access  Private (Recruiter Owner)
+ */
+router.put('/:slug/jobs/:id', protect, checkCompanyOwnership, async (req, res) => {
+  try {
+    const { slug, id } = req.params;
+    const job = await Job.findOne({ _id: id, companySlug: slug.toLowerCase() });
+
+    if (!job) {
+      return res.status(404).json({ success: false, error: 'Job not found' });
+    }
+
+    const {
+      title,
+      department,
+      location,
+      work_policy,
+      employment_type,
+      experience_level,
+      job_type,
+      salary_range,
+      description,
+      requirements,
+      status,
+    } = req.body;
+
+    if (title && title.trim()) job.title = title.trim();
+    if (department) job.department = department;
+    if (location) job.location = location;
+    if (work_policy) job.work_policy = work_policy;
+    if (employment_type) job.employment_type = employment_type;
+    if (experience_level) job.experience_level = experience_level;
+    if (job_type) job.job_type = job_type;
+    if (salary_range !== undefined) job.salary_range = salary_range;
+    if (description !== undefined) job.description = description;
+    if (requirements !== undefined) job.requirements = requirements;
+
+    // Update slug if title/location changed
+    if (title || location) {
+      job.job_slug = await generateUniqueJobSlug(job.companySlug, job.title, job.location, job._id);
+    }
+
+    if (status && ['DRAFT', 'PUBLISHED', 'UNPUBLISHED'].includes(status)) {
+      if (status === 'PUBLISHED' && job.status !== 'PUBLISHED') {
+        job.published_at = job.published_at || new Date();
+      }
+      job.status = status;
+    }
+
+    await job.save();
+
+    const jObj = job.toObject();
+    jObj.posted_days_ago = computeDaysAgo(job.published_at);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Job updated successfully',
+      data: jObj,
+    });
+  } catch (error) {
+    console.error('Error in PUT /companies/:slug/jobs/:id:', error);
+    return res.status(500).json({ success: false, error: 'Failed to update job: ' + error.message });
+  }
+});
+
+/**
+ * @route   PATCH /api/companies/:slug/jobs/:id/status
+ * @desc    Publish / Unpublish / Set Draft status for a job
+ * @access  Private (Recruiter Owner)
+ */
+router.patch('/:slug/jobs/:id/status', protect, checkCompanyOwnership, async (req, res) => {
+  try {
+    const { slug, id } = req.params;
+    const { status } = req.body;
+
+    if (!['DRAFT', 'PUBLISHED', 'UNPUBLISHED'].includes(status)) {
+      return res.status(400).json({ success: false, error: 'Invalid status value' });
+    }
+
+    const job = await Job.findOne({ _id: id, companySlug: slug.toLowerCase() });
+    if (!job) {
+      return res.status(404).json({ success: false, error: 'Job not found' });
+    }
+
+    job.status = status;
+    if (status === 'PUBLISHED' && !job.published_at) {
+      job.published_at = new Date();
+    }
+
+    await job.save();
+
+    const jObj = job.toObject();
+    jObj.posted_days_ago = computeDaysAgo(job.published_at);
+
+    return res.status(200).json({
+      success: true,
+      message: `Job status updated to ${status}`,
+      data: jObj,
+    });
+  } catch (error) {
+    console.error('Error in PATCH /companies/:slug/jobs/:id/status:', error);
+    return res.status(500).json({ success: false, error: 'Failed to update job status' });
+  }
+});
+
+/**
+ * @route   DELETE /api/companies/:slug/jobs/:id
+ * @desc    Delete a job posting
+ * @access  Private (Recruiter Owner)
+ */
+router.delete('/:slug/jobs/:id', protect, checkCompanyOwnership, async (req, res) => {
+  try {
+    const { slug, id } = req.params;
+    const result = await Job.deleteOne({ _id: id, companySlug: slug.toLowerCase() });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ success: false, error: 'Job not found or already deleted' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Job posting deleted successfully',
+    });
+  } catch (error) {
+    console.error('Error in DELETE /companies/:slug/jobs/:id:', error);
+    return res.status(500).json({ success: false, error: 'Failed to delete job' });
   }
 });
 

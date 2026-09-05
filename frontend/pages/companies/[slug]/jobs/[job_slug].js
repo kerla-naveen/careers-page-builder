@@ -142,7 +142,7 @@ export default function JobDetailPage({ company, job, error }) {
       <main className={styles.mainContainer}>
         {/* Navigation Breadcrumbs */}
         <div className={styles.breadcrumbBar}>
-          <Link href={`/companies/${company.slug}`} className={styles.backLink}>
+          <Link href={`/companies/${company.slug}/careers`} className={styles.backLink}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />
@@ -155,15 +155,9 @@ export default function JobDetailPage({ company, job, error }) {
         <div className={styles.heroCard}>
           <div className={styles.heroHeaderTop}>
             <span className={styles.deptBadge}>{job.department}</span>
-            {job.posted_days_ago !== undefined && (
-              <span className={styles.postedBadge}>
-                📅 {typeof job.posted_days_ago === 'string' && job.posted_days_ago.toLowerCase().includes('posted')
-                  ? job.posted_days_ago
-                  : typeof job.posted_days_ago === 'string' && job.posted_days_ago.toLowerCase().includes('ago')
-                  ? `Posted ${job.posted_days_ago}`
-                  : `Posted ${daysAgoNum === 0 ? 'Today' : `${daysAgoNum} days ago`}`}
-              </span>
-            )}
+            <span className={styles.postedBadge}>
+              📅 {job.posted_days_ago === 0 ? 'Posted Today' : `Posted ${job.posted_days_ago} days ago`}
+            </span>
           </div>
 
           <h1 className={styles.jobTitle}>{job.title}</h1>
@@ -219,9 +213,17 @@ export default function JobDetailPage({ company, job, error }) {
               </h2>
               <div className={styles.descriptionText}>
                 {job.description ? (
-                  job.description.split('\n\n').map((para, idx) => (
-                    <p key={idx}>{para}</p>
-                  ))
+                  job.description.split('\n').map((line, idx) => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return <br key={idx} />;
+                    if (trimmed.startsWith('###')) {
+                      return <h3 key={idx} style={{ fontSize: '1.1rem', fontWeight: 700, margin: '1.25rem 0 0.5rem 0', color: 'var(--brand-primary, #6366f1)' }}>{trimmed.replace(/^###\s*/, '')}</h3>;
+                    }
+                    if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+                      return <li key={idx} style={{ marginLeft: '1.25rem', marginBottom: '0.25rem' }}>{trimmed.replace(/^[\-\*]\s*/, '')}</li>;
+                    }
+                    return <p key={idx} style={{ marginBottom: '0.75rem', lineHeight: 1.6 }}>{trimmed}</p>;
+                  })
                 ) : (
                   <p>We are seeking a talented {job.title} to join our growing {job.department} team at {company.name}.</p>
                 )}

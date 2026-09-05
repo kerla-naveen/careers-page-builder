@@ -51,9 +51,15 @@ const JobSchema = new mongoose.Schema({
     type: String,
     default: 'Competitive',
   },
-  posted_days_ago: {
+  status: {
     type: String,
-    default: 'Posted recently',
+    enum: ['DRAFT', 'PUBLISHED', 'UNPUBLISHED'],
+    default: 'DRAFT',
+    index: true,
+  },
+  published_at: {
+    type: Date,
+    default: null,
   },
   description: {
     type: String,

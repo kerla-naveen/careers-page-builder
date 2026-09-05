@@ -9,6 +9,7 @@ import EditorTopBar from '../../components/editor/EditorTopBar';
 import EditorLeftSidebar from '../../components/editor/EditorLeftSidebar';
 import EditorCanvas from '../../components/editor/EditorCanvas';
 import EditorRightPanel from '../../components/editor/EditorRightPanel';
+import JobManagerModal from '../../components/editor/JobManagerModal';
 
 export default function CareersEditorPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function CareersEditorPage() {
 
   const { user, token, isLoading: isAuthLoading } = useAuth();
   const [brandingFocusArea, setBrandingFocusArea] = useState(null);
+  const [isJobManagerOpen, setIsJobManagerOpen] = useState(false);
 
   const {
     company,
@@ -225,6 +227,7 @@ export default function CareersEditorPage() {
         onRedo={redo}
         viewportMode={viewportMode}
         onViewportChange={setViewportMode}
+        onOpenJobManager={() => setIsJobManagerOpen(true)}
         onSave={saveToBackend}
         onPublish={publishToBackend}
         onCopyPublicLink={() => showToast('📋 Copied public careers page link to clipboard!', 'info')}
@@ -284,6 +287,14 @@ export default function CareersEditorPage() {
           {toast.message}
         </div>
       )}
+
+      {/* Recruiter Job Management Modal */}
+      <JobManagerModal
+        isOpen={isJobManagerOpen}
+        onClose={() => setIsJobManagerOpen(false)}
+        companySlug={company?.slug}
+        token={token}
+      />
     </div>
   );
 }

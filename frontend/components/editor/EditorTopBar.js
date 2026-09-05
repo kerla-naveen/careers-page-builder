@@ -77,6 +77,7 @@ export default function EditorTopBar({
   onRedo,
   viewportMode,
   onViewportChange,
+  onOpenJobManager,
   onSave,
   onPublish,
   onCopyPublicLink,
@@ -174,6 +175,16 @@ export default function EditorTopBar({
           </span>
         )}
         
+        <button
+          className={styles.topBarBtn}
+          onClick={onOpenJobManager}
+          style={{ fontWeight: 600, color: '#2563eb', background: 'rgba(37, 99, 235, 0.08)', border: '1px solid rgba(37, 99, 235, 0.2)' }}
+          title="Open Jobs Management Dashboard"
+          aria-label="Manage company jobs"
+        >
+          💼 Manage Jobs
+        </button>
+
         <button 
           className={styles.saveBtn}
           onClick={onSave}
