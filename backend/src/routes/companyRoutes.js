@@ -113,4 +113,75 @@ router.get('/:slug/jobs', async (req, res) => {
   }
 });
 
+/**
+ * @route   PUT /api/companies/:slug
+ * @desc    Update company brand theme, details, and sections by slug
+ * @access  Public (Recruiter Dashboard)
+ */
+router.put('/:slug', async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const company = await Company.findOne({ slug });
+
+    if (!company) {
+      return res.status(404).json({
+        success: false,
+        error: `Company with slug '${slug}' not found`,
+      });
+    }
+
+    const {
+      name,
+      primaryColor,
+      accentColor,
+      backgroundColor,
+      textColor,
+      description,
+      website,
+      videoUrl,
+      bannerUrl,
+      logoUrl,
+      sections,
+      isPublished,
+    } = req.body;
+
+    if (name !== undefined) company.name = name;
+    if (primaryColor !== undefined) company.primaryColor = primaryColor;
+    if (accentColor !== undefined) company.accentColor = accentColor;
+    if (backgroundColor !== undefined) company.backgroundColor = backgroundColor;
+    if (textColor !== undefined) company.textColor = textColor;
+    if (description !== undefined) company.description = description;
+    if (website !== undefined) company.website = website;
+    if (videoUrl !== undefined) company.videoUrl = videoUrl;
+    if (bannerUrl !== undefined) company.bannerUrl = bannerUrl;
+    if (logoUrl !== undefined) company.logoUrl = logoUrl;
+    if (isPublished !== undefined) company.isPublished = isPublished;
+
+    if (Array.isArray(sections)) {
+      company.sections = sections.map((sec, idx) => ({
+        type: sec.type,
+        title: sec.title || '',
+        subtitle: sec.subtitle || '',
+        content: sec.content || {},
+        orderIndex: sec.orderIndex !== undefined ? sec.orderIndex : idx,
+        isVisible: sec.isVisible !== undefined ? sec.isVisible : true,
+      }));
+    }
+
+    await company.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Company settings updated successfully',
+      data: company,
+    });
+  } catch (error) {
+    console.error('Error in PUT /companies/:slug:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to update company settings: ' + error.message,
+    });
+  }
+});
+
 module.exports = router;

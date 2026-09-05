@@ -23,6 +23,9 @@ export default function Header({ company }) {
           )}
         </div>
         <nav className={styles.nav}>
+          <a href={`/dashboard/${company.slug || 'workable'}`} className={styles.navLink} style={{ color: 'var(--brand-accent)' }}>
+            ⚙️ Recruiter Studio
+          </a>
           <a href={company.website} target="_blank" rel="noopener noreferrer" className={styles.navLink}>
             Company Website
           </a>
