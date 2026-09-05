@@ -1,0 +1,161 @@
+.culture {
+  padding: 6rem 2rem;
+  background: linear-gradient(180deg, #ffffff 0%, var(--brand-bg) 100%);
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  max-width: 1100px;
+  width: 100%;
+}
+
+/* ===== Header ===== */
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.culture.visible .header {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.subtitle {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--brand-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: var(--brand-text);
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--brand-text);
+  opacity: 0.75;
+}
+
+/* ===== Values Grid ===== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* ===== Value Card ===== */
+
+.card {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    opacity 0.6s ease-out,
+    translate 0.6s ease-out;
+  /* Stagger entrance — starts hidden */
+  opacity: 0;
+  translate: 0 30px;
+}
+
+.culture.visible .card {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  border-left: 3px solid var(--brand-primary);
+}
+
+.iconContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--brand-primary) 10%, transparent);
+  margin-bottom: 1.25rem;
+}
+
+.icon {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.valueName {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--brand-text);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.valueDesc {
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: var(--brand-text);
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .title {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .culture {
+    padding: 4rem 1.5rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .title {
+    font-size: 1.85rem;
+  }
+
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+}
