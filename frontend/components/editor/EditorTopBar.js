@@ -207,7 +207,7 @@ export default function EditorTopBar({
             >
               📋 Copy Link
             </button>
-            <Link
+            <a
               href={`/companies/${company.slug}`}
               className={styles.topBarBtn}
               aria-label="Open Live Careers Page"
@@ -216,7 +216,7 @@ export default function EditorTopBar({
               rel="noopener noreferrer"
             >
               Open Live Page ↗
-            </Link>
+            </a>
           </div>
         )}
 

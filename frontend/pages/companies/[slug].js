@@ -7,14 +7,19 @@ import AboutSection from '../../components/sections/AboutSection';
 import CultureSection from '../../components/sections/CultureSection';
 import PerksSection from '../../components/sections/PerksSection';
 import JobsSection from '../../components/sections/JobsSection';
+import TeamSection from '../../components/sections/TeamSection';
+import TestimonialsSection from '../../components/sections/TestimonialsSection';
+import FaqSection from '../../components/sections/FaqSection';
+import CtaSection from '../../components/sections/CtaSection';
+import GallerySection from '../../components/sections/GallerySection';
 import { generateCompanySchema } from '../../utils/seoHelper';
 
 export default function CompanyPage({ company, jobs, error }) {
   if (error) {
     return (
-      <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-        <h1>Error</h1>
-        <p>{error}</p>
+      <div style={{ padding: '4rem 2rem', textAlign: 'center', fontFamily: 'sans-serif', background: '#0f172a', color: '#f8fafc', minHeight: '100vh' }}>
+        <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>⚠️ Careers Page Unavailable</h1>
+        <p style={{ color: '#94a3b8' }}>{error}</p>
       </div>
     );
   }
@@ -25,6 +30,7 @@ export default function CompanyPage({ company, jobs, error }) {
     '--brand-accent': company.accentColor || '#3b82f6',
     '--brand-bg': company.backgroundColor || '#0f172a',
     '--brand-text': company.textColor || '#f8fafc',
+    '--brand-radius': company.borderRadius || '16px',
     fontFamily: company.fontFamily ? `'${company.fontFamily}', sans-serif` : "'Outfit', sans-serif",
   };
 
@@ -35,6 +41,10 @@ export default function CompanyPage({ company, jobs, error }) {
   const pageTitle = `${company.name} Careers — Open Jobs & Company Culture`;
   const metaDesc = company.description || `Explore open roles, benefits, culture, and career opportunities at ${company.name}.`;
   const heroBanner = company.bannerUrl || company.logoUrl;
+
+  const displaySections = (company.publishedSections && company.publishedSections.length > 0)
+    ? company.publishedSections
+    : (company.sections || []);
 
   // Helper to render sections dynamically
   const renderSection = (section, index) => {
@@ -89,6 +99,51 @@ export default function CompanyPage({ company, jobs, error }) {
             companySlug={company.slug}
           />
         );
+      case 'TEAM':
+        return (
+          <TeamSection
+            key={index}
+            title={section.title}
+            subtitle={section.subtitle}
+            content={section.content}
+          />
+        );
+      case 'TESTIMONIALS':
+        return (
+          <TestimonialsSection
+            key={index}
+            title={section.title}
+            subtitle={section.subtitle}
+            content={section.content}
+          />
+        );
+      case 'FAQ':
+        return (
+          <FaqSection
+            key={index}
+            title={section.title}
+            subtitle={section.subtitle}
+            content={section.content}
+          />
+        );
+      case 'CTA':
+        return (
+          <CtaSection
+            key={index}
+            title={section.title}
+            subtitle={section.subtitle}
+            content={section.content}
+          />
+        );
+      case 'GALLERY':
+        return (
+          <GallerySection
+            key={index}
+            title={section.title}
+            subtitle={section.subtitle}
+            content={section.content}
+          />
+        );
       default:
         return null;
     }
@@ -117,7 +172,7 @@ export default function CompanyPage({ company, jobs, error }) {
         <meta name="twitter:description" content={metaDesc} />
         {heroBanner && <meta name="twitter:image" content={heroBanner} />}
 
-        {/* JSON-LD Structured Data for Search Engine rich snippets */}
+        {/* JSON-LD Structured Data */}
         {jsonLd && (
           <script
             type="application/ld+json"
@@ -129,7 +184,7 @@ export default function CompanyPage({ company, jobs, error }) {
       <Header company={company} />
 
       <main>
-        {company.sections?.map((section, index) => renderSection(section, index))}
+        {displaySections.map((section, index) => renderSection(section, index))}
       </main>
 
       <Footer company={company} />
