@@ -55,6 +55,19 @@ export default function JobDetailPage({ company, job, error }) {
     ? job.requirements.split('\n').filter((req) => req.trim().length > 0)
     : [];
 
+  // Safely parse days count from integer or string ("40 days ago", "Posted today")
+  const parseDaysAgo = (val) => {
+    if (val === undefined || val === null) return 0;
+    if (typeof val === 'number') return isNaN(val) ? 0 : Math.max(0, val);
+    const str = String(val).toLowerCase();
+    if (str.includes('today') || str.includes('just')) return 0;
+    const match = str.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  };
+
+  const daysAgoNum = parseDaysAgo(job.posted_days_ago);
+  const postedDateIso = new Date(Date.now() - daysAgoNum * 86400000).toISOString();
+
   // Schema.org JobPosting JSON-LD for Google Jobs indexing
   const jobPostingSchema = {
     '@context': 'https://schema.org/',
@@ -66,7 +79,7 @@ export default function JobDetailPage({ company, job, error }) {
       name: company.name,
       value: job._id || job.job_slug,
     },
-    datePosted: new Date(Date.now() - (job.posted_days_ago || 0) * 86400000).toISOString(),
+    datePosted: postedDateIso,
     employmentType: job.employment_type === 'Full-time' ? 'FULL_TIME' : 'PART_TIME',
     hiringOrganization: {
       '@type': 'Organization',
@@ -144,7 +157,11 @@ export default function JobDetailPage({ company, job, error }) {
             <span className={styles.deptBadge}>{job.department}</span>
             {job.posted_days_ago !== undefined && (
               <span className={styles.postedBadge}>
-                📅 Posted {job.posted_days_ago === 0 ? 'Today' : `${job.posted_days_ago} days ago`}
+                📅 {typeof job.posted_days_ago === 'string' && job.posted_days_ago.toLowerCase().includes('posted')
+                  ? job.posted_days_ago
+                  : typeof job.posted_days_ago === 'string' && job.posted_days_ago.toLowerCase().includes('ago')
+                  ? `Posted ${job.posted_days_ago}`
+                  : `Posted ${daysAgoNum === 0 ? 'Today' : `${daysAgoNum} days ago`}`}
               </span>
             )}
           </div>
