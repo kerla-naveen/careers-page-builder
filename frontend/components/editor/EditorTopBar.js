@@ -114,10 +114,24 @@ export default function EditorTopBar({
         <div className={styles.editorTitle}>
           <EditorIcon />
           <span style={{ fontWeight: 700, color: '#0f172a' }}>{company?.name || 'Careers Editor'}</span>
-          <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 500, background: '#f1f5f9', padding: '2px 8px', borderRadius: '4px', border: '1px solid #e2e8f0' }}>
-            Recruiter Studio
-          </span>
         </div>
+        <div className={styles.divider}></div>
+        <nav style={{ display: 'flex', gap: '4px' }}>
+          <Link
+            href="/editor"
+            className={styles.topBarBtn}
+            style={{ fontWeight: 600, color: '#2563eb', background: 'rgba(37, 99, 235, 0.1)' }}
+          >
+            🎨 Careers Page
+          </Link>
+          <Link
+            href="/jobs"
+            className={styles.topBarBtn}
+            style={{ fontWeight: 600, color: '#475569' }}
+          >
+            💼 Jobs
+          </Link>
+        </nav>
       </div>
 
       <div className={styles.topBarCenter}>

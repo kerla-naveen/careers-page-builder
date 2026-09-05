@@ -272,13 +272,70 @@ router.get('/:slug/jobs', async (req, res) => {
 
 /**
  * @route   GET /api/companies/:slug/jobs/recruiter
- * @desc    Get ALL company jobs for recruiter management dashboard (including DRAFT, PUBLISHED, UNPUBLISHED)
+ * @desc    Get paginated, filtered, sorted company jobs for recruiter management dashboard
  * @access  Private (Recruiter Owner)
  */
 router.get('/:slug/jobs/recruiter', protect, checkCompanyOwnership, async (req, res) => {
   try {
     const slug = req.params.slug.toLowerCase();
-    const jobs = await Job.find({ companySlug: slug }).sort({ createdAt: -1 });
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
+
+    const { search, status, department, location, employment_type, sort } = req.query;
+
+    const query = { companySlug: slug };
+
+    // Status filter
+    if (status && status !== 'ALL') {
+      if (status === 'CLOSED') {
+        query.status = { $in: ['CLOSED', 'UNPUBLISHED'] };
+      } else {
+        query.status = status;
+      }
+    }
+
+    // Department filter
+    if (department && department !== 'ALL') {
+      query.department = department;
+    }
+
+    // Location filter
+    if (location && location !== 'ALL') {
+      query.location = location;
+    }
+
+    // Employment type filter
+    if (employment_type && employment_type !== 'ALL') {
+      query.employment_type = employment_type;
+    }
+
+    // Search query across title, department, location, work_policy, description
+    if (search && search.trim()) {
+      const searchRegex = new RegExp(search.trim(), 'i');
+      query.$or = [
+        { title: searchRegex },
+        { department: searchRegex },
+        { location: searchRegex },
+        { work_policy: searchRegex },
+        { description: searchRegex },
+      ];
+    }
+
+    // Sort order
+    let sortOption = { createdAt: -1 };
+    if (sort === 'recently_updated') {
+      sortOption = { updatedAt: -1 };
+    } else if (sort === 'recently_created') {
+      sortOption = { createdAt: -1 };
+    } else if (sort === 'title') {
+      sortOption = { title: 1 };
+    } else if (sort === 'status') {
+      sortOption = { status: 1, createdAt: -1 };
+    }
+
+    const totalJobs = await Job.countDocuments(query);
+    const jobs = await Job.find(query).sort(sortOption).skip(skip).limit(limit);
 
     const formattedJobs = jobs.map((job) => {
       const jObj = job.toObject();
@@ -286,14 +343,148 @@ router.get('/:slug/jobs/recruiter', protect, checkCompanyOwnership, async (req, 
       return jObj;
     });
 
+    // Fetch distinct filter options and status counts across ALL jobs of this company
+    const allCompanyJobs = await Job.find({ companySlug: slug }).select('department location status');
+    const availableDepartments = [...new Set(allCompanyJobs.map((j) => j.department).filter(Boolean))].sort();
+    const availableLocations = [...new Set(allCompanyJobs.map((j) => j.location).filter(Boolean))].sort();
+
+    const statusCounts = {
+      ALL: allCompanyJobs.length,
+      DRAFT: allCompanyJobs.filter((j) => j.status === 'DRAFT').length,
+      PUBLISHED: allCompanyJobs.filter((j) => j.status === 'PUBLISHED').length,
+      CLOSED: allCompanyJobs.filter((j) => j.status === 'CLOSED' || j.status === 'UNPUBLISHED').length,
+      ARCHIVED: allCompanyJobs.filter((j) => j.status === 'ARCHIVED').length,
+    };
+
     return res.status(200).json({
       success: true,
-      count: formattedJobs.length,
       data: formattedJobs,
+      totalJobs,
+      page,
+      limit,
+      totalPages: Math.ceil(totalJobs / limit) || 1,
+      availableDepartments,
+      availableLocations,
+      statusCounts,
     });
   } catch (error) {
     console.error('Error in GET /companies/:slug/jobs/recruiter:', error);
     return res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+/**
+ * @route   POST /api/companies/:slug/jobs/bulk-status
+ * @desc    Bulk update job statuses
+ * @access  Private (Recruiter Owner)
+ */
+router.post('/:slug/jobs/bulk-status', protect, checkCompanyOwnership, async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const { jobIds, status } = req.body;
+
+    if (!Array.isArray(jobIds) || jobIds.length === 0) {
+      return res.status(400).json({ success: false, error: 'No job IDs provided' });
+    }
+
+    if (!['DRAFT', 'PUBLISHED', 'CLOSED', 'ARCHIVED'].includes(status)) {
+      return res.status(400).json({ success: false, error: 'Invalid status value' });
+    }
+
+    const updateDoc = { status };
+    if (status === 'PUBLISHED') {
+      updateDoc.published_at = new Date();
+    }
+
+    const result = await Job.updateMany(
+      { _id: { $in: jobIds }, companySlug: slug },
+      { $set: updateDoc }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: `Successfully updated ${result.modifiedCount} job(s) to ${status}`,
+      modifiedCount: result.modifiedCount,
+    });
+  } catch (error) {
+    console.error('Error in POST /companies/:slug/jobs/bulk-status:', error);
+    return res.status(500).json({ success: false, error: 'Failed to perform bulk status update' });
+  }
+});
+
+/**
+ * @route   POST /api/companies/:slug/jobs/bulk-delete
+ * @desc    Bulk delete job postings
+ * @access  Private (Recruiter Owner)
+ */
+router.post('/:slug/jobs/bulk-delete', protect, checkCompanyOwnership, async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase();
+    const { jobIds } = req.body;
+
+    if (!Array.isArray(jobIds) || jobIds.length === 0) {
+      return res.status(400).json({ success: false, error: 'No job IDs provided' });
+    }
+
+    const result = await Job.deleteMany({ _id: { $in: jobIds }, companySlug: slug });
+
+    return res.status(200).json({
+      success: true,
+      message: `Successfully deleted ${result.deletedCount} job(s)`,
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error('Error in POST /companies/:slug/jobs/bulk-delete:', error);
+    return res.status(500).json({ success: false, error: 'Failed to perform bulk deletion' });
+  }
+});
+
+/**
+ * @route   POST /api/companies/:slug/jobs/:id/duplicate
+ * @desc    Duplicate an existing job posting as a DRAFT
+ * @access  Private (Recruiter Owner)
+ */
+router.post('/:slug/jobs/:id/duplicate', protect, checkCompanyOwnership, async (req, res) => {
+  try {
+    const { slug, id } = req.params;
+    const original = await Job.findOne({ _id: id, companySlug: slug.toLowerCase() });
+
+    if (!original) {
+      return res.status(404).json({ success: false, error: 'Original job posting not found' });
+    }
+
+    const newTitle = `${original.title} (Copy)`;
+    const newSlug = await generateUniqueJobSlug(slug, newTitle, original.location);
+
+    const duplicatedJob = await Job.create({
+      companyId: original.companyId,
+      companySlug: original.companySlug,
+      title: newTitle,
+      job_slug: newSlug,
+      department: original.department,
+      location: original.location,
+      work_policy: original.work_policy,
+      employment_type: original.employment_type,
+      experience_level: original.experience_level,
+      job_type: original.job_type,
+      salary_range: original.salary_range,
+      description: original.description,
+      requirements: original.requirements,
+      status: 'DRAFT',
+      published_at: null,
+    });
+
+    const jObj = duplicatedJob.toObject();
+    jObj.posted_days_ago = 0;
+
+    return res.status(201).json({
+      success: true,
+      message: 'Job posting duplicated successfully!',
+      data: jObj,
+    });
+  } catch (error) {
+    console.error('Error in POST /companies/:slug/jobs/:id/duplicate:', error);
+    return res.status(500).json({ success: false, error: 'Failed to duplicate job' });
   }
 });
 
@@ -448,7 +639,7 @@ router.put('/:slug/jobs/:id', protect, checkCompanyOwnership, async (req, res) =
       job.job_slug = await generateUniqueJobSlug(job.companySlug, job.title, job.location, job._id);
     }
 
-    if (status && ['DRAFT', 'PUBLISHED', 'UNPUBLISHED'].includes(status)) {
+    if (status && ['DRAFT', 'PUBLISHED', 'CLOSED', 'ARCHIVED', 'UNPUBLISHED'].includes(status)) {
       if (status === 'PUBLISHED' && job.status !== 'PUBLISHED') {
         job.published_at = job.published_at || new Date();
       }
@@ -473,7 +664,7 @@ router.put('/:slug/jobs/:id', protect, checkCompanyOwnership, async (req, res) =
 
 /**
  * @route   PATCH /api/companies/:slug/jobs/:id/status
- * @desc    Publish / Unpublish / Set Draft status for a job
+ * @desc    Publish / Unpublish / Close / Archive / Set Draft status for a job
  * @access  Private (Recruiter Owner)
  */
 router.patch('/:slug/jobs/:id/status', protect, checkCompanyOwnership, async (req, res) => {
@@ -481,7 +672,7 @@ router.patch('/:slug/jobs/:id/status', protect, checkCompanyOwnership, async (re
     const { slug, id } = req.params;
     const { status } = req.body;
 
-    if (!['DRAFT', 'PUBLISHED', 'UNPUBLISHED'].includes(status)) {
+    if (!['DRAFT', 'PUBLISHED', 'CLOSED', 'ARCHIVED', 'UNPUBLISHED'].includes(status)) {
       return res.status(400).json({ success: false, error: 'Invalid status value' });
     }
 

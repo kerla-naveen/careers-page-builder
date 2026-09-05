@@ -53,7 +53,7 @@ const JobSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['DRAFT', 'PUBLISHED', 'UNPUBLISHED'],
+    enum: ['DRAFT', 'PUBLISHED', 'CLOSED', 'ARCHIVED', 'UNPUBLISHED'],
     default: 'DRAFT',
     index: true,
   },

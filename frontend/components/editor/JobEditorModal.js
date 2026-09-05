@@ -56,6 +56,10 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
   };
 
   const handleSave = async (targetStatus) => {
+    if (!companySlug) {
+      setError('Company context missing. Please refresh or re-login.');
+      return;
+    }
     if (!title.trim()) {
       setError('Job Title is required');
       return;
