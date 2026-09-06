@@ -263,6 +263,80 @@ Below is an exact example of the JSON object stored in MongoDB (`Company` collec
 
 ---
 
+## 2.2 ⚡ Real-Time Responsive Live Preview Architecture ("Response Change Preview")
+
+### 💬 Why We Designed It This Way
+
+When designing a modern Page Builder, the traditional web CMS workflow (**Edit field ➔ Click Save ➔ Wait 3 seconds for database response ➔ Refresh preview tab**) feels sluggish and frustrating. It breaks a recruiter's creative momentum.
+
+We wanted the Studio experience to feel like **Figma or Canva**—where every keystroke, color tweak, or layout re-ordering reflects **instantly (60 FPS)** in the center of the screen, while giving recruiters full confidence in how their page looks across desktop, tablet, and mobile devices before publishing.
+
+#### Core Design Decisions & Goals:
+1. **Zero Input Latency (0ms UI Lag)**: Editing text or dragging a slider should update the DOM immediately in browser memory without waiting for backend network roundtrips.
+2. **Multi-Device Responsive Previewing**: Recruiters should be able to toggle between Desktop (`100%`), Tablet (`768px`), and Mobile (`390px` iPhone frame) with a single click to catch layout overflow or readability issues before candidates do.
+3. **Decoupled Database I/O**: Network requests are completely isolated from editing. You can make 100 visual tweaks in memory safely, and only write to MongoDB when you click **"Save Draft"** or **"Publish Page"**.
+
+---
+
+### ⚙️ How It Works Under the Hood
+
+#### 1. The React Unidirectional Data Flow
+The entire Studio Editor state is lifted up into a single custom hook (`useEditorState.js`). 
+
+```text
+┌─────────────────────────────────┐
+│     Control Panel (Right)       │
+│  - Text Inputs / Section Form   │
+│  - Color Pickers & Font Selector│
+└────────────────┬────────────────┘
+                 │ 1. Triggers onChange event
+                 ▼
+┌─────────────────────────────────┐
+│   useEditorState (Custom Hook)  │
+│  - Holds top-level `company`    │
+│  - Manages Undo/Redo history    │
+└────────────────┬────────────────┘
+                 │ 2. Updates state immutably & re-renders
+                 ▼
+┌─────────────────────────────────┐
+│   Middle Preview Canvas         │
+│  - Applies CSS Variables        │
+│  - Resizes Viewport (390/768px) │
+│  - Smooth auto-scrolls to target│
+└─────────────────────────────────┘
+```
+
+- When a recruiter types a character in the right-side inspector (`EditorRightPanel.js`), an `onChange` event calls `updateCompany()`.
+- `updateCompany()` mutates the top-level `company` React state object immutably and saves a snapshot in the internal history stack (enabling `Cmd+Z` Undo / `Cmd+Y` Redo).
+
+#### 2. Dynamic CSS Variables Engine
+Instead of re-mounting heavy React components whenever theme colors change, `EditorCanvas.js` injects CSS custom properties directly onto the wrapper container:
+
+```javascript
+const brandStyles = useMemo(() => ({
+  '--brand-primary': company.primaryColor,
+  '--brand-accent': company.accentColor,
+  '--brand-bg': company.backgroundColor,
+  '--brand-text': company.textColor,
+  '--brand-radius': company.borderRadius,
+  fontFamily: `'${company.fontFamily}', sans-serif`,
+}), [company]);
+```
+All child section components (`HeroSection`, `PerksSection`, `JobsSection`) use these CSS variables. Changing a color picker instantly recalculates styles across the entire page without DOM teardowns.
+
+#### 3. Simulated Device Viewport Sandbox
+The preview canvas container dynamically swaps layout constraint classes based on `viewportMode`:
+- **Desktop Mode**: `w-full` (`100%` width)
+- **Tablet Mode**: `w-[768px]` (centers a 768px iPad breakpoint frame with drop shadows)
+- **Mobile Mode**: `w-[390px]` (centers a 390px iPhone frame with rounded bezels and mobile scrollbars)
+
+#### 4. Smooth Auto-Focus & Auto-Scroll
+To prevent recruiters from losing track of what section they are editing:
+- Whenever a section is clicked in the left tree or right inspector, `selectedSectionId` changes.
+- An internal `useEffect` triggers `scrollIntoView({ behavior: 'smooth', block: 'center' })`, instantly centering the middle canvas on the exact section being modified.
+
+---
+
 ## 3. 🗄️ Database Schemas (Mongoose / MongoDB)
 
 ### 3.1 User Schema (`users` collection)
