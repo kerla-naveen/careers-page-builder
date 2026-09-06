@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { UilExclamationTriangle, UilRocket } from '@iconscout/react-unicons';
+import { API_BASE } from '../../utils/apiConfig';
 
 const WORK_POLICY_OPTIONS = ['Hybrid', 'Remote', 'On-site'];
 const EMPLOYMENT_TYPE_OPTIONS = ['Full time', 'Part time', 'Contract', 'Internship'];
@@ -87,8 +88,8 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
 
     try {
       const url = jobToEdit
-        ? `http://127.0.0.1:5000/api/companies/${companySlug}/jobs/${jobToEdit._id}`
-        : `http://127.0.0.1:5000/api/companies/${companySlug}/jobs`;
+        ? `${API_BASE}/companies/${companySlug}/jobs/${jobToEdit._id}`
+        : `${API_BASE}/companies/${companySlug}/jobs`;
 
       const method = jobToEdit ? 'PUT' : 'POST';
 

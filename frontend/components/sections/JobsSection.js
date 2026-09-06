@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { API_BASE } from '../../utils/apiConfig';
 
 export default function JobsSection({ title, subtitle, jobs: initialJobs = [], companySlug }) {
   const router = useRouter();
@@ -75,7 +76,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
       if (selectedLevels.length > 0) params.append('experience_level', selectedLevels.join(','));
       if (selectedLocations.length > 0) params.append('location', selectedLocations.join(','));
 
-      const url = `http://127.0.0.1:5000/api/companies/${companySlug}/jobs?${params.toString()}`;
+      const url = `${API_BASE}/companies/${companySlug}/jobs?${params.toString()}`;
       const res = await fetch(url);
       const data = await res.json();
 

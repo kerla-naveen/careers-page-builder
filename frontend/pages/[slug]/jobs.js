@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../context/AuthContext';
 import JobEditorModal from '../../components/editor/JobEditorModal';
+import { API_BASE } from '../../utils/apiConfig';
 import {
   UilBriefcase,
   UilPalette,
@@ -119,7 +120,7 @@ export default function JobsManagementPage() {
       if (departmentFilter !== 'ALL') params.append('department', departmentFilter);
       if (locationFilter !== 'ALL') params.append('location', locationFilter);
 
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/recruiter?${params.toString()}`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/recruiter?${params.toString()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -182,7 +183,7 @@ export default function JobsManagementPage() {
 
   const handleUpdateStatus = async (jobId, newStatus) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/${jobId}/status`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/${jobId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -204,7 +205,7 @@ export default function JobsManagementPage() {
 
   const handleDuplicateJob = async (jobId) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/${jobId}/duplicate`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/${jobId}/duplicate`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -224,7 +225,7 @@ export default function JobsManagementPage() {
 
   const handleDeleteSingle = async (jobId) => {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/${jobId}`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/${jobId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -250,7 +251,7 @@ export default function JobsManagementPage() {
     if (selectedIds.length === 0) return;
     setBulkActionLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/bulk-status`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/bulk-status`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -277,7 +278,7 @@ export default function JobsManagementPage() {
     if (selectedIds.length === 0) return;
     setBulkActionLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/bulk-delete`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/bulk-delete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

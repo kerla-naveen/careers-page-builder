@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { API_BASE } from '../../utils/apiConfig';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import HeroSection from '../../components/sections/HeroSection';
@@ -196,7 +197,7 @@ export async function getServerSideProps(context) {
   const { slug } = context.params;
 
   try {
-    const companyRes = await fetch(`http://127.0.0.1:5000/api/companies/${slug}`);
+    const companyRes = await fetch(`${API_BASE}/companies/${slug}`);
     const companyData = await companyRes.json();
 
     if (!companyRes.ok || !companyData.success) {
@@ -207,7 +208,7 @@ export async function getServerSideProps(context) {
       };
     }
 
-    const jobsRes = await fetch(`http://127.0.0.1:5000/api/companies/${slug}/jobs`);
+    const jobsRes = await fetch(`${API_BASE}/companies/${slug}/jobs`);
     const jobsData = await jobsRes.json();
 
     return {
@@ -220,7 +221,7 @@ export async function getServerSideProps(context) {
     console.error('Error fetching data:', err);
     return {
       props: {
-        error: 'Failed to fetch data from backend. Is the server running on port 5000?',
+        error: 'Failed to fetch data from backend. Please check server availability.',
       },
     };
   }

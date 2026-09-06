@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import JobEditorModal from './JobEditorModal';
+import { API_BASE } from '../../utils/apiConfig';
 
 export default function JobManagerModal({ isOpen, onClose, companySlug, token }) {
   const [jobs, setJobs] = useState([]);
@@ -15,7 +16,7 @@ export default function JobManagerModal({ isOpen, onClose, companySlug, token })
     setIsLoading(true);
     setError('');
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/recruiter`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/recruiter`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,7 +55,7 @@ export default function JobManagerModal({ isOpen, onClose, companySlug, token })
   const handleToggleStatus = async (jobId, currentStatus) => {
     const newStatus = currentStatus === 'PUBLISHED' ? 'UNPUBLISHED' : 'PUBLISHED';
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/${jobId}/status`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/${jobId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ export default function JobManagerModal({ isOpen, onClose, companySlug, token })
       return;
     }
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs/${jobId}`, {
+      const res = await fetch(`${API_BASE}/companies/${companySlug}/jobs/${jobId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

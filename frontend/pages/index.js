@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { API_BASE } from '../utils/apiConfig';
 import Link from 'next/link';
 import CompanyLogoIcon from '../components/CompanyLogoIcon';
 
@@ -249,7 +250,7 @@ export async function getServerSideProps() {
     const companies = [];
 
     for (const slug of slugs) {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${slug}`);
+      const res = await fetch(`${API_BASE}/companies/${slug}`);
       const data = await res.json();
       if (data.success) {
         companies.push(data.data);

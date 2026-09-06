@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { API_BASE } from '../../utils/apiConfig';
 
 
 import Header from '../../components/Header';
@@ -61,7 +62,7 @@ export default function RecruiterDashboard() {
   // Fetch all companies list for dropdown
   const loadAllCompanies = useCallback(async () => {
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/companies');
+      const res = await fetch(`${API_BASE}/companies`);
       const data = await res.json();
       if (data.success) {
         setCompaniesList(data.data || []);
@@ -75,7 +76,7 @@ export default function RecruiterDashboard() {
   const loadCompanyData = useCallback(async (companySlug) => {
     if (!companySlug) return;
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}`);
+      const res = await fetch(`${API_BASE}/companies/${companySlug}`);
       const data = await res.json();
       if (data.success) {
         const normalizedSections = (data.data.sections || [])
@@ -97,7 +98,7 @@ export default function RecruiterDashboard() {
         });
       }
 
-      const jobsRes = await fetch(`http://127.0.0.1:5000/api/companies/${companySlug}/jobs`);
+      const jobsRes = await fetch(`${API_BASE}/companies/${companySlug}/jobs`);
       const jobsData = await jobsRes.json();
       if (jobsData.success) {
         setJobs(jobsData.data || []);
@@ -271,7 +272,7 @@ export default function RecruiterDashboard() {
     try {
       if (editingJob) {
         // PUT update existing job
-        const res = await fetch(`http://127.0.0.1:5000/api/companies/jobs/${editingJob._id}`, {
+        const res = await fetch(`${API_BASE}/companies/jobs/${editingJob._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(jobForm),
@@ -282,7 +283,7 @@ export default function RecruiterDashboard() {
         } else alert(`Error: ${data.error}`);
       } else {
         // POST create new job
-        const res = await fetch(`http://127.0.0.1:5000/api/companies/${slug}/jobs`, {
+        const res = await fetch(`${API_BASE}/companies/${slug}/jobs`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(jobForm),
@@ -305,7 +306,7 @@ export default function RecruiterDashboard() {
   const handleDeleteJob = async (jobId, jobTitle) => {
     if (!confirm(`Are you sure you want to delete job "${jobTitle}"?`)) return;
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/jobs/${jobId}`, {
+      const res = await fetch(`${API_BASE}/companies/jobs/${jobId}`, {
         method: 'DELETE',
       });
       const data = await res.json();
@@ -326,7 +327,7 @@ export default function RecruiterDashboard() {
     setToast('');
 
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/companies/${slug}`, {
+      const res = await fetch(`${API_BASE}/companies/${slug}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -371,7 +372,7 @@ export default function RecruiterDashboard() {
     }
 
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/companies', {
+      const res = await fetch(`${API_BASE}/companies`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newCompanyForm),

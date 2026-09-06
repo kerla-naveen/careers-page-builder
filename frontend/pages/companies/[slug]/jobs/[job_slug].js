@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { API_BASE } from '../../../../utils/apiConfig';
 import Link from 'next/link';
 import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
@@ -297,7 +298,7 @@ export async function getServerSideProps(context) {
   const { slug, job_slug } = context.params;
 
   try {
-    const res = await fetch(`http://127.0.0.1:5000/api/companies/${slug}/jobs/${job_slug}`);
+    const res = await fetch(`${API_BASE}/companies/${slug}/jobs/${job_slug}`);
     const data = await res.json();
 
     if (!res.ok || !data.success) {

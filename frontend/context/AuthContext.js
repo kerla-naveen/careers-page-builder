@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 
-const API_BASE = 'http://127.0.0.1:5000/api';
+import { API_BASE } from '../utils/apiConfig';
+
 
 const AuthContext = createContext({
   user: null,

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { API_BASE } from '../utils/apiConfig';
 
-const API_BASE = 'http://127.0.0.1:5000/api';
 
 export function useEditorState(slug, token) {
   // Company data

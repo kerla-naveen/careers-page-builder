@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { API_BASE } from '../../../utils/apiConfig';
 import Link from 'next/link';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
@@ -106,7 +107,7 @@ export async function getServerSideProps(context) {
   const { query } = context;
 
   try {
-    const companyRes = await fetch(`http://127.0.0.1:5000/api/companies/${slug}`);
+    const companyRes = await fetch(`${API_BASE}/companies/${slug}`);
     const companyData = await companyRes.json();
 
     if (!companyRes.ok || !companyData.success) {
@@ -120,7 +121,7 @@ export async function getServerSideProps(context) {
     // Pass initial URL query parameters to backend API
     const queryString = new URLSearchParams(query).toString();
     const jobsRes = await fetch(
-      `http://127.0.0.1:5000/api/companies/${slug}/jobs?${queryString}`
+      `${API_BASE}/companies/${slug}/jobs?${queryString}`
     );
     const jobsData = await jobsRes.json();
 
@@ -134,7 +135,7 @@ export async function getServerSideProps(context) {
     console.error('Error fetching jobs sub-page data:', err);
     return {
       props: {
-        error: 'Failed to connect to backend server on port 5000.',
+        error: 'Failed to connect to backend server.',
       },
     };
   }
