@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const Company = require('../models/Company');
 const Job = require('../models/Job');
+const User = require('../models/User');
 
 const connectDB = async () => {
   const connStr = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/careers_page_builder';
@@ -289,9 +290,10 @@ async function seedData() {
   try {
     await connectDB();
 
-    console.log('🧹 Clearing existing Company and Job collections...');
+    console.log('🧹 Clearing existing Company, Job, and User collections...');
     await Company.deleteMany({});
     await Job.deleteMany({});
+    await User.deleteMany({});
 
     console.log('🏢 Seeding demo companies...');
     const insertedCompanies = await Company.insertMany(demoCompanies);
@@ -302,6 +304,37 @@ async function seedData() {
     insertedCompanies.forEach(c => {
       companyMap[c.slug] = c;
     });
+
+    console.log('👤 Seeding demo recruiter accounts...');
+    const demoUsers = [
+      {
+        name: 'Workable Recruiter',
+        email: 'recruiter@workable.com',
+        password: 'password123',
+        company: companyMap['workable']._id,
+        role: 'recruiter',
+      },
+      {
+        name: 'Ashby Recruiter',
+        email: 'recruiter@ashby.com',
+        password: 'password123',
+        company: companyMap['ashby']._id,
+        role: 'recruiter',
+      },
+      {
+        name: 'Whitecarrot Recruiter',
+        email: 'recruiter@whitecarrot.com',
+        password: 'password123',
+        company: companyMap['whitecarrot']._id,
+        role: 'recruiter',
+      },
+    ];
+
+    for (const uData of demoUsers) {
+      const u = await User.create(uData);
+      await Company.findByIdAndUpdate(uData.company, { owner: u._id });
+    }
+    console.log('✅ Seeded demo recruiter accounts: recruiter@workable.com, recruiter@ashby.com, recruiter@whitecarrot.com');
 
     // Read jobs data
     const jobsFilePath = path.join(__dirname, 'jobs-data.json');
