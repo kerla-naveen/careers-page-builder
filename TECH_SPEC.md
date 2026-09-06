@@ -73,6 +73,196 @@ The application follows a **Monolithic Single-Repo Full-Stack Architecture** com
 
 ---
 
+## 2.1 🎨 Editor Page Architecture & Data Flow (Core Engine)
+
+### 📊 Visualizing the Round-Trip Data Architecture
+
+```text
+               ┌────────────────────────────────────────────────────────┐
+               │                  MONGODB DATABASE                      │
+               │  Document: Company { slug, theme, sections: [...] }    │
+               └───────────────────────────┬────────────────────────────┘
+                                           │
+                                  1. GET /api/companies/:slug (Initial Load)
+                                           │
+                                           ▼
+               ┌────────────────────────────────────────────────────────┐
+               │           SINGLE SOURCE OF TRUTH (React State)         │
+               │         useEditorState Hook (company, history)         │
+               └───────────────┬────────────────────────┬───────────────┘
+                               │                        │
+         2. Binds Form Values  │                        │ 3. Passes Props
+                               ▼                        ▼
+┌──────────────────────────────────────────┐  ┌──────────────────────────────────────────┐
+│         RECRUITER INPUT PANELS           │  │            LIVE CANVAS PREVIEW           │
+│                                          │  │                                          │
+│ • Left Sidebar: Global Theme (Colors,    │  │ • Simulated Viewport (Desktop/Tablet/   │
+│   Fonts, Radius) & Section Re-ordering   │  │   Mobile 390px)                          │
+│ • Right Inspector: Active Section Fields │  │ • Dynamically maps section.type to       │
+│   (Title, Subtitle, Items, Media, Cards) │  │   React Component (Hero, Perks, Jobs...) │
+└──────────────────────┬───────────────────┘  └──────────────────────────────────────────┘
+                       │
+              4. Recruiter Types/Edits
+                       │
+                       ▼
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ updateCompany((prev) => ({ ...prev, sections: newSections }))                          │
+│ ➔ Updates React State instantly (0ms UI lag)                                           │
+│ ➔ Pushes copy into History Stack for Undo/Redo (Cmd+Z)                                 │
+└──────────────────────────────┬─────────────────────────────────────────────────────────┘
+                               │
+                      5. Save & Publish
+                               │
+       ┌───────────────────────┴───────────────────────┐
+       │                                               │
+       ▼ (PUT /api/companies/:slug)                    ▼ (POST /api/companies/:slug/publish)
+┌──────────────────────────────┐              ┌──────────────────────────────────────────┐
+│   SAVED DRAFT IN DATABASE    │              │    PUBLISHED TO LIVE CANDIDATE SITE      │
+│   Company.sections [...]     │              │    Company.publishedSections [...]       │
+└──────────────────────────────┘              └────────────────────┬─────────────────────┘
+                                                                   │
+                                                          6. Candidates Visit
+                                                                   │
+                                                                   ▼
+                                              ┌──────────────────────────────────────────┐
+                                              │       PUBLIC CANDIDATE PAGE              │
+                                              │    (/companies/[slug]/jobs)              │
+                                              │ Renders visible sections dynamically!   │
+                                              └──────────────────────────────────────────┘
+```
+
+---
+
+### 🗣️ Simple & Conversational Explanation: How it Works Under the Hood
+
+Think of the Careers Page Builder like a **Lego Block Engine**:
+
+1. **The Page is Just a JSON Recipe**:
+   Instead of writing HTML or CSS files, the entire careers page is saved as a single simple recipe (a JSON document). The recipe lists global styles (like brand colors and fonts) and an ordered list of content blocks (like a Hero header, an About story, Perk cards, and Job listings).
+
+2. **Fetching & Hydrating the Editor**:
+   When a recruiter opens the editor page (`/editor/[slug]`), the app asks the server: *"Give me the latest recipe for this company."* The server responds with the JSON document, and the frontend loads it into a central React state (`useEditorState`).
+
+3. **How Recruiter Inputs are Collected (Form ➔ JSON)**:
+   - **Left Sidebar**: Controls global recipe settings (colors, typography, section order, section visibility).
+   - **Right Panel (Inspector)**: Controls the currently selected section's specific contents. When a recruiter selects the "Perks" section, the right panel automatically generates text inputs, icon pickers, and card adders specifically for Perks.
+   - **Real-Time Data Capture**: Every keystroke or button click triggers an `updateCompany()` function. This updates the in-memory JSON state instantly. Because React automatically re-renders when state changes, the canvas preview updates with **0 millisecond delay**—no manual refresh needed!
+   - **Safety Net (Undo/Redo)**: Every single state update saves a snapshot into an internal history array (up to 50 edits). If a recruiter makes a mistake, pressing `Cmd+Z` rolls the JSON back to the previous snapshot.
+
+4. **Putting JSON Back onto the Page (JSON ➔ Live Render)**:
+   - **In the Canvas**: The editor loops through the JSON `sections` array and renders matching React template components (`HeroSection`, `PerksSection`, `JobsSection`, etc.), passing the section's JSON data directly into the component as props.
+   - **Saving Drafts**: Clicking **"Save Draft"** sends the updated JSON recipe back to MongoDB via a `PUT` request.
+   - **Publishing Live**: Clicking **"Publish Page"** copies the draft recipe into `publishedSections`.
+   - **For Candidates**: When candidates visit `/companies/[slug]`, the site reads `publishedSections` from the database and constructs the live page using the exact same section components and theme tokens!
+
+---
+
+### 📋 Concrete Sample JSON Document (How Careers Page Data is Collected & Stored)
+
+Below is an exact example of the JSON object stored in MongoDB (`Company` collection) and sent back and forth between the frontend editor and backend API:
+
+```json
+{
+  "_id": "66d98f7e2a4b1c001f98e101",
+  "name": "Workable",
+  "slug": "workable",
+  "owner": "66d98f7e2a4b1c001f98e100",
+
+  "primaryColor": "#059669",
+  "accentColor": "#10b981",
+  "backgroundColor": "#f0fdf4",
+  "textColor": "#064e3b",
+  "fontFamily": "Outfit",
+  "borderRadius": "16px",
+
+  "logoUrl": "💼",
+  "bannerUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c",
+  "description": "The all-in-one recruiting software helping companies hire globally.",
+  "website": "https://workable.com",
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+
+  "socialLinks": {
+    "linkedin": "https://linkedin.com/company/workable",
+    "twitter": "https://twitter.com/workable",
+    "github": "https://github.com/workable",
+    "glassdoor": "https://glassdoor.com/Overview/Workable-EI_IE789.htm"
+  },
+
+  "sections": [
+    {
+      "_id": "sec_hero_001",
+      "type": "HERO",
+      "title": "Shape the Future of Hiring Worldwide",
+      "subtitle": "Join a global team empowering 27,000+ businesses.",
+      "content": {
+        "headline": "Build Your Career at Workable",
+        "tagline": "Remote-first culture, global scale, and commitment to quality.",
+        "ctaText": "Explore Open Positions",
+        "badgeText": "🚀 We are actively hiring worldwide",
+        "stats": [
+          { "value": "27,000+", "label": "Companies" },
+          { "value": "100+", "label": "Countries" },
+          { "value": "1M+", "label": "Hires Made" }
+        ]
+      },
+      "orderIndex": 0,
+      "isVisible": true
+    },
+    {
+      "_id": "sec_perks_002",
+      "type": "PERKS",
+      "title": "Benefits & Perks",
+      "subtitle": "We take care of our people so they can do their best work.",
+      "content": {
+        "perks": [
+          {
+            "icon": "🏠",
+            "title": "Remote-First",
+            "description": "Work from anywhere in the world with home office stipends."
+          },
+          {
+            "icon": "📚",
+            "title": "Learning Budget",
+            "description": "$2,000 annual learning budget for courses & conferences."
+          },
+          {
+            "icon": "🏥",
+            "title": "Health Coverage",
+            "description": "Comprehensive medical, dental, and wellness stipends."
+          }
+        ]
+      },
+      "orderIndex": 1,
+      "isVisible": true
+    },
+    {
+      "_id": "sec_jobs_003",
+      "type": "JOBS",
+      "title": "Open Opportunities",
+      "subtitle": "Find your next role with us.",
+      "content": {
+        "showSearch": true,
+        "showFilters": true,
+        "layoutStyle": "cards"
+      },
+      "orderIndex": 2,
+      "isVisible": true
+    }
+  ],
+
+  "publishedSections": [
+    /* Snapshot of sections when recruiter hits 'Publish Page' */
+  ],
+
+  "isPublished": true,
+  "lastPublishedAt": "2026-09-06T12:00:00.000Z",
+  "createdAt": "2026-09-06T10:00:00.000Z",
+  "updatedAt": "2026-09-06T16:45:00.000Z"
+}
+```
+
+---
+
 ## 3. 🗄️ Database Schemas (Mongoose / MongoDB)
 
 ### 3.1 User Schema (`users` collection)
