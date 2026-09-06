@@ -105,27 +105,38 @@ Instead of storing stale strings like `"21 days ago"`, the job model stores `pub
 
 ## 📡 4. Clean REST API Architecture
 
-The API strictly separates **Authenticated Recruiter Endpoints** (`/api/recruiter/...`) from **Public Candidate Endpoints** (`/api/public/...`):
+The API endpoints are organized under `/api/auth` (Authentication) and `/api/companies` (Career Page & Job Management):
 
-### 4.1 Authenticated Recruiter API (`/api/recruiter`)
-- **Career Page Template**:
-  - `GET /api/companies/:companySlug/career-page` — Get recruiter draft career page layout.
-  - `PUT /api/recruiter/career-page` — Update career page sections, branding, and theme.
-- **Job Management**:
-  - `GET /api/recruiter/jobs` — Fetch all jobs (published & draft) for recruiter dashboard table.
-  - `POST /api/recruiter/jobs` — Create a new job posting.
-  - `GET /api/recruiter/jobs/:id` — Get single job details for editing.
-  - `PUT /api/recruiter/jobs/:id` — Update job posting details.
-  - `DELETE /api/recruiter/jobs/:id` — Delete a job posting.
+### 4.1 Authentication API (`/api/auth`)
+- `POST /api/auth/register` — Register a recruiter account + auto-create company & default template sections.
+- `POST /api/auth/login` — Authenticate recruiter credentials and issue JWT token.
+- `GET /api/auth/me` — Fetch current logged-in recruiter context.
 
 ---
 
-### 4.2 Public Candidate API (`/api/public`)
-- **Public Career Page**:
-  - `GET /api/public/companies/:companySlug` — Fetch published career page layout & theme styling.
-- **Public Jobs & Search**:
-  - `GET /api/public/companies/:companySlug/jobs` — Search & filter published jobs for candidate view.
-  - `GET /api/public/companies/:companySlug/jobs/:jobSlug` — Fetch public job details + inherit company theme & Schema.org JSON-LD data.
+### 4.2 Company & Career Page API (`/api/companies`)
+- `GET /api/companies` — List all registered companies.
+- `GET /api/companies/:slug` — Get company details, brand styles, and page section layout.
+- `POST /api/companies` — Create a new company portal dynamically.
+- `PUT /api/companies/:slug` — Update company branding, theme colors, Google Fonts, and section layouts.
+- `POST /api/companies/:slug/publish` — Publish draft sections to the live candidate site.
+- `DELETE /api/companies/:slug` — Delete a company portal.
+
+---
+
+### 4.3 Job Management API (`/api/companies/:slug/jobs`)
+- **Public Candidate Jobs**:
+  - `GET /api/companies/:slug/jobs` — Candidate search & multi-facet filtering.
+  - `GET /api/companies/:slug/jobs/:job_slug` — Fetch individual job posting details + Schema.org JSON-LD data.
+- **Recruiter Studio Jobs**:
+  - `GET /api/companies/:slug/jobs/recruiter` — Fetch all jobs (published & draft) for recruiter dashboard table.
+  - `POST /api/companies/:slug/jobs` — Create a new job posting.
+  - `PUT /api/companies/:slug/jobs/:id` (or `/api/companies/jobs/:id`) — Update an existing job posting.
+  - `PATCH /api/companies/:slug/jobs/:id/status` — Toggle job status between `published` and `draft`.
+  - `POST /api/companies/:slug/jobs/:id/duplicate` — Duplicate a job posting.
+  - `DELETE /api/companies/:slug/jobs/:id` (or `/api/companies/jobs/:id`) — Delete a job posting.
+  - `POST /api/companies/:slug/jobs/bulk-status` — Bulk update status for multiple selected jobs.
+  - `POST /api/companies/:slug/jobs/bulk-delete` — Bulk delete multiple selected jobs.
 
 ---
 
