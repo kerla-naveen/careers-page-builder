@@ -31,6 +31,13 @@ The database comes pre-seeded with **3 test companies** and **150 real job entri
 
 ## 💻 How to Run the Application Locally
 
+> 💡 **Recommended Launch Order**:
+> 1. **MongoDB Database** (Local instance or MongoDB Atlas)
+> 2. **Backend Server** (`cd backend && npm run dev` on port `5000`)
+> 3. **Frontend Server** (`cd frontend && npm run dev` on port `3000`)
+> 
+> *Starting the backend server before the frontend ensures that Next.js Server-Side Rendering (`getServerSideProps`) can fetch initial company and job data immediately during page rendering.*
+
 ### Prerequisites
 Make sure you have the following installed on your machine:
 1. **Node.js** (v18.0.0 or higher) & `npm`
@@ -58,12 +65,12 @@ cd careers-page-builder
    npm install
    ```
 
-3. Configure Environment Variables (Optional):
-   Create a `.env` file in the `backend/` directory (or use default fallbacks):
+3. **Configure Backend Environment Variables**:
+   Create a `.env` file in the `backend/` directory (refer to `.env.example`):
    ```env
    PORT=5000
    MONGODB_URI=mongodb://127.0.0.1:27017/careers_page_builder
-   JWT_SECRET=super_secret_jwt_key_2026
+   JWT_SECRET=your_jwt_secret_key_here
    ```
 
 4. **Seed Database with Sample Data**:
@@ -92,13 +99,20 @@ cd careers-page-builder
    npm install
    ```
 
-3. **Start Next.js Development Server**:
+3. **Configure Frontend Environment Variables**:
+   Create a `.env.local` file in the `frontend/` directory (refer to `.env.example`):
+   ```env
+   # Backend API Endpoint URL (used for SSR and client API calls)
+   NEXT_PUBLIC_API_URL=http://127.0.0.1:5000/api
+   ```
+
+4. **Start Next.js Development Server**:
    ```bash
    npm run dev
    ```
    The frontend application will start on **`http://localhost:3000`**.
 
-4. **Production Build Verification (Optional)**:
+5. **Production Build Verification (Optional)**:
    ```bash
    npm run build
    npm run start
