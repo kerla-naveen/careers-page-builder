@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
-import { UilLockAlt, UilExclamationTriangle } from '@iconscout/react-unicons';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -45,79 +44,102 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-50 font-sans p-4 sm:p-8">
+    <div className="min-h-screen bg-[#FAFAF9] text-[#18181B] flex flex-col justify-between items-center font-sans p-4 sm:p-6 antialiased selection:bg-blue-100 selection:text-blue-900">
       <Head>
-        <title>Recruiter Sign In | Careers Page Builder</title>
+        <title>Sign In | Career Page Builder</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
-      <div className="w-full max-w-md bg-slate-900 border border-white/10 rounded-2xl p-8 sm:p-10 shadow-2xl">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-semibold tracking-wider uppercase mb-4">
-            <UilLockAlt size={14} /> Recruiter Portal
+      {/* Top Branding Bar */}
+      <header className="w-full max-w-5xl py-6 flex justify-center">
+        <Link href="/" className="inline-flex items-center gap-2.5 no-underline hover:opacity-90 transition-opacity">
+          <div className="w-7 h-7 rounded-md bg-[#18181B] text-white flex items-center justify-center font-bold text-xs">
+            ✦
+          </div>
+          <span className="font-outfit font-bold text-base tracking-tight text-[#18181B]">
+            Career Page Builder
           </span>
-          <h1 className="font-outfit text-2xl sm:text-3xl font-bold m-0 mb-2 text-white">
-            Welcome Back
-          </h1>
-          <p className="text-sm text-slate-400 m-0 leading-relaxed">
-            Sign in to access your company's careers page editor.
-          </p>
+        </Link>
+      </header>
+
+      {/* Centered Auth Card */}
+      <main className="w-full max-w-[400px] my-auto">
+        <div className="bg-white border border-[#E4E4E7] rounded-xl p-6 sm:p-8 shadow-xs">
+          {/* Title & Subtitle */}
+          <div className="text-center mb-6">
+            <h1 className="font-outfit text-2xl font-bold text-[#18181B] tracking-tight mb-1.5">
+              Welcome back
+            </h1>
+            <p className="font-inter text-xs text-[#71717A] leading-relaxed">
+              Sign in to manage your careers page
+            </p>
+          </div>
+
+          {/* Inline Error Alert */}
+          {errorMessage && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-3.5 py-2.5 rounded-lg text-xs mb-5 flex items-start gap-2 font-medium">
+              <span className="shrink-0 mt-0.5">⚠️</span>
+              <span className="leading-snug">{errorMessage}</span>
+            </div>
+          )}
+
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-xs font-semibold text-[#18181B] mb-1.5">
+                Work Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full bg-white border border-[#E4E4E7] rounded-lg px-3.5 py-2.5 text-[#18181B] text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-[#A1A1AA]"
+              />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label htmlFor="password" className="block text-xs font-semibold text-[#18181B]">
+                  Password
+                </label>
+              </div>
+              <input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full bg-white border border-[#E4E4E7] rounded-lg px-3.5 py-2.5 text-[#18181B] text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-[#A1A1AA]"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-sm mt-2"
+            >
+              {isSubmitting ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+
+          {/* Footer Toggle Link */}
+          <div className="text-center mt-6 pt-5 border-t border-[#E4E4E7] text-xs text-[#71717A]">
+            Don&apos;t have an account?{' '}
+            <Link href="/register" className="text-blue-600 font-semibold no-underline hover:underline">
+              Create one
+            </Link>
+          </div>
         </div>
+      </main>
 
-        {/* Error Alert */}
-        {errorMessage && (
-          <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-3.5 rounded-xl text-xs mb-6 flex items-center gap-2">
-            <UilExclamationTriangle size={16} /> {errorMessage}
-          </div>
-        )}
-
-        {/* Form */}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-5">
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
-              Work Email Address
-            </label>
-            <input
-              type="email"
-              placeholder="sarah@acme.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full bg-slate-950 border border-white/15 rounded-lg px-3.5 py-2.5 text-white text-sm outline-none focus:border-indigo-500 transition-colors"
-            />
-          </div>
-
-          <div className="mb-7">
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full bg-slate-950 border border-white/15 rounded-lg px-3.5 py-2.5 text-white text-sm outline-none focus:border-indigo-500 transition-colors"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-3 rounded-lg border-none bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-semibold text-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed shadow-md shadow-indigo-500/30 hover:from-indigo-600 hover:to-indigo-700 transition-all"
-          >
-            {isSubmitting ? 'Authenticating...' : 'Sign In to Editor →'}
-          </button>
-        </form>
-
-        {/* Footer Link */}
-        <div className="text-center mt-7 text-xs text-slate-500">
-          Don't have a recruiter account yet?{' '}
-          <Link href="/register" className="text-indigo-400 font-medium no-underline hover:underline">
-            Register your company
-          </Link>
-        </div>
-      </div>
+      {/* Minimal Footer */}
+      <footer className="py-6 text-center text-xs text-[#71717A]">
+        © {new Date().getFullYear()} Career Page Builder. All rights reserved.
+      </footer>
     </div>
   );
 }
