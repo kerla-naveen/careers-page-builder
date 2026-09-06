@@ -28,8 +28,8 @@ async function createCompany(data) {
     slug: cleanSlug,
     primaryColor: primaryColor || '#2563eb',
     accentColor: accentColor || '#3b82f6',
-    backgroundColor: backgroundColor || '#0f172a',
-    textColor: textColor || '#f8fafc',
+    backgroundColor: backgroundColor || '#FAFAF9',
+    textColor: textColor || '#18181B',
     description: description || '',
     website: website || '',
   });

@@ -403,8 +403,8 @@ export default function RecruiterDashboard() {
   const previewBrandStyles = {
     '--brand-primary': company.primaryColor || '#2563eb',
     '--brand-accent': company.accentColor || '#3b82f6',
-    '--brand-bg': company.backgroundColor || '#0f172a',
-    '--brand-text': company.textColor || '#f8fafc',
+    '--brand-bg': company.backgroundColor || '#FAFAF9',
+    '--brand-text': company.textColor || '#18181B',
     fontFamily: company.fontFamily ? `'${company.fontFamily}', sans-serif` : "'Outfit', sans-serif",
   };
 
@@ -653,7 +653,7 @@ export default function RecruiterDashboard() {
                     <input
                       type="color"
                       className="w-8 h-8 border-none rounded-lg cursor-pointer bg-none"
-                      value={company.backgroundColor || '#0f172a'}
+                      value={company.backgroundColor || '#FAFAF9'}
                       onChange={(e) => handleMetaChange('backgroundColor', e.target.value)}
                     />
                     <div>
@@ -666,7 +666,7 @@ export default function RecruiterDashboard() {
                     <input
                       type="color"
                       className="w-8 h-8 border-none rounded-lg cursor-pointer bg-none"
-                      value={company.textColor || '#f8fafc'}
+                      value={company.textColor || '#18181B'}
                       onChange={(e) => handleMetaChange('textColor', e.target.value)}
                     />
                     <div>

@@ -28,10 +28,10 @@ export default function JobDetailPage({ company, job, error }) {
   )}:wght@400;500;600;700;800&display=swap`;
 
   const brandStyles = {
-    '--brand-primary': company.primaryColor || '#6366f1',
-    '--brand-accent': company.accentColor || '#38bdf8',
-    '--brand-bg': company.backgroundColor || '#0b0f19',
-    '--brand-text': company.textColor || '#f8fafc',
+    '--brand-primary': company.primaryColor || '#2563eb',
+    '--brand-accent': company.accentColor || '#3b82f6',
+    '--brand-bg': company.backgroundColor || '#FAFAF9',
+    '--brand-text': company.textColor || '#18181B',
     fontFamily: `"${fontName}", sans-serif`,
   };
 

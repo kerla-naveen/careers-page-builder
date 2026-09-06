@@ -17,9 +17,9 @@ import { generateCompanySchema } from '../../utils/seoHelper';
 export default function CompanyPage({ company, jobs, error }) {
   if (error) {
     return (
-      <div style={{ padding: '4rem 2rem', textAlign: 'center', fontFamily: 'sans-serif', background: '#0f172a', color: '#f8fafc', minHeight: '100vh' }}>
+      <div style={{ padding: '4rem 2rem', textAlign: 'center', fontFamily: 'sans-serif', background: '#FAFAF9', color: '#18181B', minHeight: '100vh' }}>
         <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>⚠️ Careers Page Unavailable</h1>
-        <p style={{ color: '#94a3b8' }}>{error}</p>
+        <p style={{ color: '#71717A' }}>{error}</p>
       </div>
     );
   }
@@ -28,8 +28,8 @@ export default function CompanyPage({ company, jobs, error }) {
   const brandStyles = {
     '--brand-primary': company.primaryColor || '#2563eb',
     '--brand-accent': company.accentColor || '#3b82f6',
-    '--brand-bg': company.backgroundColor || '#0f172a',
-    '--brand-text': company.textColor || '#f8fafc',
+    '--brand-bg': company.backgroundColor || '#FAFAF9',
+    '--brand-text': company.textColor || '#18181B',
     '--brand-radius': company.borderRadius || '16px',
     fontFamily: company.fontFamily ? `'${company.fontFamily}', sans-serif` : "'Outfit', sans-serif",
   };

@@ -407,14 +407,14 @@ export default function EditorLeftSidebar({
                 <input
                   type="color"
                   className="w-8 h-8 rounded-lg border border-slate-300 cursor-pointer p-0 overflow-hidden shrink-0"
-                  value={company?.backgroundColor || '#0f172a'}
+                  value={company?.backgroundColor || '#FAFAF9'}
                   onChange={(e) => handleDesignChange('backgroundColor', e.target.value)}
                 />
                 <span className="flex-1 text-xs font-medium text-slate-700">Background</span>
                 <input
                   type="text"
                   className="w-24 px-2.5 py-1.5 border border-slate-200 rounded-md text-xs font-mono text-slate-800 bg-white outline-none focus:border-blue-500"
-                  value={company?.backgroundColor || '#0f172a'}
+                  value={company?.backgroundColor || '#FAFAF9'}
                   onChange={(e) => handleDesignChange('backgroundColor', e.target.value)}
                 />
               </div>
@@ -423,14 +423,14 @@ export default function EditorLeftSidebar({
                 <input
                   type="color"
                   className="w-8 h-8 rounded-lg border border-slate-300 cursor-pointer p-0 overflow-hidden shrink-0"
-                  value={company?.textColor || '#f8fafc'}
+                  value={company?.textColor || '#18181B'}
                   onChange={(e) => handleDesignChange('textColor', e.target.value)}
                 />
                 <span className="flex-1 text-xs font-medium text-slate-700">Text Color</span>
                 <input
                   type="text"
                   className="w-24 px-2.5 py-1.5 border border-slate-200 rounded-md text-xs font-mono text-slate-800 bg-white outline-none focus:border-blue-500"
-                  value={company?.textColor || '#f8fafc'}
+                  value={company?.textColor || '#18181B'}
                   onChange={(e) => handleDesignChange('textColor', e.target.value)}
                 />
               </div>

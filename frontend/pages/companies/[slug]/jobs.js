@@ -20,8 +20,8 @@ export default function DedicatedJobsPage({ company, jobs, error }) {
   const brandStyles = {
     '--brand-primary': company.primaryColor || '#2563eb',
     '--brand-accent': company.accentColor || '#3b82f6',
-    '--brand-bg': company.backgroundColor || '#0f172a',
-    '--brand-text': company.textColor || '#f8fafc',
+    '--brand-bg': company.backgroundColor || '#FAFAF9',
+    '--brand-text': company.textColor || '#18181B',
   };
 
   // Generate JSON-LD Schema for Job Postings list

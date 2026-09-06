@@ -1,5 +1,16 @@
 export const THEME_PRESETS = [
   {
+    id: 'clean-saas',
+    name: 'Clean SaaS',
+    badge: '✨ Default',
+    primaryColor: '#2563eb',
+    accentColor: '#3b82f6',
+    backgroundColor: '#FAFAF9',
+    textColor: '#18181B',
+    fontFamily: 'Outfit',
+    borderRadius: '12px',
+  },
+  {
     id: 'modern-tech',
     name: 'Modern Tech',
     badge: '🔮 Cyber',

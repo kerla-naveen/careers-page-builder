@@ -188,8 +188,8 @@ export default function EditorCanvas({
     return {
       '--brand-primary': company.primaryColor || '#2563eb',
       '--brand-accent': company.accentColor || '#3b82f6',
-      '--brand-bg': company.backgroundColor || '#0f172a',
-      '--brand-text': company.textColor || '#f8fafc',
+      '--brand-bg': company.backgroundColor || '#FAFAF9',
+      '--brand-text': company.textColor || '#18181B',
       '--brand-radius': company.borderRadius || '16px',
       fontFamily: company.fontFamily
         ? `'${company.fontFamily}', sans-serif`
