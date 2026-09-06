@@ -335,6 +335,42 @@ To prevent recruiters from losing track of what section they are editing:
 - Whenever a section is clicked in the left tree or right inspector, `selectedSectionId` changes.
 - An internal `useEffect` triggers `scrollIntoView({ behavior: 'smooth', block: 'center' })`, instantly centering the middle canvas on the exact section being modified.
 
+
+
+---
+
+## 2.3 🔍 How We Designed Job Pages for Search Engine Optimization (SEO)
+
+### 💬 Why We Built It This Way
+
+Most candidates start looking for jobs on Google. If a careers builder opens jobs inside popups or relies purely on client-side JavaScript, Google won't index those jobs. Companies miss out on candidates simply because Google can't "see" the positions!
+
+We wanted every job posted on our platform to show up directly on **Google Search, Google Jobs, and social media feeds (LinkedIn, Twitter, WhatsApp)** without any extra effort from recruiters.
+
+---
+
+### 💡 Simple Breakdown: How It Works & What We Did
+
+1. **Server-Side Rendering (Pre-made Web Pages for Google)**
+   - **Why**: Google's web crawler prefers complete web pages over empty scripts.
+   - **How**: We use Next.js `getServerSideProps`. When Google visits a job link, our server fetches the job details from MongoDB and hands Google a fully built HTML page right away.
+
+2. **Google Jobs Integration (Built-in Job Ticket)**
+   - **Why**: To get our job postings listed directly inside Google's blue "Jobs" box on search results.
+   - **How**: We automatically attach a small JSON snippet (`JobPosting` schema via [`utils/seoHelper.js`](file:///home/naveen-kerla/Pictures/careers-page-builder/frontend/utils/seoHelper.js)) to every job page. It tells Google the exact title, location, salary range, workplace policy (e.g. Remote), and company name.
+
+3. **Unique Web Address (URL) for Every Job**
+   - **Why**: Modal popups can't be bookmarked, indexed, or shared.
+   - **How**: Every position gets its own clean, shareable web link (e.g., `/companies/workable/jobs/senior-react-developer`).
+
+4. **Rich Social Media Preview Cards (OpenGraph)**
+   - **Why**: When someone pastes a job link on LinkedIn or WhatsApp, it should look professional with a preview image, title, and description instead of a plain link.
+   - **How**: We dynamically inject OpenGraph meta tags (`og:title`, `og:image`, `og:description`) into the top of every page.
+
+5. **Clean HTML Structure (Easy for Search Engines to Read)**
+   - **Why**: Search engines give better rankings to clear, well-structured pages.
+   - **How**: We use standard HTML tags like single `<h1>` headers, breadcrumb links, and semantic `<article>` tags.
+
 ---
 
 ## 3. 🗄️ Database Schemas (Mongoose / MongoDB)
