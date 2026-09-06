@@ -12,7 +12,7 @@ const app = express();
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "https://careers-page-builder-zjj8.onrender.com",
+    "https://careers-page-builder-six.vercel.app",
   ],
 };
 
