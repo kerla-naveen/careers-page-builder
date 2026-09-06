@@ -179,11 +179,3 @@ On the public careers page, job seekers get:
 
 ### 🔍 Search Engine Optimization (Google Jobs)
 Every published job posting automatically generates **Schema.org `JobPosting` JSON-LD structured data**. This means your open positions are structured for indexing by **Google Jobs**, LinkedIn, and search engines out-of-the-box!
-
----
-
-## 💡 Quick Tips & Troubleshooting
-
-- **Forgot your password?**: Contact your system administrator or use the demo credentials (`recruiter@workable.com` / `password123`).
-- **Live page not updating?**: Make sure to click **"🚀 Publish"** in the top bar of the editor to push your latest draft changes live!
-- **Need help with styling?**: Try selecting a pre-configured font like *Outfit* or *Inter* and paired brand colors in the **Design Tab**.

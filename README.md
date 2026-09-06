@@ -1,6 +1,6 @@
 # Careers Page Builder & Recruiter Studio 🚀
 
-A full-stack, enterprise-grade **Careers Page Builder & Recruiter Studio** built with **Next.js 14**, **Tailwind CSS v4**, **Node.js / Express**, and **MongoDB**. 
+A full-stack **Careers Page Builder & Recruiter Studio** built with **Next.js 14**, **Tailwind CSS v4**, **Node.js / Express**, and **MongoDB**. 
 
 This application enables **Recruiters** to dynamically build, customize, brand, and publish interactive careers pages (with real-time live previews, section reordering, theme customization, and job management), while providing **Candidates** with a candidate experience to search, filter, and apply for open positions.
 
