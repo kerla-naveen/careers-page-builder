@@ -137,13 +137,13 @@ export default function EditorTopBar({
         <div className="w-[1px] h-5 bg-slate-200 mx-1"></div>
         <nav className="flex gap-1">
           <Link
-            href="/editor"
+            href={company?.slug ? `/editor/${company.slug}` : "/editor"}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-all"
           >
             <UilPalette size={16} /> Careers Page
           </Link>
           <Link
-            href="/jobs"
+            href={company?.slug ? `/${company.slug}/jobs` : "/jobs"}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-100 hover:text-slate-900 transition-all"
           >
             <UilBriefcase size={16} /> Jobs

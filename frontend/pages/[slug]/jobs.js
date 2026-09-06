@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useAuth } from '../context/AuthContext';
-import JobEditorModal from '../components/editor/JobEditorModal';
+import { useAuth } from '../../context/AuthContext';
+import JobEditorModal from '../../components/editor/JobEditorModal';
 import {
   UilBriefcase,
   UilPalette,
@@ -32,6 +32,7 @@ const STATUS_BADGES = {
 
 export default function JobsManagementPage() {
   const router = useRouter();
+  const { slug } = router.query;
   const { user, token, loading: authLoading, logout } = useAuth();
 
   const [companySlug, setCompanySlug] = useState('');
@@ -78,17 +79,17 @@ export default function JobsManagementPage() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // Redirect if not logged in
+  // Redirect if not logged in & set company slug
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/login');
     } else if (user) {
-      const slug = user.company?.slug || user.companySlug || '';
-      if (slug) {
-        setCompanySlug(slug);
+      const activeSlug = (slug && typeof slug === 'string') ? slug : (user.company?.slug || user.companySlug || '');
+      if (activeSlug) {
+        setCompanySlug(activeSlug);
       }
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, slug]);
 
   // Debounce search input
   useEffect(() => {
@@ -341,10 +342,10 @@ export default function JobsManagementPage() {
           <div className="h-6 w-px bg-slate-200" />
 
           <nav className="flex gap-1.5">
-            <Link href="/editor" className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-1.5 no-underline">
+            <Link href={companySlug ? `/editor/${companySlug}` : "/editor"} className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-1.5 no-underline">
               <UilPalette size={16} /> Careers Page
             </Link>
-            <Link href="/jobs" className="px-4 py-2 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 flex items-center gap-1.5 no-underline">
+            <Link href={companySlug ? `/${companySlug}/jobs` : "/jobs"} className="px-4 py-2 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 flex items-center gap-1.5 no-underline">
               <UilBriefcase size={16} /> Jobs
             </Link>
           </nav>
@@ -895,18 +896,3 @@ export default function JobsManagementPage() {
     </div>
   );
 }
-
-const menuItemStyle = {
-  width: '100%',
-  padding: '8px 14px',
-  background: 'transparent',
-  border: 'none',
-  textAlign: 'left',
-  fontSize: '13px',
-  color: '#334155',
-  fontWeight: 500,
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-};

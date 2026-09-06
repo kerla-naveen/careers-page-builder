@@ -205,7 +205,7 @@ export default function CareersEditorPage() {
         viewportMode={viewportMode}
         onViewportChange={setViewportMode}
         onToggleMobileSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
-        onOpenJobManager={() => router.push('/jobs')}
+        onOpenJobManager={() => router.push(slug ? `/${slug}/jobs` : '/jobs')}
         onSave={saveToBackend}
         onPublish={publishToBackend}
         onCopyPublicLink={() => showToast('📋 Copied public careers page link to clipboard!', 'info')}
