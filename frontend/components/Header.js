@@ -36,20 +36,20 @@ export default function Header({ company, showRecruiterLink = false }) {
           : 'py-5'
       }`}
     >
-      <div className="max-w-[1200px] mx-auto px-6 flex justify-between items-center">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 flex justify-between items-center">
         <Link
           href={`/companies/${company?.slug || 'workable'}`}
-          className="no-underline flex items-center transition-opacity hover:opacity-90"
+          className="no-underline flex items-center transition-opacity hover:opacity-90 min-w-0"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <CompanyLogoIcon company={company} size="md" />
-            <span className="font-outfit font-extrabold text-xl text-[var(--brand-text,#f8fafc)] tracking-tight">
+            <span className="font-outfit font-extrabold text-base sm:text-xl text-[var(--brand-text,#f8fafc)] tracking-tight truncate max-w-[120px] sm:max-w-none">
               {company?.name}
             </span>
           </div>
         </Link>
 
-        <nav className="flex items-center gap-4 sm:gap-6">
+        <nav className="flex items-center gap-2 sm:gap-6 shrink-0">
           {showRecruiterLink && (
             <Link
               href={`/dashboard/${company.slug || 'workable'}`}
@@ -71,7 +71,7 @@ export default function Header({ company, showRecruiterLink = false }) {
           )}
 
           <button
-            className="px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-inter font-semibold text-white bg-[var(--brand-primary,#6366f1)] border border-white/20 rounded-xl cursor-pointer transition-all hover:-translate-y-0.5 hover:brightness-110 shadow-md"
+            className="px-3 py-1.5 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-inter font-semibold text-white bg-[var(--brand-primary,#6366f1)] border border-white/20 rounded-xl cursor-pointer transition-all hover:-translate-y-0.5 hover:brightness-110 shadow-md shrink-0 whitespace-nowrap"
             onClick={handleViewJobsClick}
           >
             View All Openings

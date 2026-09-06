@@ -201,7 +201,7 @@ export default function EditorCanvas({
     'w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-300 transition-all duration-300',
     viewportMode === 'desktop' ? 'max-w-[1280px]' : '',
     viewportMode === 'tablet' ? 'max-w-[768px] mx-auto' : '',
-    viewportMode === 'mobile' ? 'max-w-[390px] mx-auto' : '',
+    viewportMode === 'mobile' ? 'max-w-[390px] mx-auto mobile-viewport-preview' : '',
   ].filter(Boolean).join(' ');
 
   if (!company) {

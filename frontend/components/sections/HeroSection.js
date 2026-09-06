@@ -36,11 +36,11 @@ export default function HeroSection({ content, bannerUrl }) {
             </div>
           )}
 
-          <h1 className="font-outfit text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+          <h1 className="font-outfit text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight break-words">
             {content?.headline || 'Build Your Career With Us'}
           </h1>
 
-          <p className="text-base sm:text-lg text-white/85 mb-8 max-w-[520px] leading-relaxed font-inter">
+          <p className="text-sm sm:text-lg text-white/85 mb-8 max-w-[520px] leading-relaxed font-inter">
             {content?.tagline || 'Join our team and shape the future.'}
           </p>
 

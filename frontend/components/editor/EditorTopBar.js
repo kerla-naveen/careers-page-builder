@@ -85,6 +85,8 @@ export default function EditorTopBar({
   onRedo,
   viewportMode,
   onViewportChange,
+  mobileWidth = '390px',
+  onMobileWidthChange,
   onToggleMobileSidebar,
   onOpenJobManager,
   onSave,

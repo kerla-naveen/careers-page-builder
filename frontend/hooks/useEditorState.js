@@ -13,6 +13,7 @@ export function useEditorState(slug, token) {
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [activeLeftTab, setActiveLeftTab] = useState('sections'); // 'sections' | 'design' | 'branding'
   const [viewportMode, setViewportMode] = useState('desktop'); // 'desktop' | 'tablet' | 'mobile'
+  const [mobileWidth, setMobileWidth] = useState('390px'); // '320px' | '375px' | '390px' | '414px'
 
   // Save state
   const [isSaving, setIsSaving] = useState(false);
@@ -251,6 +252,8 @@ export function useEditorState(slug, token) {
     setActiveLeftTab,
     viewportMode,
     setViewportMode,
+    mobileWidth,
+    setMobileWidth,
     updateCompany,
     setCompany,
     saveToBackend,

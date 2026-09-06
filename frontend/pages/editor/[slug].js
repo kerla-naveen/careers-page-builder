@@ -32,6 +32,8 @@ export default function CareersEditorPage() {
     setActiveLeftTab,
     viewportMode,
     setViewportMode,
+    mobileWidth,
+    setMobileWidth,
     updateCompany,
     saveToBackend,
     publishToBackend,
@@ -204,6 +206,8 @@ export default function CareersEditorPage() {
         onRedo={redo}
         viewportMode={viewportMode}
         onViewportChange={setViewportMode}
+        mobileWidth={mobileWidth}
+        onMobileWidthChange={setMobileWidth}
         onToggleMobileSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
         onOpenJobManager={() => router.push(slug ? `/${slug}/jobs` : '/jobs')}
         onSave={saveToBackend}
@@ -246,6 +250,7 @@ export default function CareersEditorPage() {
           company={company}
           jobs={jobs}
           viewportMode={viewportMode}
+          mobileWidth={mobileWidth}
           selectedSectionId={selectedSectionId}
           brandingFocusArea={brandingFocusArea}
           onSelectSection={(secId) => {
