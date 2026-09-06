@@ -107,91 +107,37 @@ export default function AddSectionModal({ isOpen, onClose, onAddSection }) {
     : SECTION_TEMPLATES.filter((s) => s.category === activeCategory);
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(15, 23, 42, 0.4)',
-      backdropFilter: 'blur(8px)',
-      zIndex: 9999,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '24px',
-    }}>
-      <div style={{
-        background: '#ffffff',
-        border: '1px solid #e2e8f0',
-        borderRadius: '16px',
-        width: '100%',
-        maxWidth: '840px',
-        maxHeight: '85vh',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.15)',
-      }}>
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[9999] flex items-center justify-center p-4 sm:p-6">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl">
         {/* Modal Header */}
-        <div style={{
-          padding: '20px 24px',
-          borderBottom: '1px solid #e2e8f0',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          background: '#f8fafc',
-        }}>
+        <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: '#0f172a' }}>
+            <h2 className="m-0 text-lg font-bold text-slate-900">
               Add Section to Careers Page
             </h2>
-            <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#64748b' }}>
+            <p className="m-0 mt-1 text-xs text-slate-500">
               Choose a section block to customize your company's careers site
             </p>
           </div>
           <button
             onClick={onClose}
-            style={{
-              background: '#e2e8f0',
-              border: 'none',
-              borderRadius: '50%',
-              width: '30px',
-              height: '30px',
-              color: '#475569',
-              fontSize: '18px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="bg-slate-200 hover:bg-slate-300 transition-colors border-none rounded-full w-7 h-7 text-slate-600 text-lg cursor-pointer flex items-center justify-center"
           >
             ×
           </button>
         </div>
 
         {/* Category Tabs */}
-        <div style={{
-          padding: '12px 24px',
-          borderBottom: '1px solid #e2e8f0',
-          display: 'flex',
-          gap: '8px',
-          overflowX: 'auto',
-          background: '#ffffff',
-        }}>
+        <div className="px-6 py-3 border-b border-slate-200 flex gap-2 overflow-x-auto bg-white">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              style={{
-                padding: '6px 14px',
-                borderRadius: '8px',
-                border: 'none',
-                background: activeCategory === cat ? '#2563eb' : '#f1f5f9',
-                color: activeCategory === cat ? '#ffffff' : '#64748b',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease',
-              }}
+              className={`px-3.5 py-1.5 rounded-lg border-none text-xs font-semibold cursor-pointer whitespace-nowrap transition-all ${
+                activeCategory === cat
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
             >
               {cat}
             </button>
@@ -199,14 +145,7 @@ export default function AddSectionModal({ isOpen, onClose, onAddSection }) {
         </div>
 
         {/* Templates Grid */}
-        <div style={{
-          padding: '24px',
-          overflowY: 'auto',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-          gap: '16px',
-          background: '#f8fafc',
-        }}>
+        <div className="p-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-slate-50">
           {filteredSections.map((item) => (
             <div
               key={item.type}
@@ -214,65 +153,28 @@ export default function AddSectionModal({ isOpen, onClose, onAddSection }) {
                 onAddSection(item.type);
                 onClose();
               }}
-              style={{
-                background: '#ffffff',
-                border: '1px solid #e2e8f0',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#2563eb';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(37, 99, 235, 0.15)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
+              className="bg-white border border-slate-200 hover:border-blue-600 hover:-translate-y-0.5 hover:shadow-lg rounded-xl overflow-hidden cursor-pointer transition-all flex flex-col"
             >
-              <div style={{ height: '110px', overflow: 'hidden', position: 'relative' }}>
+              <div className="h-28 overflow-hidden relative">
                 <img
                   src={item.previewImg}
                   alt={item.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  className="w-full h-full object-cover"
                 />
-                <span style={{
-                  position: 'absolute',
-                  top: '10px',
-                  left: '10px',
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  backdropFilter: 'blur(4px)',
-                  padding: '4px 8px',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-                }}>
+                <span className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-sm shadow-sm flex items-center justify-center">
                   {item.icon}
                 </span>
               </div>
-              <div style={{ padding: '14px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="p-3.5 flex-1 flex flex-col justify-between">
                 <div>
-                  <h4 style={{ margin: '0 0 4px', fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
+                  <h4 className="m-0 mb-1 text-sm font-semibold text-slate-900">
                     {item.name}
                   </h4>
-                  <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', lineHeight: 1.4 }}>
+                  <p className="m-0 text-xs text-slate-500 leading-relaxed">
                     {item.description}
                   </p>
                 </div>
-                <div style={{
-                  marginTop: '12px',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  color: '#2563eb',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}>
+                <div className="mt-3 text-xs font-semibold text-blue-600 flex items-center gap-1">
                   + Add Section →
                 </div>
               </div>

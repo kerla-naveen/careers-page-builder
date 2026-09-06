@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import styles from './Dashboard.module.css';
+
 
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -466,19 +466,29 @@ export default function RecruiterDashboard() {
   };
 
   return (
-    <div className={styles.dashboardLayout}>
+    <div className="min-h-screen bg-slate-950 text-slate-50 font-sans flex flex-col">
       <Head>
         <title>SaaS Recruiter Studio — {company.name}</title>
       </Head>
 
       {/* Toast Notification */}
-      {toast && <div className={styles.toast}>{toast}</div>}
+      {toast && (
+        <div className="fixed top-0 inset-x-0 z-[300] py-3 px-6 bg-emerald-600 text-white text-sm font-semibold text-center shadow-lg transition-all">
+          {toast}
+        </div>
+      )}
 
       {/* Top Navigation */}
-      <header className={styles.topNav}>
-        <div className={styles.brandBrand}>
-          <h1 className={styles.dashboardTitle}>⚙️ SaaS Recruiter Studio</h1>
-          <select className={styles.companySelect} value={slug} onChange={handleCompanyChange}>
+      <header className="flex items-center justify-between px-8 py-3.5 bg-slate-900/95 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
+        <div className="flex items-center gap-5">
+          <h1 className="font-outfit text-xl font-bold m-0 bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+            ⚙️ SaaS Recruiter Studio
+          </h1>
+          <select
+            className="px-4 py-2 rounded-xl bg-white/5 border border-white/15 text-slate-50 text-sm font-semibold outline-none cursor-pointer focus:border-indigo-500 [&>option]:bg-slate-900 [&>option]:text-slate-50"
+            value={slug}
+            onChange={handleCompanyChange}
+          >
             {companiesList.map((c) => (
               <option key={c.slug} value={c.slug}>
                 🏢 {c.name} ({c.slug})
@@ -487,33 +497,47 @@ export default function RecruiterDashboard() {
           </select>
         </div>
 
-        <div className={styles.navActions}>
-          <div className={styles.viewModeToggle}>
+        <div className="flex items-center gap-4">
+          <div className="flex bg-white/5 rounded-xl p-1 border border-white/10">
             <button
-              className={`${styles.modeBtn} ${viewMode === 'split' ? styles.activeMode : ''}`}
+              className={`px-3.5 py-1.5 rounded-lg bg-transparent border-none text-xs font-medium cursor-pointer transition-all ${
+                viewMode === 'split' ? 'bg-white/15 text-white font-semibold shadow-sm' : 'text-slate-400 hover:text-white'
+              }`}
               onClick={() => setViewMode('split')}
             >
               Split View
             </button>
             <button
-              className={`${styles.modeBtn} ${viewMode === 'edit' ? styles.activeMode : ''}`}
+              className={`px-3.5 py-1.5 rounded-lg bg-transparent border-none text-xs font-medium cursor-pointer transition-all ${
+                viewMode === 'edit' ? 'bg-white/15 text-white font-semibold shadow-sm' : 'text-slate-400 hover:text-white'
+              }`}
               onClick={() => setViewMode('edit')}
             >
               Editor Only
             </button>
             <button
-              className={`${styles.modeBtn} ${viewMode === 'preview' ? styles.activeMode : ''}`}
+              className={`px-3.5 py-1.5 rounded-lg bg-transparent border-none text-xs font-medium cursor-pointer transition-all ${
+                viewMode === 'preview' ? 'bg-white/15 text-white font-semibold shadow-sm' : 'text-slate-400 hover:text-white'
+              }`}
               onClick={() => setViewMode('preview')}
             >
               Live Preview
             </button>
           </div>
 
-          <Link href={`/companies/${company.slug}`} target="_blank" className={styles.livePageLink}>
+          <Link
+            href={`/companies/${company.slug}`}
+            target="_blank"
+            className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sky-400 text-sm font-semibold no-underline inline-flex items-center gap-1.5 hover:bg-sky-400/10 transition-colors"
+          >
             <span>Live Page</span> ↗
           </Link>
 
-          <button className={styles.saveBtn} onClick={handleSave} disabled={isSaving}>
+          <button
+            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 border-none text-white text-sm font-semibold cursor-pointer inline-flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:opacity-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            onClick={handleSave}
+            disabled={isSaving}
+          >
             {isSaving ? 'Saving...' : '💾 Save & Publish'}
           </button>
         </div>
@@ -521,41 +545,55 @@ export default function RecruiterDashboard() {
 
       {/* Split Screen Workspace */}
       <div
-        className={`${styles.mainContainer} ${
-          viewMode === 'edit' ? styles.fullEdit : viewMode === 'preview' ? styles.fullPreview : ''
-        }`}
+        className={`grid flex-1 ${
+          viewMode === 'edit'
+            ? 'grid-cols-1'
+            : viewMode === 'preview'
+            ? 'grid-cols-1'
+            : 'grid-cols-1 lg:grid-cols-[520px_1fr]'
+        } h-[calc(100vh-65px)] overflow-hidden`}
       >
         {/* LEFT PANEL: Recruiter CMS Editor */}
         {viewMode !== 'preview' && (
-          <aside className={styles.editorSidebar}>
+          <aside className="bg-slate-900 border-r border-white/10 overflow-y-auto p-6 flex flex-col gap-6">
             {/* Tabbed Navigation */}
-            <div className={styles.tabNav}>
+            <div className="flex bg-white/5 rounded-xl p-1 border border-white/10 gap-1">
               <button
-                className={`${styles.tabBtn} ${activeTab === 'design' ? styles.activeTab : ''}`}
+                className={`flex-1 py-2 px-1 rounded-lg bg-transparent border-none text-xs font-semibold cursor-pointer transition-all text-center ${
+                  activeTab === 'design' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                }`}
                 onClick={() => setActiveTab('design')}
               >
                 🎨 Design
               </button>
               <button
-                className={`${styles.tabBtn} ${activeTab === 'info' ? styles.activeTab : ''}`}
+                className={`flex-1 py-2 px-1 rounded-lg bg-transparent border-none text-xs font-semibold cursor-pointer transition-all text-center ${
+                  activeTab === 'info' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                }`}
                 onClick={() => setActiveTab('info')}
               >
                 🏢 Info
               </button>
               <button
-                className={`${styles.tabBtn} ${activeTab === 'content' ? styles.activeTab : ''}`}
+                className={`flex-1 py-2 px-1 rounded-lg bg-transparent border-none text-xs font-semibold cursor-pointer transition-all text-center ${
+                  activeTab === 'content' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                }`}
                 onClick={() => setActiveTab('content')}
               >
                 📑 Content
               </button>
               <button
-                className={`${styles.tabBtn} ${activeTab === 'jobs' ? styles.activeTab : ''}`}
+                className={`flex-1 py-2 px-1 rounded-lg bg-transparent border-none text-xs font-semibold cursor-pointer transition-all text-center ${
+                  activeTab === 'jobs' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                }`}
                 onClick={() => setActiveTab('jobs')}
               >
                 💼 Jobs ({jobs.length})
               </button>
               <button
-                className={`${styles.tabBtn} ${activeTab === 'create' ? styles.activeTab : ''}`}
+                className={`flex-1 py-2 px-1 rounded-lg bg-transparent border-none text-xs font-semibold cursor-pointer transition-all text-center ${
+                  activeTab === 'create' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                }`}
                 onClick={() => setActiveTab('create')}
               >
                 ➕ New
@@ -564,13 +602,13 @@ export default function RecruiterDashboard() {
 
             {/* TAB 1: Design & Fonts */}
             {activeTab === 'design' && (
-              <div className={styles.panelSection}>
-                <h3 className={styles.panelTitle}>🎨 Theme Colors & Typography</h3>
+              <div className="bg-white/[0.025] border border-white/10 rounded-2xl p-5 flex flex-col gap-5">
+                <h3 className="font-outfit text-base font-bold text-slate-50 m-0 flex items-center gap-2">🎨 Theme Colors & Typography</h3>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Font Family (Google Fonts)</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Font Family (Google Fonts)</label>
                   <select
-                    className={styles.select}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors cursor-pointer [&>option]:bg-slate-900 [&>option]:text-slate-50"
                     value={company.fontFamily || 'Outfit'}
                     onChange={(e) => handleMetaChange('fontFamily', e.target.value)}
                   >
@@ -583,56 +621,56 @@ export default function RecruiterDashboard() {
                   </select>
                 </div>
 
-                <div className={styles.colorsGrid}>
-                  <div className={styles.colorItem}>
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div className="flex items-center gap-2.5 p-2 px-3 bg-white/5 border border-white/10 rounded-xl">
                     <input
                       type="color"
-                      className={styles.colorPicker}
+                      className="w-8 h-8 border-none rounded-lg cursor-pointer bg-none"
                       value={company.primaryColor || '#2563eb'}
                       onChange={(e) => handleMetaChange('primaryColor', e.target.value)}
                     />
                     <div>
-                      <span className={styles.label}>Primary</span>
-                      <div className={styles.colorHex}>{company.primaryColor}</div>
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Primary</span>
+                      <div className="font-mono text-xs text-slate-300">{company.primaryColor}</div>
                     </div>
                   </div>
 
-                  <div className={styles.colorItem}>
+                  <div className="flex items-center gap-2.5 p-2 px-3 bg-white/5 border border-white/10 rounded-xl">
                     <input
                       type="color"
-                      className={styles.colorPicker}
+                      className="w-8 h-8 border-none rounded-lg cursor-pointer bg-none"
                       value={company.accentColor || '#3b82f6'}
                       onChange={(e) => handleMetaChange('accentColor', e.target.value)}
                     />
                     <div>
-                      <span className={styles.label}>Accent</span>
-                      <div className={styles.colorHex}>{company.accentColor}</div>
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Accent</span>
+                      <div className="font-mono text-xs text-slate-300">{company.accentColor}</div>
                     </div>
                   </div>
 
-                  <div className={styles.colorItem}>
+                  <div className="flex items-center gap-2.5 p-2 px-3 bg-white/5 border border-white/10 rounded-xl">
                     <input
                       type="color"
-                      className={styles.colorPicker}
+                      className="w-8 h-8 border-none rounded-lg cursor-pointer bg-none"
                       value={company.backgroundColor || '#0f172a'}
                       onChange={(e) => handleMetaChange('backgroundColor', e.target.value)}
                     />
                     <div>
-                      <span className={styles.label}>Background</span>
-                      <div className={styles.colorHex}>{company.backgroundColor}</div>
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Background</span>
+                      <div className="font-mono text-xs text-slate-300">{company.backgroundColor}</div>
                     </div>
                   </div>
 
-                  <div className={styles.colorItem}>
+                  <div className="flex items-center gap-2.5 p-2 px-3 bg-white/5 border border-white/10 rounded-xl">
                     <input
                       type="color"
-                      className={styles.colorPicker}
+                      className="w-8 h-8 border-none rounded-lg cursor-pointer bg-none"
                       value={company.textColor || '#f8fafc'}
                       onChange={(e) => handleMetaChange('textColor', e.target.value)}
                     />
                     <div>
-                      <span className={styles.label}>Text</span>
-                      <div className={styles.colorHex}>{company.textColor}</div>
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Text</span>
+                      <div className="font-mono text-xs text-slate-300">{company.textColor}</div>
                     </div>
                   </div>
                 </div>
@@ -641,110 +679,110 @@ export default function RecruiterDashboard() {
 
             {/* TAB 2: Company Info & Social Links */}
             {activeTab === 'info' && (
-              <div className={styles.panelSection}>
-                <h3 className={styles.panelTitle}>🏢 Company Profile & Links</h3>
+              <div className="bg-white/[0.025] border border-white/10 rounded-2xl p-5 flex flex-col gap-5">
+                <h3 className="font-outfit text-base font-bold text-slate-50 m-0 flex items-center gap-2">🏢 Company Profile & Links</h3>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Company Name</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Company Name</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     value={company.name || ''}
                     onChange={(e) => handleMetaChange('name', e.target.value)}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Description</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Description</label>
                   <textarea
-                    className={styles.textarea}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors resize-y min-h-[90px]"
                     value={company.description || ''}
                     onChange={(e) => handleMetaChange('description', e.target.value)}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Official Website URL</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Official Website URL</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     value={company.website || ''}
                     onChange={(e) => handleMetaChange('website', e.target.value)}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>YouTube / Vimeo Video URL</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">YouTube / Vimeo Video URL</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     value={company.videoUrl || ''}
                     onChange={(e) => handleMetaChange('videoUrl', e.target.value)}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Logo URL</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Logo URL</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     value={company.logoUrl || ''}
                     onChange={(e) => handleMetaChange('logoUrl', e.target.value)}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Banner Image URL</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Banner Image URL</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     value={company.bannerUrl || ''}
                     onChange={(e) => handleMetaChange('bannerUrl', e.target.value)}
                   />
                 </div>
 
-                <h4 style={{ color: '#38bdf8', margin: '1rem 0 0.5rem 0', fontSize: '0.95rem' }}>
+                <h4 className="text-sky-400 mt-4 mb-2 text-sm font-semibold">
                   🔗 Social Media Links
                 </h4>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>LinkedIn URL</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">LinkedIn URL</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="https://linkedin.com/company/..."
                     value={company.socialLinks?.linkedin || ''}
                     onChange={(e) => handleSocialChange('linkedin', e.target.value)}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Twitter / X URL</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Twitter / X URL</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="https://twitter.com/..."
                     value={company.socialLinks?.twitter || ''}
                     onChange={(e) => handleSocialChange('twitter', e.target.value)}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>GitHub URL</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">GitHub URL</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="https://github.com/..."
                     value={company.socialLinks?.github || ''}
                     onChange={(e) => handleSocialChange('github', e.target.value)}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Glassdoor URL</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Glassdoor URL</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="https://glassdoor.com/..."
                     value={company.socialLinks?.glassdoor || ''}
                     onChange={(e) => handleSocialChange('glassdoor', e.target.value)}
@@ -755,15 +793,15 @@ export default function RecruiterDashboard() {
 
             {/* TAB 3: Deep Content Builder */}
             {activeTab === 'content' && (
-              <div className={styles.panelSection}>
-                <div className={styles.panelHeaderRow}>
-                  <h3 className={styles.panelTitle}>📑 Deep Section Builder</h3>
+              <div className="bg-white/[0.025] border border-white/10 rounded-2xl p-5 flex flex-col gap-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-outfit text-base font-bold text-slate-50 m-0 flex items-center gap-2">📑 Deep Section Builder</h3>
                 </div>
 
                 {/* Add Section Bar */}
-                <div className={styles.addSectionBar}>
+                <div className="flex items-center gap-2 pb-2">
                   <select
-                    className={styles.addSectionSelect}
+                    className="flex-1 p-2 rounded-lg bg-white/5 border border-white/15 text-slate-50 text-xs outline-none [&>option]:bg-slate-900"
                     value={newSectionType}
                     onChange={(e) => setNewSectionType(e.target.value)}
                   >
@@ -773,23 +811,23 @@ export default function RecruiterDashboard() {
                     <option value="PERKS">Perks & Benefits Section</option>
                     <option value="JOBS">Jobs & Roles Section</option>
                   </select>
-                  <button className={styles.addBtn} onClick={handleAddSection}>
+                  <button className="px-4 py-2 rounded-lg bg-emerald-500 border-none text-white font-semibold text-xs cursor-pointer hover:bg-emerald-600 transition-colors" onClick={handleAddSection}>
                     + Add Section
                   </button>
                 </div>
 
                 {/* Sections List */}
-                <div className={styles.sectionsList}>
+                <div className="flex flex-col gap-4">
                   {company.sections?.map((section, idx) => (
-                    <div key={idx} className={styles.sectionCard}>
-                      <div className={styles.sectionCardHeader}>
-                        <span className={styles.sectionTypeBadge}>
+                    <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-outfit text-xs font-bold uppercase tracking-wider text-sky-400 flex items-center gap-2">
                           <span>{idx + 1}.</span> {section.type}
                         </span>
 
-                        <div className={styles.cardControls}>
+                        <div className="flex items-center gap-1.5">
                           <button
-                            className={styles.reorderBtn}
+                            className="px-2 py-1 bg-white/5 border border-white/10 rounded-md text-slate-300 cursor-pointer text-xs hover:bg-white/15 disabled:opacity-30 disabled:cursor-not-allowed"
                             onClick={() => moveSection(idx, 'up')}
                             disabled={idx === 0}
                             title="Move Up"
@@ -797,7 +835,7 @@ export default function RecruiterDashboard() {
                             ▲
                           </button>
                           <button
-                            className={styles.reorderBtn}
+                            className="px-2 py-1 bg-white/5 border border-white/10 rounded-md text-slate-300 cursor-pointer text-xs hover:bg-white/15 disabled:opacity-30 disabled:cursor-not-allowed"
                             onClick={() => moveSection(idx, 'down')}
                             disabled={idx === company.sections.length - 1}
                             title="Move Down"
@@ -805,17 +843,18 @@ export default function RecruiterDashboard() {
                             ▼
                           </button>
 
-                          <label className={styles.toggleSwitch} title="Toggle Visibility">
+                          <label className="relative inline-block w-10 h-5 cursor-pointer" title="Toggle Visibility">
                             <input
                               type="checkbox"
+                              className="peer sr-only"
                               checked={section.isVisible}
                               onChange={() => toggleVisibility(idx)}
                             />
-                            <span className={styles.slider}></span>
+                            <span className="absolute inset-0 bg-white/15 peer-checked:bg-emerald-500 transition-all rounded-full before:absolute before:content-[''] before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all peer-checked:before:translate-x-5"></span>
                           </label>
 
                           <button
-                            className={styles.deleteBtn}
+                            className="px-2 py-1 bg-red-500/15 border border-red-500/30 rounded-md text-red-300 cursor-pointer text-xs hover:bg-red-600 hover:text-white transition-colors"
                             onClick={() => deleteSection(idx)}
                             title="Delete Section"
                           >
@@ -825,21 +864,21 @@ export default function RecruiterDashboard() {
                       </div>
 
                       {/* Header Inputs */}
-                      <div className={styles.fieldGroup}>
-                        <label className={styles.label}>Section Title</label>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Section Title</label>
                         <input
                           type="text"
-                          className={styles.input}
+                          className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                           value={section.title || ''}
                           onChange={(e) => updateSectionField(idx, 'title', e.target.value)}
                         />
                       </div>
 
-                      <div className={styles.fieldGroup}>
-                        <label className={styles.label}>Section Subtitle</label>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Section Subtitle</label>
                         <input
                           type="text"
-                          className={styles.input}
+                          className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                           value={section.subtitle || ''}
                           onChange={(e) => updateSectionField(idx, 'subtitle', e.target.value)}
                         />
@@ -847,47 +886,47 @@ export default function RecruiterDashboard() {
 
                       {/* Section Specific Content Array Editors */}
                       {section.type === 'HERO' && (
-                        <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Hero Badge Text</label>
+                        <div className="mt-2 flex flex-col gap-2.5">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Hero Badge Text</label>
                             <input
                               type="text"
-                              className={styles.input}
+                              className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                               value={section.content?.badgeText || ''}
                               onChange={(e) => updateSectionContentField(idx, 'badgeText', e.target.value)}
                             />
                           </div>
 
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Headline</label>
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Headline</label>
                             <input
                               type="text"
-                              className={styles.input}
+                              className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                               value={section.content?.headline || ''}
                               onChange={(e) => updateSectionContentField(idx, 'headline', e.target.value)}
                             />
                           </div>
 
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Tagline</label>
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tagline</label>
                             <input
                               type="text"
-                              className={styles.input}
+                              className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                               value={section.content?.tagline || ''}
                               onChange={(e) => updateSectionContentField(idx, 'tagline', e.target.value)}
                             />
                           </div>
 
                           {/* Hero Stats Array */}
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Hero Key Stats Badges</label>
-                            <div className={styles.arrayItemsContainer}>
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Hero Key Stats Badges</label>
+                            <div className="flex flex-col gap-3 mt-2">
                               {(section.content?.stats || []).map((st, stIdx) => (
-                                <div key={stIdx} className={styles.arrayCard}>
-                                  <div className={styles.arrayCardHeader}>
+                                <div key={stIdx} className="bg-black/20 border border-white/5 rounded-xl p-3.5 flex flex-col gap-2 relative">
+                                  <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                                     <span>Stat #{stIdx + 1}</span>
                                     <button
-                                      className={styles.removeArrayItemBtn}
+                                      className="bg-transparent border-none text-red-400 cursor-pointer text-xs p-0 hover:text-red-300"
                                       onClick={() => removeArrayItem(idx, 'stats', stIdx)}
                                     >
                                       ✕ Remove
@@ -895,7 +934,7 @@ export default function RecruiterDashboard() {
                                   </div>
                                   <input
                                     type="text"
-                                    className={styles.input}
+                                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                                     placeholder="Value (e.g. 27,000+)"
                                     value={st.value || ''}
                                     onChange={(e) =>
@@ -904,7 +943,7 @@ export default function RecruiterDashboard() {
                                   />
                                   <input
                                     type="text"
-                                    className={styles.input}
+                                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                                     placeholder="Label (e.g. Companies)"
                                     value={st.label || ''}
                                     onChange={(e) =>
@@ -914,7 +953,7 @@ export default function RecruiterDashboard() {
                                 </div>
                               ))}
                               <button
-                                className={styles.addArrayItemBtn}
+                                className="px-3.5 py-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-semibold cursor-pointer self-start mt-1 hover:bg-indigo-500/25 transition-colors"
                                 onClick={() =>
                                   addArrayItem(idx, 'stats', { value: '100+', label: 'New Metric' })
                                 }
@@ -927,11 +966,11 @@ export default function RecruiterDashboard() {
                       )}
 
                       {section.type === 'ABOUT' && (
-                        <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Story (Multi-paragraph)</label>
+                        <div className="mt-2 flex flex-col gap-2.5">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Story (Multi-paragraph)</label>
                             <textarea
-                              className={styles.textarea}
+                              className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors resize-y min-h-[90px]"
                               rows={5}
                               value={section.content?.story || ''}
                               onChange={(e) => updateSectionContentField(idx, 'story', e.target.value)}
@@ -939,15 +978,15 @@ export default function RecruiterDashboard() {
                           </div>
 
                           {/* About Stats Array */}
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Company Milestones / Stats</label>
-                            <div className={styles.arrayItemsContainer}>
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Company Milestones / Stats</label>
+                            <div className="flex flex-col gap-3 mt-2">
                               {(section.content?.stats || []).map((st, stIdx) => (
-                                <div key={stIdx} className={styles.arrayCard}>
-                                  <div className={styles.arrayCardHeader}>
+                                <div key={stIdx} className="bg-black/20 border border-white/5 rounded-xl p-3.5 flex flex-col gap-2 relative">
+                                  <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                                     <span>Milestone #{stIdx + 1}</span>
                                     <button
-                                      className={styles.removeArrayItemBtn}
+                                      className="bg-transparent border-none text-red-400 cursor-pointer text-xs p-0 hover:text-red-300"
                                       onClick={() => removeArrayItem(idx, 'stats', stIdx)}
                                     >
                                       ✕ Remove
@@ -955,7 +994,7 @@ export default function RecruiterDashboard() {
                                   </div>
                                   <input
                                     type="text"
-                                    className={styles.input}
+                                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                                     placeholder="Value (e.g. 2012)"
                                     value={st.value || ''}
                                     onChange={(e) =>
@@ -964,7 +1003,7 @@ export default function RecruiterDashboard() {
                                   />
                                   <input
                                     type="text"
-                                    className={styles.input}
+                                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                                     placeholder="Label (e.g. Founded)"
                                     value={st.label || ''}
                                     onChange={(e) =>
@@ -974,7 +1013,7 @@ export default function RecruiterDashboard() {
                                 </div>
                               ))}
                               <button
-                                className={styles.addArrayItemBtn}
+                                className="px-3.5 py-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-semibold cursor-pointer self-start mt-1 hover:bg-indigo-500/25 transition-colors"
                                 onClick={() =>
                                   addArrayItem(idx, 'stats', { value: '2024', label: 'Milestone' })
                                 }
@@ -987,36 +1026,35 @@ export default function RecruiterDashboard() {
                       )}
 
                       {section.type === 'CULTURE' && (
-                        <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Culture Description</label>
+                        <div className="mt-2 flex flex-col gap-2.5">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Culture Description</label>
                             <textarea
-                              className={styles.textarea}
+                              className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors resize-y min-h-[90px]"
                               value={section.content?.description || ''}
                               onChange={(e) => updateSectionContentField(idx, 'description', e.target.value)}
                             />
                           </div>
 
                           {/* Culture Values Array */}
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Core Values List</label>
-                            <div className={styles.arrayItemsContainer}>
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Core Values List</label>
+                            <div className="flex flex-col gap-3 mt-2">
                               {(section.content?.values || []).map((val, valIdx) => (
-                                <div key={valIdx} className={styles.arrayCard}>
-                                  <div className={styles.arrayCardHeader}>
+                                <div key={valIdx} className="bg-black/20 border border-white/5 rounded-xl p-3.5 flex flex-col gap-2 relative">
+                                  <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                                     <span>Value #{valIdx + 1}</span>
                                     <button
-                                      className={styles.removeArrayItemBtn}
+                                      className="bg-transparent border-none text-red-400 cursor-pointer text-xs p-0 hover:text-red-300"
                                       onClick={() => removeArrayItem(idx, 'values', valIdx)}
                                     >
                                       ✕ Remove
                                     </button>
                                   </div>
-                                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                  <div className="flex gap-2">
                                     <input
                                       type="text"
-                                      className={styles.input}
-                                      style={{ width: '60px', textAlign: 'center' }}
+                                      className="w-16 px-2 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none text-center"
                                       placeholder="Icon"
                                       value={val.icon || '💡'}
                                       onChange={(e) =>
@@ -1025,7 +1063,7 @@ export default function RecruiterDashboard() {
                                     />
                                     <input
                                       type="text"
-                                      className={styles.input}
+                                      className="flex-1 px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                                       placeholder="Value Name"
                                       value={val.name || ''}
                                       onChange={(e) =>
@@ -1034,7 +1072,7 @@ export default function RecruiterDashboard() {
                                     />
                                   </div>
                                   <textarea
-                                    className={styles.textarea}
+                                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors resize-y min-h-[70px]"
                                     placeholder="Description"
                                     value={val.description || ''}
                                     onChange={(e) =>
@@ -1044,7 +1082,7 @@ export default function RecruiterDashboard() {
                                 </div>
                               ))}
                               <button
-                                className={styles.addArrayItemBtn}
+                                className="px-3.5 py-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-semibold cursor-pointer self-start mt-1 hover:bg-indigo-500/25 transition-colors"
                                 onClick={() =>
                                   addArrayItem(idx, 'values', {
                                     icon: '🚀',
@@ -1061,27 +1099,26 @@ export default function RecruiterDashboard() {
                       )}
 
                       {section.type === 'PERKS' && (
-                        <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                        <div className="mt-2 flex flex-col gap-2.5">
                           {/* Perks Array */}
-                          <div className={styles.fieldGroup}>
-                            <label className={styles.label}>Benefits & Perks List</label>
-                            <div className={styles.arrayItemsContainer}>
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Benefits & Perks List</label>
+                            <div className="flex flex-col gap-3 mt-2">
                               {(section.content?.perks || []).map((pk, pkIdx) => (
-                                <div key={pkIdx} className={styles.arrayCard}>
-                                  <div className={styles.arrayCardHeader}>
+                                <div key={pkIdx} className="bg-black/20 border border-white/5 rounded-xl p-3.5 flex flex-col gap-2 relative">
+                                  <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                                     <span>Perk #{pkIdx + 1}</span>
                                     <button
-                                      className={styles.removeArrayItemBtn}
+                                      className="bg-transparent border-none text-red-400 cursor-pointer text-xs p-0 hover:text-red-300"
                                       onClick={() => removeArrayItem(idx, 'perks', pkIdx)}
                                     >
                                       ✕ Remove
                                     </button>
                                   </div>
-                                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                  <div className="flex gap-2">
                                     <input
                                       type="text"
-                                      className={styles.input}
-                                      style={{ width: '60px', textAlign: 'center' }}
+                                      className="w-16 px-2 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none text-center"
                                       placeholder="Icon"
                                       value={pk.icon || '🎁'}
                                       onChange={(e) =>
@@ -1090,7 +1127,7 @@ export default function RecruiterDashboard() {
                                     />
                                     <input
                                       type="text"
-                                      className={styles.input}
+                                      className="flex-1 px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                                       placeholder="Perk Title"
                                       value={pk.title || ''}
                                       onChange={(e) =>
@@ -1099,7 +1136,7 @@ export default function RecruiterDashboard() {
                                     />
                                   </div>
                                   <textarea
-                                    className={styles.textarea}
+                                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors resize-y min-h-[70px]"
                                     placeholder="Description"
                                     value={pk.description || ''}
                                     onChange={(e) =>
@@ -1109,7 +1146,7 @@ export default function RecruiterDashboard() {
                                 </div>
                               ))}
                               <button
-                                className={styles.addArrayItemBtn}
+                                className="px-3.5 py-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-semibold cursor-pointer self-start mt-1 hover:bg-indigo-500/25 transition-colors"
                                 onClick={() =>
                                   addArrayItem(idx, 'perks', {
                                     icon: '🏖️',
@@ -1132,47 +1169,47 @@ export default function RecruiterDashboard() {
 
             {/* TAB 4: Full Jobs CRUD Studio */}
             {activeTab === 'jobs' && (
-              <div className={styles.panelSection}>
-                <div className={styles.panelHeaderRow}>
-                  <h3 className={styles.panelTitle}>💼 Job Postings & JD Studio</h3>
-                  <button className={styles.addBtn} onClick={handleOpenCreateJob}>
+              <div className="bg-white/[0.025] border border-white/10 rounded-2xl p-5 flex flex-col gap-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-outfit text-base font-bold text-slate-50 m-0 flex items-center gap-2">💼 Job Postings & JD Studio</h3>
+                  <button className="px-4 py-2 rounded-lg bg-emerald-500 border-none text-white font-semibold text-xs cursor-pointer hover:bg-emerald-600 transition-colors" onClick={handleOpenCreateJob}>
                     + Create New Job
                   </button>
                 </div>
 
-                <div className={styles.arrayItemsContainer}>
+                <div className="flex flex-col gap-3 mt-2">
                   {jobs.length > 0 ? (
                     jobs.map((j) => (
-                      <div key={j._id} className={styles.arrayCard}>
-                        <div className={styles.arrayCardHeader}>
-                          <span style={{ color: '#38bdf8', fontWeight: 700 }}>{j.department}</span>
-                          <div style={{ display: 'flex', gap: '0.4rem' }}>
+                      <div key={j._id} className="bg-black/20 border border-white/5 rounded-xl p-3.5 flex flex-col gap-2 relative">
+                        <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
+                          <span className="text-sky-400 font-bold">{j.department}</span>
+                          <div className="flex gap-1.5">
                             <button
-                              className={styles.reorderBtn}
+                              className="px-2 py-1 bg-white/5 border border-white/10 rounded-md text-slate-300 cursor-pointer text-xs hover:bg-white/15"
                               onClick={() => handleOpenEditJob(j)}
                             >
                               ✏️ Edit JD
                             </button>
                             <button
-                              className={styles.deleteBtn}
+                              className="px-2 py-1 bg-red-500/15 border border-red-500/30 rounded-md text-red-300 cursor-pointer text-xs hover:bg-red-600 hover:text-white transition-colors"
                               onClick={() => handleDeleteJob(j._id, j.title)}
                             >
                               🗑️
                             </button>
                           </div>
                         </div>
-                        <h4 style={{ margin: '0.2rem 0 0.4rem 0', color: '#f8fafc', fontSize: '1.05rem' }}>
+                        <h4 className="my-1 text-slate-50 font-bold text-base">
                           {j.title}
                         </h4>
-                        <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.8rem', opacity: 0.8 }}>
+                        <div className="flex gap-3 text-xs text-slate-400 opacity-90">
                           <span>📍 {j.location}</span>
                           <span>🏢 {j.work_policy}</span>
-                          <span style={{ color: '#4ade80' }}>💰 {j.salary_range}</span>
+                          <span className="text-emerald-400">💰 {j.salary_range}</span>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <p style={{ color: '#94a3b8', textAlign: 'center', padding: '1rem' }}>
+                    <p className="text-slate-400 text-center py-4 text-xs">
                       No active job postings. Click "+ Create New Job" above to post your first position!
                     </p>
                   )}
@@ -1182,14 +1219,14 @@ export default function RecruiterDashboard() {
 
             {/* TAB 5: Create New SaaS Company */}
             {activeTab === 'create' && (
-              <form className={styles.panelSection} onSubmit={handleCreateCompanySubmit}>
-                <h3 className={styles.panelTitle}>➕ Launch New SaaS Company Portal</h3>
+              <form className="bg-white/[0.025] border border-white/10 rounded-2xl p-5 flex flex-col gap-5" onSubmit={handleCreateCompanySubmit}>
+                <h3 className="font-outfit text-base font-bold text-slate-50 m-0 flex items-center gap-2">➕ Launch New SaaS Company Portal</h3>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Company Name *</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Company Name *</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="e.g. Acme Corp"
                     required
                     value={newCompanyForm.name}
@@ -1203,11 +1240,11 @@ export default function RecruiterDashboard() {
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>URL Slug *</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">URL Slug *</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="e.g. acme-corp"
                     required
                     value={newCompanyForm.slug}
@@ -1217,10 +1254,10 @@ export default function RecruiterDashboard() {
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Description</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Description</label>
                   <textarea
-                    className={styles.textarea}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors resize-y min-h-[90px]"
                     placeholder="Company mission or elevator pitch..."
                     value={newCompanyForm.description}
                     onChange={(e) =>
@@ -1229,11 +1266,11 @@ export default function RecruiterDashboard() {
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Website</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Website</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="https://acme.com"
                     value={newCompanyForm.website}
                     onChange={(e) =>
@@ -1244,8 +1281,7 @@ export default function RecruiterDashboard() {
 
                 <button
                   type="submit"
-                  className={styles.saveBtn}
-                  style={{ alignSelf: 'flex-start', marginTop: '0.5rem' }}
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 border-none text-white text-sm font-semibold cursor-pointer inline-flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:opacity-95 self-start mt-2 transition-all"
                 >
                   🚀 Launch Portal Now
                 </button>
@@ -1256,16 +1292,16 @@ export default function RecruiterDashboard() {
 
         {/* RIGHT PANEL: Real-Time Live Preview */}
         {viewMode !== 'edit' && (
-          <section className={styles.previewContainer}>
-            <div className={styles.previewHeader}>
-              <div className={styles.previewBadge}>
-                <span className={styles.liveDot}></span>
+          <section className="bg-slate-950 overflow-y-auto relative h-full isolate">
+            <div className="sticky top-0 z-50 px-6 py-2 bg-slate-900/95 border-b border-white/10 flex items-center justify-between text-xs text-slate-400">
+              <div className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span>
                 <span>REAL-TIME SAAS LIVE PREVIEW</span>
               </div>
               <span>Font: {company.fontFamily || 'Outfit'} | Live Preview Sync</span>
             </div>
 
-            <div style={previewBrandStyles} className={styles.previewViewport}>
+            <div style={previewBrandStyles} className="min-h-full transition-all">
               <Header company={company} />
 
               <main>
@@ -1282,75 +1318,50 @@ export default function RecruiterDashboard() {
 
       {/* Job Create/Edit Modal */}
       {isJobModalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0, 0, 0, 0.8)',
-            backdropFilter: 'blur(8px)',
-            zIndex: 200,
-            display: 'flex',
-            alignItems: 'center',
-            justify: 'center',
-            padding: '1.5rem',
-          }}
-        >
-          <div
-            style={{
-              background: '#0f172a',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '20px',
-              padding: '2rem',
-              maxWidth: '650px',
-              width: '100%',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              color: '#f8fafc',
-              fontFamily: 'Inter, sans-serif',
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.4rem', margin: 0 }}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] flex items-center justify-center p-6">
+          <div className="bg-slate-900 border border-white/15 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto text-slate-50 font-sans shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-outfit text-xl font-bold m-0">
                 {editingJob ? `✏️ Edit Job: ${editingJob.title}` : '💼 Post New Job Opportunity'}
               </h3>
               <button
                 onClick={() => setIsJobModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '1.2rem', cursor: 'pointer' }}
+                className="bg-transparent border-none text-slate-400 hover:text-white text-xl cursor-pointer p-1"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleSaveJobSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Job Title *</label>
+            <form onSubmit={handleSaveJobSubmit} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Job Title *</label>
                 <input
                   type="text"
                   required
-                  className={styles.input}
+                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                   placeholder="e.g. Senior Full Stack Engineer"
                   value={jobForm.title}
                   onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Department</label>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Department</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="e.g. Engineering"
                     value={jobForm.department}
                     onChange={(e) => setJobForm({ ...jobForm, department: e.target.value })}
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Location</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Location</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="e.g. Remote / Athens"
                     value={jobForm.location}
                     onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
@@ -1358,11 +1369,11 @@ export default function RecruiterDashboard() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Work Policy</label>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Work Policy</label>
                   <select
-                    className={styles.select}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors cursor-pointer [&>option]:bg-slate-900 [&>option]:text-slate-50"
                     value={jobForm.work_policy}
                     onChange={(e) => setJobForm({ ...jobForm, work_policy: e.target.value })}
                   >
@@ -1372,10 +1383,10 @@ export default function RecruiterDashboard() {
                   </select>
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Employment Type</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Employment Type</label>
                   <select
-                    className={styles.select}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors cursor-pointer [&>option]:bg-slate-900 [&>option]:text-slate-50"
                     value={jobForm.employment_type}
                     onChange={(e) => setJobForm({ ...jobForm, employment_type: e.target.value })}
                   >
@@ -1386,11 +1397,11 @@ export default function RecruiterDashboard() {
                   </select>
                 </div>
 
-                <div className={styles.fieldGroup}>
-                  <label className={styles.label}>Salary Range</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Salary Range</label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     placeholder="e.g. $120k - $150k"
                     value={jobForm.salary_range}
                     onChange={(e) => setJobForm({ ...jobForm, salary_range: e.target.value })}
@@ -1398,45 +1409,41 @@ export default function RecruiterDashboard() {
                 </div>
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Job Description (JD) *</label>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Job Description (JD) *</label>
                 <textarea
                   rows={6}
                   required
-                  className={styles.textarea}
+                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors resize-y min-h-[90px]"
                   placeholder="Full role responsibilities, team vision, and daily impact..."
                   value={jobForm.description}
                   onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
                 />
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Requirements & Qualifications</label>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Requirements & Qualifications</label>
                 <textarea
                   rows={5}
-                  className={styles.textarea}
+                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors resize-y min-h-[90px]"
                   placeholder="Bullet points of required experience, skills, and qualifications..."
                   value={jobForm.requirements}
                   onChange={(e) => setJobForm({ ...jobForm, requirements: e.target.value })}
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
+              <div className="flex justify-end gap-3 mt-4">
                 <button
                   type="button"
                   onClick={() => setIsJobModalOpen(false)}
-                  style={{
-                    padding: '0.65rem 1.25rem',
-                    borderRadius: '10px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#cbd5e1',
-                    cursor: 'pointer',
-                  }}
+                  className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-300 cursor-pointer hover:bg-white/10 transition-colors"
                 >
                   Cancel
                 </button>
-                <button type="submit" className={styles.saveBtn}>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 border-none text-white text-sm font-semibold cursor-pointer inline-flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:opacity-95 transition-all"
+                >
                   {editingJob ? '💾 Save Changes' : '🚀 Post Position'}
                 </button>
               </div>

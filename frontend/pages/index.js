@@ -15,7 +15,7 @@ export default function HomePage({ companies }) {
   };
 
   return (
-    <div style={{ background: '#0b0f19', color: '#f8fafc', minHeight: '100vh', fontFamily: 'Inter, sans-serif' }}>
+    <div className="bg-slate-950 text-slate-50 min-h-screen font-sans">
       <Head>
         <title>{pageTitle}</title>
         <meta name="title" content={pageTitle} />
@@ -33,167 +33,75 @@ export default function HomePage({ companies }) {
         />
       </Head>
 
-      <header style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '1.25rem 1.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            fontWeight: '700',
-            fontSize: '14px',
-          }}>
+      <header className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between border-b border-white/10">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
             ⚡
           </div>
-          <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 700, fontSize: '1.1rem', color: '#f8fafc' }}>
+          <span className="font-outfit font-bold text-lg text-slate-50">
             Careers Builder
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div className="flex items-center gap-4">
           <Link
             href="/login"
-            style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              color: '#94a3b8',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: 500,
-              transition: 'color 0.2s',
-            }}
+            className="px-4 py-2 rounded-lg text-slate-400 no-underline text-sm font-medium hover:text-slate-200 transition-colors"
           >
             Recruiter Sign In
           </Link>
           <Link
             href="/register"
-            style={{
-              padding: '0.55rem 1.1rem',
-              borderRadius: '8px',
-              background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-              color: '#ffffff',
-              textDecoration: 'none',
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              boxShadow: '0 2px 8px rgba(99, 102, 241, 0.25)',
-            }}
+            className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-indigo-500 to-indigo-600 text-white no-underline text-sm font-semibold shadow-md shadow-indigo-500/25 hover:from-indigo-600 hover:to-indigo-700 transition-all"
           >
             Register Company Page →
           </Link>
         </div>
       </header>
 
-      <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '4rem 1.5rem', textAlign: 'center' }}>
-        <span
-          style={{
-            display: 'inline-block',
-            padding: '0.4rem 1rem',
-            borderRadius: '9999px',
-            background: 'rgba(99, 102, 241, 0.15)',
-            border: '1px solid rgba(99, 102, 241, 0.3)',
-            color: '#818cf8',
-            fontSize: '0.875rem',
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            marginBottom: '1.5rem',
-          }}
-        >
+      <main className="max-w-5xl mx-auto px-6 py-16 text-center">
+        <span className="inline-block px-4 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-6">
           ✨ Careers Page Builder Platform
         </span>
 
-        <h1
-          style={{
-            fontFamily: 'Outfit, sans-serif',
-            fontSize: 'clamp(2.5rem, 5vw, 3.75rem)',
-            fontWeight: '800',
-            lineHeight: 1.15,
-            margin: '0 0 1.5rem 0',
-            background: 'linear-gradient(135deg, #ffffff 0%, #94a3b8 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
+        <h1 className="font-outfit text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
           High-Converting Careers Pages for Modern Companies
         </h1>
 
-        <p style={{ fontSize: '1.2rem', color: '#94a3b8', maxWidth: '700px', margin: '0 auto 3.5rem', lineHeight: 1.6 }}>
+        <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-14 leading-relaxed">
           Explore live demo careers pages with real-time job filtering, rich company culture sections, and Google Job Indexing (JSON-LD) optimization.
         </p>
 
         {/* Demo Companies Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {companies.map((c) => (
             <div
               key={c.slug}
-              style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '20px',
-                padding: '2rem',
-                textAlign: 'left',
-                display: 'flex',
-                flexDirection: 'column',
-                justify: 'space-between',
-              }}
+              className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 text-left flex flex-col justify-between hover:border-white/20 transition-all"
             >
               <div>
-                <div style={{ width: '56px', height: '56px', borderRadius: '14px', overflow: 'hidden', marginBottom: '1.25rem' }}>
-                  <img src={c.logoUrl} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div className="w-14 h-14 rounded-xl overflow-hidden mb-5">
+                  <img src={c.logoUrl} alt={c.name} className="w-full h-full object-cover" />
                 </div>
-                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.5rem', margin: '0 0 0.5rem 0', color: '#f8fafc' }}>
+                <h2 className="font-outfit text-2xl font-bold mb-2 text-slate-50">
                   {c.name}
                 </h2>
-                <p style={{ fontSize: '0.925rem', color: '#94a3b8', lineHeight: 1.5, margin: '0 0 1.5rem 0' }}>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6">
                   {c.description}
                 </p>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div className="flex flex-col gap-3">
                 <Link
                   href={`/companies/${c.slug}/careers`}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justify: 'center',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: '12px',
-                    background: c.primaryColor || '#6366f1',
-                    color: '#ffffff',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    fontSize: '0.95rem',
-                  }}
+                  className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-indigo-600 text-white font-semibold no-underline text-sm hover:bg-indigo-700 transition-colors"
+                  style={{ backgroundColor: c.primaryColor || '#6366f1' }}
                 >
                   View Careers Page →
                 </Link>
                 <Link
                   href={`/companies/${c.slug}/jobs`}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justify: 'center',
-                    padding: '0.65rem 1.25rem',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#cbd5e1',
-                    fontWeight: 500,
-                    textDecoration: 'none',
-                    fontSize: '0.875rem',
-                  }}
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-300 font-medium no-underline text-xs hover:bg-white/10 transition-colors"
                 >
                   All Open Positions Sub-Page
                 </Link>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import styles from './Editor.module.css';
 import JobEditorModal from './JobEditorModal';
 
 export default function JobManagerModal({ isOpen, onClose, companySlug, token }) {
@@ -108,74 +107,35 @@ export default function JobManagerModal({ isOpen, onClose, companySlug, token })
 
   return (
     <>
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(15, 23, 42, 0.75)',
-        backdropFilter: 'blur(8px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 9999,
-        padding: '1.5rem',
-      }} onClick={onClose}>
-        <div style={{
-          background: '#ffffff',
-          width: '100%',
-          maxWidth: '850px',
-          maxHeight: '90vh',
-          borderRadius: '16px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }} onClick={(e) => e.stopPropagation()}>
-
+      <div
+        className="fixed inset-0 bg-slate-900/75 backdrop-blur-md flex items-center justify-center z-[9999] p-4 sm:p-6"
+        onClick={onClose}
+      >
+        <div
+          className="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Header */}
-          <div style={{
-            padding: '1.25rem 1.5rem',
-            borderBottom: '1px solid #e2e8f0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: '#f8fafc',
-          }}>
+          <div className="px-6 py-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#0f172a' }}>
+              <h2 className="text-xl font-bold m-0 text-slate-900">
                 💼 Company Jobs Management
               </h2>
-              <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '2px 0 0 0' }}>
+              <p className="text-xs text-slate-500 m-0 mt-0.5">
                 Create, edit, publish, or unpublish your company's job openings.
               </p>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="flex items-center gap-2">
               <button
                 onClick={handleOpenCreate}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-                  color: '#ffffff',
-                  fontWeight: 600,
-                  fontSize: '13px',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 6px rgba(99, 102, 241, 0.25)',
-                }}
+                className="px-4 py-2 rounded-lg border-none bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-semibold text-xs shadow-md shadow-indigo-500/20 hover:from-indigo-600 hover:to-indigo-700 cursor-pointer transition-all"
               >
                 + Create Job
               </button>
               <button
                 onClick={onClose}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  fontSize: '1.25rem',
-                  color: '#64748b',
-                  cursor: 'pointer',
-                  padding: '4px 8px',
-                }}
+                className="bg-transparent border-none text-xl text-slate-500 hover:text-slate-800 cursor-pointer p-1 rounded-md transition-colors"
               >
                 ✕
               </button>
@@ -183,55 +143,45 @@ export default function JobManagerModal({ isOpen, onClose, companySlug, token })
           </div>
 
           {/* Search bar */}
-          <div style={{ padding: '1rem 1.5rem 0.5rem', borderBottom: '1px solid #f1f5f9' }}>
+          <div className="px-6 py-3 border-b border-slate-100 bg-white">
             <input
               type="text"
               placeholder="Search jobs by title, department, or location..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className={styles.inputField}
-              style={{ padding: '8px 12px', fontSize: '13px' }}
+              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors"
             />
           </div>
 
           {/* Content */}
-          <div style={{ padding: '1rem 1.5rem', overflowY: 'auto', flex: 1 }}>
+          <div className="p-6 overflow-y-auto flex-1">
             {isLoading ? (
-              <div style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>
-                <div className={styles.loadingSpinner} style={{ margin: '0 auto 12px' }} />
-                <p>Loading company jobs...</p>
+              <div className="py-12 text-center text-slate-500">
+                <div className="w-10 h-10 border-[3px] border-slate-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-xs">Loading company jobs...</p>
               </div>
             ) : error ? (
-              <div style={{ padding: '2rem', textAlign: 'center', color: '#ef4444' }}>
+              <div className="py-8 text-center text-red-500 text-sm">
                 <p>⚠️ {error}</p>
               </div>
             ) : filteredJobs.length === 0 ? (
-              <div style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>
-                <p style={{ fontSize: '2.5rem', marginBottom: '8px', opacity: 0.5 }}>💼</p>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#334155', margin: '0 0 4px 0' }}>
+              <div className="py-12 text-center text-slate-500">
+                <p className="text-4xl mb-2 opacity-50">💼</p>
+                <h3 className="text-base font-semibold text-slate-700 m-0 mb-1">
                   No Jobs Found
                 </h3>
-                <p style={{ fontSize: '0.85rem', margin: '0 0 16px 0' }}>
+                <p className="text-xs m-0 mb-4">
                   {search ? 'No jobs match your search query.' : 'You haven\'t created any job postings yet.'}
                 </p>
                 <button
                   onClick={handleOpenCreate}
-                  style={{
-                    padding: '8px 16px',
-                    borderRadius: '6px',
-                    border: 'none',
-                    background: '#6366f1',
-                    color: '#fff',
-                    fontWeight: 600,
-                    fontSize: '13px',
-                    cursor: 'pointer',
-                  }}
+                  className="px-4 py-2 rounded-md border-none bg-indigo-600 text-white font-semibold text-xs cursor-pointer hover:bg-indigo-700 transition-colors"
                 >
                   Create First Job →
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div className="flex flex-col gap-2.5">
                 {filteredJobs.map((job) => {
                   const isPublished = job.status === 'PUBLISHED';
                   const isDraft = job.status === 'DRAFT';
@@ -239,61 +189,36 @@ export default function JobManagerModal({ isOpen, onClose, companySlug, token })
                   return (
                     <div
                       key={job._id}
-                      style={{
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        padding: '14px 16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        background: '#ffffff',
-                        transition: 'border-color 0.2s',
-                      }}
+                      className="border border-slate-200 rounded-xl p-4 flex items-center justify-between bg-white hover:border-slate-300 transition-colors"
                     >
-                      <div style={{ flex: 1, paddingRight: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                          <h3 style={{ fontSize: '1rem', fontWeight: 700, margin: 0, color: '#0f172a' }}>
+                      <div className="flex-1 pr-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-base font-bold m-0 text-slate-900">
                             {job.title}
                           </h3>
 
                           {/* Status Badge */}
-                          <span style={{
-                            fontSize: '11px',
-                            fontWeight: 700,
-                            padding: '2px 8px',
-                            borderRadius: '12px',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.04em',
-                            background: isPublished
-                              ? '#dcfce7'
-                              : isDraft
-                              ? '#fef3c7'
-                              : '#f1f5f9',
-                            color: isPublished
-                              ? '#15803d'
-                              : isDraft
-                              ? '#b45309'
-                              : '#64748b',
-                            border: `1px solid ${
+                          <span
+                            className={`text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border ${
                               isPublished
-                                ? '#bbf7d0'
+                                ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
                                 : isDraft
-                                ? '#fde68a'
-                                : '#e2e8f0'
-                            }`,
-                          }}>
+                                ? 'bg-amber-100 text-amber-800 border-amber-200'
+                                : 'bg-slate-100 text-slate-600 border-slate-200'
+                            }`}
+                          >
                             {job.status || 'DRAFT'}
                           </span>
                         </div>
 
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', fontSize: '12px', color: '#64748b' }}>
+                        <div className="flex flex-wrap gap-3 text-xs text-slate-500">
                           <span>📍 {job.location || 'Remote'}</span>
                           <span>🏢 {job.work_policy || 'Hybrid'}</span>
                           <span>📂 {job.department || 'General'}</span>
                           <span>🎯 {job.experience_level || 'Mid Level'}</span>
                           {job.salary_range && <span>💰 {job.salary_range}</span>}
                           {isPublished && (
-                            <span style={{ color: '#059669', fontWeight: 500 }}>
+                            <span className="text-emerald-600 font-medium">
                               📅 {job.posted_days_ago === 0 ? 'Posted Today' : `Posted ${job.posted_days_ago}d ago`}
                             </span>
                           )}
@@ -301,69 +226,38 @@ export default function JobManagerModal({ isOpen, onClose, companySlug, token })
                       </div>
 
                       {/* Action Buttons */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div className="flex items-center gap-2">
                         <a
                           href={`/companies/${companySlug}/jobs/${job.job_slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           title="View public job web page"
-                          style={{
-                            padding: '6px 10px',
-                            borderRadius: '6px',
-                            border: '1px solid #cbd5e1',
-                            background: '#f8fafc',
-                            color: '#334155',
-                            fontSize: '12px',
-                            fontWeight: 500,
-                            textDecoration: 'none',
-                          }}
+                          className="px-2.5 py-1.5 rounded-md border border-slate-300 bg-slate-50 text-slate-700 text-xs font-medium no-underline hover:bg-slate-100 transition-colors"
                         >
                           View ↗
                         </a>
 
                         <button
                           onClick={() => handleOpenEdit(job)}
-                          style={{
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            border: '1px solid #cbd5e1',
-                            background: '#ffffff',
-                            color: '#0f172a',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                          }}
+                          className="px-3 py-1.5 rounded-md border border-slate-300 bg-white text-slate-900 text-xs font-semibold cursor-pointer hover:bg-slate-50 transition-colors"
                         >
                           Edit
                         </button>
 
                         <button
                           onClick={() => handleToggleStatus(job._id, job.status)}
-                          style={{
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            border: 'none',
-                            background: isPublished ? '#fef3c7' : '#dcfce7',
-                            color: isPublished ? '#92400e' : '#166534',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                          }}
+                          className={`px-3 py-1.5 rounded-md border-none text-xs font-semibold cursor-pointer transition-colors ${
+                            isPublished
+                              ? 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+                              : 'bg-emerald-100 text-emerald-900 hover:bg-emerald-200'
+                          }`}
                         >
                           {isPublished ? 'Unpublish' : 'Publish'}
                         </button>
 
                         <button
                           onClick={() => handleDeleteJob(job._id, job.title)}
-                          style={{
-                            padding: '6px 10px',
-                            borderRadius: '6px',
-                            border: '1px solid #fca5a5',
-                            background: '#fef2f2',
-                            color: '#b91c1c',
-                            fontSize: '12px',
-                            cursor: 'pointer',
-                          }}
+                          className="px-2.5 py-1.5 rounded-md border border-red-300 bg-red-50 text-red-700 text-xs cursor-pointer hover:bg-red-100 transition-colors"
                           title="Delete job posting"
                         >
                           🗑️

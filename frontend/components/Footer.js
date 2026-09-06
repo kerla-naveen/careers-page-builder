@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Footer.module.css';
+import { getCompanyWebsiteUrl } from '../utils/urlHelper';
 
 function normalizeUrl(url) {
   if (!url || typeof url !== 'string') return '';
@@ -39,7 +39,7 @@ const GlobeIcon = () => (
 
 export default function Footer({ company }) {
   const currentYear = new Date().getFullYear();
-  const websiteUrl = normalizeUrl(company.website);
+  const websiteUrl = getCompanyWebsiteUrl(company);
   const linkedinUrl = normalizeUrl(company.socialLinks?.linkedin);
   const twitterUrl = normalizeUrl(company.socialLinks?.twitter);
   const githubUrl = normalizeUrl(company.socialLinks?.github);
@@ -47,54 +47,54 @@ export default function Footer({ company }) {
   const instagramUrl = normalizeUrl(company.socialLinks?.instagram);
 
   return (
-    <footer className={styles.footer} id="company-footer">
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.brandInfo}>
-            <span className={styles.brandName}>{company.name}</span>
-            <p className={styles.tagline}>
+    <footer className="bg-[var(--brand-bg,#0b0f19)] text-[var(--brand-text,#f8fafc)] border-t border-white/10 py-16 px-0 text-[0.95rem]" id="company-footer">
+      <div className="max-w-[1200px] mx-auto px-8">
+        <div className="flex flex-col md:flex-row justify-between flex-wrap gap-8 mb-12">
+          <div className="max-w-[400px]">
+            <span className="block font-outfit font-bold text-2xl mb-4">{company.name}</span>
+            <p className="opacity-70 leading-relaxed">
               {company.description || 'Join us and build the future.'}
             </p>
           </div>
 
-          <div className={styles.links}>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8">
             {websiteUrl && (
-              <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className={styles.socialLink} title="Official Website">
+              <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[var(--brand-text,#f8fafc)] opacity-80 hover:opacity-100 transition-all no-underline font-medium" title="Official Website">
                 <GlobeIcon />
                 <span>Website</span>
               </a>
             )}
 
             {linkedinUrl && (
-              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className={styles.socialLink} title="LinkedIn">
+              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[var(--brand-text,#f8fafc)] opacity-80 hover:opacity-100 transition-all no-underline font-medium" title="LinkedIn">
                 <LinkedInIcon />
                 <span>LinkedIn</span>
               </a>
             )}
 
             {twitterUrl && (
-              <a href={twitterUrl} target="_blank" rel="noopener noreferrer" className={styles.socialLink} title="Twitter / X">
+              <a href={twitterUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[var(--brand-text,#f8fafc)] opacity-80 hover:opacity-100 transition-all no-underline font-medium" title="Twitter / X">
                 <TwitterIcon />
                 <span>Twitter</span>
               </a>
             )}
 
             {githubUrl && (
-              <a href={githubUrl} target="_blank" rel="noopener noreferrer" className={styles.socialLink} title="GitHub">
+              <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[var(--brand-text,#f8fafc)] opacity-80 hover:opacity-100 transition-all no-underline font-medium" title="GitHub">
                 <GitHubIcon />
                 <span>GitHub</span>
               </a>
             )}
 
             {glassdoorUrl && (
-              <a href={glassdoorUrl} target="_blank" rel="noopener noreferrer" className={styles.socialLink} title="Glassdoor">
+              <a href={glassdoorUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[var(--brand-text,#f8fafc)] opacity-80 hover:opacity-100 transition-all no-underline font-medium" title="Glassdoor">
                 <GlobeIcon />
                 <span>Glassdoor</span>
               </a>
             )}
 
             {instagramUrl && (
-              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className={styles.socialLink} title="Instagram">
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[var(--brand-text,#f8fafc)] opacity-80 hover:opacity-100 transition-all no-underline font-medium" title="Instagram">
                 <GlobeIcon />
                 <span>Instagram</span>
               </a>
@@ -102,10 +102,11 @@ export default function Footer({ company }) {
           </div>
         </div>
 
-        <div className={styles.bottomBar}>
+        <div className="border-t border-white/10 pt-6 text-center opacity-60 text-xs sm:text-sm">
           <p>&copy; {currentYear} {company.name}. All rights reserved.</p>
         </div>
       </div>
     </footer>
   );
 }
+

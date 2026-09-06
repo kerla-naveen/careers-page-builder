@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './TestimonialsSection.module.css';
 
 export default function TestimonialsSection({ title, subtitle, content }) {
   const testimonials = content?.testimonials || [
@@ -18,27 +17,29 @@ export default function TestimonialsSection({ title, subtitle, content }) {
   ];
 
   return (
-    <section className={styles.testimonialsSection} id="testimonials-section">
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>{title || 'What Our Team Says'}</h2>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+    <section className="py-20 px-6 sm:px-8 bg-white/[0.015] text-[var(--brand-text,#f8fafc)]" id="testimonials-section">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="text-center max-w-[700px] mx-auto mb-14">
+          <h2 className="font-outfit text-3xl sm:text-4xl font-bold mb-3 text-[var(--brand-text,#f8fafc)] tracking-tight">
+            {title || 'What Our Team Says'}
+          </h2>
+          {subtitle && <p className="font-inter text-base sm:text-lg text-slate-400 leading-relaxed">{subtitle}</p>}
         </div>
 
-        <div className={styles.grid}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {testimonials.map((item, index) => (
-            <div key={index} className={styles.card}>
-              <div className={styles.quoteMark}>“</div>
-              <p className={styles.quote}>{item.quote}</p>
-              <div className={styles.author}>
+            <div key={index} className="bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col justify-between relative transition-all duration-300 hover:-translate-y-1 hover:border-[var(--brand-primary,#6366f1)]">
+              <div className="text-5xl leading-none text-[var(--brand-primary,#6366f1)] opacity-30 -mb-4 font-serif">“</div>
+              <p className="font-inter text-base text-slate-200 leading-relaxed italic mb-6 relative z-10">{item.quote}</p>
+              <div className="flex items-center gap-4 border-t border-white/10 pt-4">
                 <img
                   src={item.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200'}
                   alt={item.author}
-                  className={styles.avatar}
+                  className="w-11 h-11 rounded-full object-cover"
                 />
-                <div className={styles.authorInfo}>
-                  <span className={styles.name}>{item.author}</span>
-                  <span className={styles.role}>{item.role}</span>
+                <div className="flex flex-col">
+                  <span className="font-outfit text-sm font-semibold text-[var(--brand-text,#f8fafc)]">{item.author}</span>
+                  <span className="font-inter text-xs text-slate-400">{item.role}</span>
                 </div>
               </div>
             </div>
@@ -48,3 +49,4 @@ export default function TestimonialsSection({ title, subtitle, content }) {
     </section>
   );
 }
+

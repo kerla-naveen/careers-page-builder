@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import styles from '../../components/editor/Editor.module.css';
 
 import { useAuth } from '../../context/AuthContext';
 import { useEditorState } from '../../hooks/useEditorState';
@@ -129,12 +128,12 @@ export default function CareersEditorPage() {
 
   if (isAuthLoading || isCompanyLoading) {
     return (
-      <div className={styles.editorLoading}>
+      <div className="w-screen h-screen flex flex-col items-center justify-center bg-slate-50 font-inter">
         <Head>
           <title>Loading Careers Editor...</title>
         </Head>
-        <div className={styles.loadingSpinner} />
-        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '14px' }}>
+        <div className="w-10 h-10 border-[3px] border-slate-200 border-t-blue-600 rounded-full animate-spin" />
+        <p className="mt-4 text-slate-500 text-sm font-medium">
           Loading careers page editor...
         </p>
       </div>
@@ -144,36 +143,21 @@ export default function CareersEditorPage() {
   // Ownership Guard — recruiter can only edit their own company
   if (user && user.company && slug && user.company.slug !== slug) {
     return (
-      <div className={styles.editorLoading}>
+      <div className="w-screen h-screen flex flex-col items-center justify-center bg-slate-50 font-inter">
         <Head>
           <title>Access Denied | Careers Editor</title>
         </Head>
-        <div style={{
-          textAlign: 'center',
-          maxWidth: '440px',
-          padding: '32px 24px',
-          background: '#131926',
-          borderRadius: '16px',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}>
-          <p style={{ fontSize: '48px', marginBottom: '16px' }}>🚫</p>
-          <h2 style={{ color: '#f1f5f9', marginBottom: '8px', fontFamily: 'Outfit, sans-serif' }}>
+        <div className="text-center max-w-[440px] p-8 bg-slate-900 rounded-2xl border border-white/10 shadow-2xl">
+          <p className="text-5xl mb-4">🚫</p>
+          <h2 className="text-white text-xl font-bold font-outfit mb-2">
             Access Restricted
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '24px', lineHeight: 1.5 }}>
+          <p className="text-slate-400 text-sm mb-6 leading-relaxed">
             You are logged in as <strong>{user.name}</strong> ({user.company.name}). You do not have authorization to edit <strong>{slug}</strong>'s page.
           </p>
           <button
             onClick={() => router.push(`/editor/${user.company.slug}`)}
-            style={{
-              padding: '10px 20px',
-              borderRadius: '8px',
-              border: 'none',
-              background: '#6366f1',
-              color: '#fff',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
+            className="px-5 py-2.5 rounded-xl border-0 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm cursor-pointer transition-colors"
           >
             Go to My Company Editor ({user.company.name}) →
           </button>
@@ -184,27 +168,19 @@ export default function CareersEditorPage() {
 
   if (loadError || !company) {
     return (
-      <div className={styles.editorLoading}>
+      <div className="w-screen h-screen flex flex-col items-center justify-center bg-slate-50 font-inter">
         <Head>
           <title>Editor Error</title>
         </Head>
-        <div style={{ textAlign: 'center', maxWidth: '400px', padding: '24px' }}>
-          <p style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</p>
-          <h2 style={{ color: '#f1f5f9', marginBottom: '8px' }}>Failed to Load Editor</h2>
-          <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '24px' }}>
+        <div className="text-center max-w-[400px] p-6 bg-slate-900 rounded-2xl border border-white/10 shadow-2xl">
+          <p className="text-5xl mb-4">⚠️</p>
+          <h2 className="text-white text-xl font-bold font-outfit mb-2">Failed to Load Editor</h2>
+          <p className="text-slate-400 text-sm mb-6">
             {loadError || 'Company not found'}
           </p>
           <button
             onClick={() => router.push('/dashboard')}
-            style={{
-              padding: '10px 20px',
-              borderRadius: '8px',
-              border: 'none',
-              background: '#6366f1',
-              color: '#fff',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
+            className="px-5 py-2.5 rounded-xl border-0 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm cursor-pointer transition-colors"
           >
             Return to Dashboard
           </button>
@@ -214,7 +190,7 @@ export default function CareersEditorPage() {
   }
 
   return (
-    <div className={styles.editorRoot}>
+    <div className="w-screen h-screen flex flex-col bg-slate-50 text-slate-900 overflow-hidden font-inter">
       <Head>
         <title>{`Editing ${company.name} Careers Page | No-Code Editor`}</title>
       </Head>
@@ -239,11 +215,11 @@ export default function CareersEditorPage() {
       />
 
       {/* Main Workspace: Left Sidebar | Center Canvas | Right Panel */}
-      <div className={styles.workspace}>
+      <div className="flex-1 flex flex-row overflow-hidden relative">
         {/* Mobile Backdrop for Left Sidebar Drawer */}
         {isMobileSidebarOpen && (
           <div
-            className={styles.mobileBackdrop}
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs z-30 md:hidden"
             onClick={() => setIsMobileSidebarOpen(false)}
           />
         )}
@@ -254,14 +230,14 @@ export default function CareersEditorPage() {
           selectedSectionId={selectedSectionId}
           onSelectSection={(secId) => {
             selectSection(secId);
-            setIsMobileSidebarOpen(false); // Auto-close drawer on mobile so recruiter sees preview!
+            setIsMobileSidebarOpen(false);
           }}
           activeTab={activeLeftTab}
           onTabChange={setActiveLeftTab}
           updateCompany={updateCompany}
           onFocusBrandingArea={(area) => {
             setBrandingFocusArea(area);
-            setIsMobileSidebarOpen(false); // Auto-close drawer on mobile for branding selection too!
+            setIsMobileSidebarOpen(false);
           }}
           isMobileOpen={isMobileSidebarOpen}
         />
@@ -296,8 +272,8 @@ export default function CareersEditorPage() {
       {/* Toast Overlay */}
       {toast && (
         <div
-          className={`${styles.toast} ${
-            toast.type === 'error' ? styles.toastError : ''
+          className={`fixed bottom-6 right-6 z-[200] px-4 py-3 bg-slate-900 text-white font-medium text-sm rounded-xl shadow-2xl flex items-center gap-2 border border-white/10 animate-fade-in-up ${
+            toast.type === 'error' ? 'border-rose-500/50 text-rose-300' : ''
           }`}
         >
           {toast.type === 'error' ? '❌ ' : '✅ '}
@@ -315,3 +291,4 @@ export default function CareersEditorPage() {
     </div>
   );
 }
+

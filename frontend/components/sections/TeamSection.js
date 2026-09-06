@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './TeamSection.module.css';
 
 export default function TeamSection({ title, subtitle, content }) {
   const members = content?.members || [
@@ -24,24 +23,26 @@ export default function TeamSection({ title, subtitle, content }) {
   ];
 
   return (
-    <section className={styles.teamSection} id="team-section">
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>{title || 'Meet the Leadership Team'}</h2>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+    <section className="py-20 px-6 sm:px-8 bg-transparent text-[var(--brand-text,#f8fafc)]" id="team-section">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="text-center max-w-[700px] mx-auto mb-14">
+          <h2 className="font-outfit text-3xl sm:text-4xl font-bold mb-3 text-[var(--brand-text,#f8fafc)] tracking-tight">
+            {title || 'Meet the Leadership Team'}
+          </h2>
+          {subtitle && <p className="text-base sm:text-lg text-slate-400 leading-relaxed font-inter">{subtitle}</p>}
         </div>
 
-        <div className={styles.grid}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {members.map((member, index) => (
-            <div key={index} className={styles.card}>
+            <div key={index} className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[var(--brand-primary,#6366f1)]">
               <img
                 src={member.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200'}
                 alt={member.name}
-                className={styles.avatar}
+                className="w-24 h-24 rounded-full object-cover mx-auto mb-5 border-[3px] border-[var(--brand-primary,#6366f1)] shadow-md"
               />
-              <h3 className={styles.name}>{member.name}</h3>
-              <p className={styles.role}>{member.role}</p>
-              {member.bio && <p className={styles.bio}>{member.bio}</p>}
+              <h3 className="font-outfit text-xl font-semibold text-[var(--brand-text,#f8fafc)] mb-1">{member.name}</h3>
+              <p className="font-inter text-sm text-[var(--brand-primary,#818cf8)] font-medium mb-3">{member.role}</p>
+              {member.bio && <p className="font-inter text-sm text-slate-400 leading-relaxed">{member.bio}</p>}
             </div>
           ))}
         </div>
@@ -49,3 +50,4 @@ export default function TeamSection({ title, subtitle, content }) {
     </section>
   );
 }
+

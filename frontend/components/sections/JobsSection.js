@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
-import styles from './JobsSection.module.css';
 
 export default function JobsSection({ title, subtitle, jobs: initialJobs = [], companySlug }) {
   const router = useRouter();
   const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   // Filter States
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,7 +34,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.classList.add(styles.visible);
+          setIsVisible(true);
         }
       },
       { threshold: 0.05 }
@@ -149,24 +149,36 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
     selectedLocations.length;
 
   return (
-    <section ref={sectionRef} id="jobs-section" className={styles.jobsSection}>
-      <div className={styles.container}>
+    <section ref={sectionRef} id="jobs-section" className="py-16 md:py-24 px-4 sm:px-6 bg-[var(--brand-bg,#0b0f19)] relative overflow-hidden">
+      <div className="max-w-[1200px] mx-auto">
         {/* Header */}
-        <div className={styles.header}>
-          <span className={styles.subtitle}>{subtitle || 'Join Our Mission'}</span>
-          <h2 className={styles.title}>
+        <div
+          className={`text-center mb-12 transition-all duration-600 ease-out ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+          }`}
+        >
+          <span className="inline-block font-inter text-xs sm:text-sm font-semibold tracking-widest uppercase text-[var(--brand-accent,#38bdf8)] mb-2">
+            {subtitle || 'Join Our Mission'}
+          </span>
+          <h2 className="font-outfit text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--brand-text,#f8fafc)] m-0 leading-tight flex items-center justify-center gap-3">
             {title || 'Open Opportunities'}{' '}
-            <span className={styles.countBadge}>{jobs.length}</span>
+            <span className="text-sm font-semibold px-3 py-1 rounded-full bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_20%,transparent)] text-[var(--brand-accent,#38bdf8)] border border-[color-mix(in_srgb,var(--brand-primary,#6366f1)_40%,transparent)]">
+              {jobs.length}
+            </span>
           </h2>
-          <div className={styles.titleAccent}></div>
+          <div className="w-16 h-1 bg-gradient-to-r from-[var(--brand-primary,#6366f1)] to-[var(--brand-accent,#38bdf8)] rounded-full mx-auto mt-4"></div>
         </div>
 
         {/* Search & Main Filter Controls */}
-        <div className={styles.controlsRow}>
+        <div
+          className={`flex flex-col gap-5 mb-8 transition-all duration-600 ease-out delay-100 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+          }`}
+        >
           {/* Search Box */}
-          <div className={styles.searchWrapper}>
+          <div className="relative w-full max-w-[680px] mx-auto">
             <svg
-              className={styles.searchIcon}
+              className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_50%,transparent)] pointer-events-none"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -177,14 +189,14 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
             </svg>
             <input
               type="text"
-              className={styles.searchInput}
+              className="w-full py-3.5 pr-11 pl-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl font-inter text-base text-[var(--brand-text,#f8fafc)] outline-none transition-all focus:border-[var(--brand-accent,#38bdf8)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--brand-accent,#38bdf8)_15%,transparent)] focus:bg-white/10 placeholder:text-slate-400"
               placeholder="Search by job title, department, or location..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
               <button
-                className={styles.clearSearchBtn}
+                className="absolute right-5 top-1/2 -translate-y-1/2 bg-transparent border-0 text-slate-400 hover:text-white cursor-pointer text-base p-1"
                 onClick={() => setSearchTerm('')}
                 aria-label="Clear search"
               >
@@ -195,15 +207,19 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
 
           {/* Department Chips */}
           {facets.department?.length > 1 && (
-            <div className={styles.filterGroup}>
-              <span className={styles.filterLabel}>Department:</span>
-              <div className={styles.chipsContainer}>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <span className="font-inter text-xs font-semibold uppercase tracking-wider text-slate-400">Department:</span>
+              <div className="flex items-center justify-center gap-2 flex-wrap">
                 {facets.department.map((dept) => {
                   const isActive = selectedDepts.includes(dept);
                   return (
                     <button
                       key={dept}
-                      className={`${styles.chip} ${isActive ? styles.chipActive : ''}`}
+                      className={`px-4 py-1.5 rounded-xl text-xs font-semibold font-inter cursor-pointer transition-all border ${
+                        isActive
+                          ? 'bg-[var(--brand-primary,#6366f1)] text-white border-[var(--brand-primary,#6366f1)] shadow-md'
+                          : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white'
+                      }`}
                       onClick={() => toggleFilter(dept, selectedDepts, setSelectedDepts)}
                     >
                       {dept}
@@ -216,15 +232,19 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
 
           {/* Work Policy Chips */}
           {facets.work_policy?.length > 1 && (
-            <div className={styles.filterGroup}>
-              <span className={styles.filterLabel}>Workplace:</span>
-              <div className={styles.chipsContainer}>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <span className="font-inter text-xs font-semibold uppercase tracking-wider text-slate-400">Workplace:</span>
+              <div className="flex items-center justify-center gap-2 flex-wrap">
                 {facets.work_policy.map((policy) => {
                   const isActive = selectedPolicies.includes(policy);
                   return (
                     <button
                       key={policy}
-                      className={`${styles.chip} ${isActive ? styles.chipActive : ''}`}
+                      className={`px-4 py-1.5 rounded-xl text-xs font-semibold font-inter cursor-pointer transition-all border ${
+                        isActive
+                          ? 'bg-[var(--brand-primary,#6366f1)] text-white border-[var(--brand-primary,#6366f1)] shadow-md'
+                          : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white'
+                      }`}
                       onClick={() => toggleFilter(policy, selectedPolicies, setSelectedPolicies)}
                     >
                       {policy}
@@ -237,15 +257,19 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
 
           {/* Employment Type Chips */}
           {facets.employment_type?.length > 1 && (
-            <div className={styles.filterGroup}>
-              <span className={styles.filterLabel}>Type:</span>
-              <div className={styles.chipsContainer}>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <span className="font-inter text-xs font-semibold uppercase tracking-wider text-slate-400">Type:</span>
+              <div className="flex items-center justify-center gap-2 flex-wrap">
                 {facets.employment_type.map((type) => {
                   const isActive = selectedTypes.includes(type);
                   return (
                     <button
                       key={type}
-                      className={`${styles.chip} ${isActive ? styles.chipActive : ''}`}
+                      className={`px-4 py-1.5 rounded-xl text-xs font-semibold font-inter cursor-pointer transition-all border ${
+                        isActive
+                          ? 'bg-[var(--brand-primary,#6366f1)] text-white border-[var(--brand-primary,#6366f1)] shadow-md'
+                          : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white'
+                      }`}
                       onClick={() => toggleFilter(type, selectedTypes, setSelectedTypes)}
                     >
                       {type}
@@ -259,123 +283,125 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
 
         {/* Active Filter Badges Bar */}
         {totalActiveFilters > 0 && (
-          <div className={styles.activeFiltersBar}>
-            <span className={styles.activeLabel}>Active Filters ({totalActiveFilters}):</span>
+          <div className="flex items-center justify-center gap-2 flex-wrap p-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl mb-8">
+            <span className="text-xs font-semibold text-slate-300">Active Filters ({totalActiveFilters}):</span>
 
             {searchTerm && (
-              <span className={styles.filterBadge}>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--brand-primary,#6366f1)]/20 border border-[var(--brand-primary,#6366f1)]/40 text-[var(--brand-accent,#38bdf8)] text-xs font-medium">
                 Search: "{searchTerm}"
-                <button onClick={() => setSearchTerm('')}>✕</button>
+                <button onClick={() => setSearchTerm('')} className="bg-transparent border-0 text-slate-300 hover:text-white cursor-pointer ml-1">✕</button>
               </span>
             )}
 
             {selectedDepts.map((d) => (
-              <span key={d} className={styles.filterBadge}>
+              <span key={d} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--brand-primary,#6366f1)]/20 border border-[var(--brand-primary,#6366f1)]/40 text-[var(--brand-accent,#38bdf8)] text-xs font-medium">
                 {d}
-                <button onClick={() => toggleFilter(d, selectedDepts, setSelectedDepts)}>✕</button>
+                <button onClick={() => toggleFilter(d, selectedDepts, setSelectedDepts)} className="bg-transparent border-0 text-slate-300 hover:text-white cursor-pointer ml-1">✕</button>
               </span>
             ))}
 
             {selectedPolicies.map((p) => (
-              <span key={p} className={styles.filterBadge}>
+              <span key={p} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--brand-primary,#6366f1)]/20 border border-[var(--brand-primary,#6366f1)]/40 text-[var(--brand-accent,#38bdf8)] text-xs font-medium">
                 {p}
-                <button onClick={() => toggleFilter(p, selectedPolicies, setSelectedPolicies)}>✕</button>
+                <button onClick={() => toggleFilter(p, selectedPolicies, setSelectedPolicies)} className="bg-transparent border-0 text-slate-300 hover:text-white cursor-pointer ml-1">✕</button>
               </span>
             ))}
 
             {selectedTypes.map((t) => (
-              <span key={t} className={styles.filterBadge}>
+              <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--brand-primary,#6366f1)]/20 border border-[var(--brand-primary,#6366f1)]/40 text-[var(--brand-accent,#38bdf8)] text-xs font-medium">
                 {t}
-                <button onClick={() => toggleFilter(t, selectedTypes, setSelectedTypes)}>✕</button>
+                <button onClick={() => toggleFilter(t, selectedTypes, setSelectedTypes)} className="bg-transparent border-0 text-slate-300 hover:text-white cursor-pointer ml-1">✕</button>
               </span>
             ))}
 
-            <button className={styles.clearAllBtn} onClick={resetAllFilters}>
+            <button className="text-xs font-semibold text-rose-400 hover:text-rose-300 ml-2 bg-transparent border-0 cursor-pointer" onClick={resetAllFilters}>
               Clear All
             </button>
           </div>
         )}
 
         {/* Loading Spinner Overlay / Job Content */}
-        <div className={styles.gridWrapper}>
+        <div className="relative min-h-[300px]">
           {isLoading && (
-            <div className={styles.loadingOverlay}>
-              <div className={styles.spinner}></div>
-              <span>Updating roles from server...</span>
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-xs z-20 flex flex-col items-center justify-center gap-3 rounded-2xl">
+              <div className="w-8 h-8 border-[3px] border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm font-medium text-slate-200 font-inter">Updating roles from server...</span>
             </div>
           )}
 
           {jobs.length > 0 ? (
-            <div className={`${styles.jobsGrid} ${isLoading ? styles.dimmed : ''}`}>
+            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
               {jobs.map((job, idx) => (
                 <div
                   key={job._id || idx}
-                  className={styles.jobCard}
+                  className="group bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:border-[var(--brand-primary,#6366f1)] hover:shadow-xl"
                   style={{ transitionDelay: `${0.04 + idx * 0.03}s` }}
                 >
-                  <div className={styles.cardHeader}>
-                    <span className={styles.deptBadge}>{job.department}</span>
-                    {job.posted_days_ago !== undefined && (
-                      <span className={styles.postedBadge}>
-                        {job.posted_days_ago === 0 ? 'Just added' : `${job.posted_days_ago}d ago`}
-                      </span>
-                    )}
+                  <div>
+                    <div className="flex justify-between items-center gap-2 mb-4">
+                      <span className="px-3 py-1 rounded-md text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">{job.department}</span>
+                      {job.posted_days_ago !== undefined && (
+                        <span className="text-xs font-medium text-slate-400 font-inter">
+                          {job.posted_days_ago === 0 ? 'Just added' : `${job.posted_days_ago}d ago`}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="font-outfit text-xl font-semibold text-[var(--brand-text,#f8fafc)] mb-4 leading-snug group-hover:text-[var(--brand-accent,#38bdf8)] transition-colors">{job.title}</h3>
+
+                    <div className="flex flex-wrap gap-x-4 gap-y-2 mb-6 text-xs text-slate-400 font-inter">
+                      {job.location && (
+                        <span className="flex items-center gap-1.5">
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                          </svg>
+                          {job.location}
+                        </span>
+                      )}
+
+                      {job.work_policy && (
+                        <span className="flex items-center gap-1.5">
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                          </svg>
+                          {job.work_policy}
+                        </span>
+                      )}
+
+                      {job.employment_type && (
+                        <span className="flex items-center gap-1.5">
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                          </svg>
+                          {job.employment_type}
+                        </span>
+                      )}
+
+                      {job.salary_range && (
+                        <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="12" y1="1" x2="12" y2="23" />
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                          </svg>
+                          {job.salary_range}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <h3 className={styles.jobTitle}>{job.title}</h3>
-
-                  <div className={styles.jobMeta}>
-                    {job.location && (
-                      <span className={styles.metaItem}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                          <circle cx="12" cy="10" r="3" />
-                        </svg>
-                        {job.location}
-                      </span>
-                    )}
-
-                    {job.work_policy && (
-                      <span className={styles.metaItem}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                        </svg>
-                        {job.work_policy}
-                      </span>
-                    )}
-
-                    {job.employment_type && (
-                      <span className={styles.metaItem}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="12" cy="12" r="10" />
-                          <polyline points="12 6 12 12 16 14" />
-                        </svg>
-                        {job.employment_type}
-                      </span>
-                    )}
-
-                    {job.salary_range && (
-                      <span className={`${styles.metaItem} ${styles.salaryItem}`}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <line x1="12" y1="1" x2="12" y2="23" />
-                          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                        </svg>
-                        {job.salary_range}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className={styles.cardFooter}>
+                  <div className="pt-4 border-t border-white/10 flex justify-end">
                     <a
                       href={`/companies/${companySlug}/jobs/${job.job_slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={styles.applyBtn}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-accent,#38bdf8)] hover:text-white transition-colors no-underline group/link font-inter"
                     >
                       <span>View Role Details ↗</span>
                       <svg
-                        className={styles.arrowIcon}
+                        className="w-4 h-4 transition-transform group-hover/link:translate-x-1"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -391,13 +417,13 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
             </div>
           ) : (
             /* Empty State */
-            <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>🔎</div>
-              <h3 className={styles.emptyTitle}>No open positions match your search</h3>
-              <p className={styles.emptyText}>
+            <div className="text-center py-16 px-4 bg-white/5 border border-white/10 rounded-2xl max-w-[500px] mx-auto">
+              <div className="text-4xl mb-4">🔎</div>
+              <h3 className="font-outfit text-xl font-bold text-white mb-2">No open positions match your search</h3>
+              <p className="font-inter text-sm text-slate-400 mb-6 leading-relaxed">
                 We couldn't find any jobs matching your current filter criteria. Try adjusting your search query or clear selected filters.
               </p>
-              <button className={styles.resetBtn} onClick={resetAllFilters}>
+              <button className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl transition-colors cursor-pointer border-0" onClick={resetAllFilters}>
                 Clear All Filters
               </button>
             </div>
@@ -406,50 +432,50 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
 
         {/* Job Details Modal Overlay */}
         {activeJobModal && (
-          <div className={styles.modalBackdrop} onClick={() => setActiveJobModal(null)}>
-            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.modalHeader}>
+          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4" onClick={() => setActiveJobModal(null)}>
+            <div className="bg-slate-900 border border-white/15 rounded-2xl max-w-[650px] w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 text-white shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-start gap-4 mb-4 pb-4 border-b border-white/10">
                 <div>
-                  <span className={styles.modalDeptBadge}>{activeJobModal.department}</span>
-                  <h2 className={styles.modalTitle}>{activeJobModal.title}</h2>
+                  <span className="inline-block px-3 py-1 rounded-md text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 mb-2">{activeJobModal.department}</span>
+                  <h2 className="font-outfit text-2xl md:text-3xl font-bold text-white leading-tight">{activeJobModal.title}</h2>
                 </div>
                 <button
-                  className={styles.closeModalBtn}
+                  className="text-slate-400 hover:text-white text-xl bg-transparent border-0 cursor-pointer p-1"
                   onClick={() => setActiveJobModal(null)}
                 >
                   ✕
                 </button>
               </div>
 
-              <div className={styles.modalMetaRow}>
+              <div className="flex flex-wrap gap-2 mb-6">
                 {activeJobModal.location && (
-                  <span className={styles.modalMetaPill}>📍 {activeJobModal.location}</span>
+                  <span className="px-3 py-1 rounded-lg bg-white/10 text-xs font-medium text-slate-200 border border-white/10">📍 {activeJobModal.location}</span>
                 )}
                 {activeJobModal.work_policy && (
-                  <span className={styles.modalMetaPill}>🏢 {activeJobModal.work_policy}</span>
+                  <span className="px-3 py-1 rounded-lg bg-white/10 text-xs font-medium text-slate-200 border border-white/10">🏢 {activeJobModal.work_policy}</span>
                 )}
                 {activeJobModal.employment_type && (
-                  <span className={styles.modalMetaPill}>⏳ {activeJobModal.employment_type}</span>
+                  <span className="px-3 py-1 rounded-lg bg-white/10 text-xs font-medium text-slate-200 border border-white/10">⏳ {activeJobModal.employment_type}</span>
                 )}
                 {activeJobModal.salary_range && (
-                  <span className={`${styles.modalMetaPill} ${styles.modalSalaryPill}`}>
+                  <span className="px-3 py-1 rounded-lg text-xs font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/20">
                     💰 {activeJobModal.salary_range}
                   </span>
                 )}
               </div>
 
-              <div className={styles.modalBody}>
+              <div className="space-y-6 mb-8">
                 {activeJobModal.description && (
-                  <div className={styles.modalSection}>
-                    <h4 className={styles.modalSectionTitle}>Role Description</h4>
-                    <p className={styles.modalText}>{activeJobModal.description}</p>
+                  <div>
+                    <h4 className="font-outfit text-lg font-semibold text-white mb-2">Role Description</h4>
+                    <p className="font-inter text-sm text-slate-300 leading-relaxed">{activeJobModal.description}</p>
                   </div>
                 )}
 
                 {activeJobModal.requirements && activeJobModal.requirements.length > 0 && (
-                  <div className={styles.modalSection}>
-                    <h4 className={styles.modalSectionTitle}>Key Requirements & Qualifications</h4>
-                    <ul className={styles.modalReqList}>
+                  <div>
+                    <h4 className="font-outfit text-lg font-semibold text-white mb-2">Key Requirements & Qualifications</h4>
+                    <ul className="list-disc list-inside space-y-1.5 font-inter text-sm text-slate-300">
                       {(Array.isArray(activeJobModal.requirements)
                         ? activeJobModal.requirements
                         : activeJobModal.requirements.split('\n')
@@ -461,9 +487,9 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                 )}
               </div>
 
-              <div className={styles.modalFooter}>
+              <div className="flex justify-end items-center gap-4 pt-4 border-t border-white/10">
                 <button
-                  className={styles.closeModalFooterBtn}
+                  className="px-5 py-2 rounded-xl text-sm font-medium text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 transition-colors border-0 cursor-pointer"
                   onClick={() => setActiveJobModal(null)}
                 >
                   Close
@@ -474,7 +500,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                     href={activeJobModal.apply_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={styles.externalApplyBtn}
+                    className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl shadow-lg transition-colors no-underline"
                   >
                     Apply on ATS Portal ↗
                   </a>
@@ -487,3 +513,4 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
     </section>
   );
 }
+

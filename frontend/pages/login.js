@@ -45,84 +45,36 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: '#0b0f19',
-      color: '#f8fafc',
-      fontFamily: "'Inter', sans-serif",
-      padding: '2rem 1rem',
-    }}>
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-50 font-sans p-4 sm:p-8">
       <Head>
         <title>Recruiter Sign In | Careers Page Builder</title>
       </Head>
 
-      <div style={{
-        width: '100%',
-        maxWidth: '420px',
-        background: '#131926',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        borderRadius: '16px',
-        padding: '2.5rem 2rem',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-      }}>
+      <div className="w-full max-w-md bg-slate-900 border border-white/10 rounded-2xl p-8 sm:p-10 shadow-2xl">
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <span style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '4px 12px',
-            borderRadius: '20px',
-            background: 'rgba(99, 102, 241, 0.15)',
-            border: '1px solid rgba(99, 102, 241, 0.3)',
-            color: '#818cf8',
-            fontSize: '12px',
-            fontWeight: 600,
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            marginBottom: '1rem',
-          }}>
+        <div className="text-center mb-8">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-semibold tracking-wider uppercase mb-4">
             <UilLockAlt size={14} /> Recruiter Portal
           </span>
-          <h1 style={{
-            fontFamily: "'Outfit', sans-serif",
-            fontSize: '1.75rem',
-            fontWeight: 700,
-            margin: '0 0 0.5rem 0',
-            color: '#ffffff',
-          }}>
+          <h1 className="font-outfit text-2xl sm:text-3xl font-bold m-0 mb-2 text-white">
             Welcome Back
           </h1>
-          <p style={{ fontSize: '0.9rem', color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
+          <p className="text-sm text-slate-400 m-0 leading-relaxed">
             Sign in to access your company's careers page editor.
           </p>
         </div>
 
         {/* Error Alert */}
         {errorMessage && (
-          <div style={{
-            background: 'rgba(239, 68, 68, 0.1)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-            color: '#fca5a5',
-            padding: '10px 14px',
-            borderRadius: '8px',
-            fontSize: '13px',
-            marginBottom: '1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}>
+          <div className="bg-red-500/10 border border-red-500/30 text-red-300 p-3.5 rounded-xl text-xs mb-6 flex items-center gap-2">
             <UilExclamationTriangle size={16} /> {errorMessage}
           </div>
         )}
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', fontSize: '13px', color: '#cbd5e1', fontWeight: 500, marginBottom: '6px' }}>
+          <div className="mb-5">
+            <label className="block text-xs font-medium text-slate-300 mb-1.5">
               Work Email Address
             </label>
             <input
@@ -131,22 +83,12 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{
-                width: '100%',
-                background: '#0b0f19',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '8px',
-                padding: '10px 14px',
-                color: '#ffffff',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
+              className="w-full bg-slate-950 border border-white/15 rounded-lg px-3.5 py-2.5 text-white text-sm outline-none focus:border-indigo-500 transition-colors"
             />
           </div>
 
-          <div style={{ marginBottom: '1.75rem' }}>
-            <label style={{ display: 'block', fontSize: '13px', color: '#cbd5e1', fontWeight: 500, marginBottom: '6px' }}>
+          <div className="mb-7">
+            <label className="block text-xs font-medium text-slate-300 mb-1.5">
               Password
             </label>
             <input
@@ -155,46 +97,23 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{
-                width: '100%',
-                background: '#0b0f19',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '8px',
-                padding: '10px 14px',
-                color: '#ffffff',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
+              className="w-full bg-slate-950 border border-white/15 rounded-lg px-3.5 py-2.5 text-white text-sm outline-none focus:border-indigo-500 transition-colors"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            style={{
-              width: '100%',
-              padding: '12px',
-              borderRadius: '8px',
-              border: 'none',
-              background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-              color: '#ffffff',
-              fontWeight: 600,
-              fontSize: '14px',
-              cursor: isSubmitting ? 'not-allowed' : 'pointer',
-              opacity: isSubmitting ? 0.7 : 1,
-              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
-              transition: 'all 0.2s ease',
-            }}
+            className="w-full py-3 rounded-lg border-none bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-semibold text-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed shadow-md shadow-indigo-500/30 hover:from-indigo-600 hover:to-indigo-700 transition-all"
           >
             {isSubmitting ? 'Authenticating...' : 'Sign In to Editor →'}
           </button>
         </form>
 
         {/* Footer Link */}
-        <div style={{ textAlign: 'center', marginTop: '1.75rem', fontSize: '13px', color: '#64748b' }}>
+        <div className="text-center mt-7 text-xs text-slate-500">
           Don't have a recruiter account yet?{' '}
-          <Link href="/register" style={{ color: '#818cf8', fontWeight: 500, textDecoration: 'none' }}>
+          <Link href="/register" className="text-indigo-400 font-medium no-underline hover:underline">
             Register your company
           </Link>
         </div>

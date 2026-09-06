@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './GallerySection.module.css';
 
 export default function GallerySection({ title, subtitle, content }) {
   const images = content?.images || [
@@ -18,18 +17,20 @@ export default function GallerySection({ title, subtitle, content }) {
   ];
 
   return (
-    <section className={styles.gallerySection} id="gallery-section">
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>{title || 'Life at the Office & Remote'}</h2>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+    <section className="py-20 px-6 sm:px-8 bg-transparent text-[var(--brand-text,#f8fafc)]" id="gallery-section">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="text-center max-w-[700px] mx-auto mb-14">
+          <h2 className="font-outfit text-3xl sm:text-4xl font-bold mb-3 text-[var(--brand-text,#f8fafc)] tracking-tight">
+            {title || 'Life at the Office & Remote'}
+          </h2>
+          {subtitle && <p className="font-inter text-base sm:text-lg text-slate-400 leading-relaxed">{subtitle}</p>}
         </div>
 
-        <div className={styles.grid}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {images.map((img, index) => (
-            <div key={index} className={styles.card}>
-              <img src={img.url} alt={img.caption || 'Gallery photo'} className={styles.image} />
-              {img.caption && <div className={styles.caption}>{img.caption}</div>}
+            <div key={index} className="group relative rounded-2xl overflow-hidden aspect-[4/3] border border-white/10 shadow-md">
+              <img src={img.url} alt={img.caption || 'Gallery photo'} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+              {img.caption && <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white text-sm font-medium font-inter">{img.caption}</div>}
             </div>
           ))}
         </div>
@@ -37,3 +38,4 @@ export default function GallerySection({ title, subtitle, content }) {
     </section>
   );
 }
+

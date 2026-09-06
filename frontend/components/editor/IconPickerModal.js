@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import styles from './Editor.module.css';
 
 const ICON_CATEGORIES = {
   All: ['🚀', '💼', '🏠', '📚', '🏥', '📈', '🌴', '✈️', '👶', '💻', '💡', '🤝', '🏆', '🌍', '🎯', '🌱', '⭐', '❤️', '🔥', '⚡', '🎨', '🔒', '👥', '💬', '❓', '📢', '🖼️', '🛠️', '🎓', '🎁', '☕', '🍕', '🎉', '🌟', '💪', '🧠', '👑', '🔮', '🧘', '🚲'],
@@ -19,55 +18,31 @@ export default function IconPickerModal({ isOpen, onClose, onSelectIcon }) {
   const filteredIcons = currentIcons.filter((icon) => icon.includes(searchTerm));
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(15, 23, 42, 0.4)',
-      backdropFilter: 'blur(8px)',
-      zIndex: 9999,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '16px',
-    }}>
-      <div style={{
-        background: '#ffffff',
-        border: '1px solid #e2e8f0',
-        borderRadius: '16px',
-        width: '100%',
-        maxWidth: '480px',
-        padding: '24px',
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.15)',
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: '#0f172a' }}>
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[9999] flex items-center justify-center p-4">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="m-0 text-base font-semibold text-slate-900">
             Choose an Icon
           </h3>
           <button
             onClick={onClose}
-            style={{ background: '#e2e8f0', border: 'none', color: '#475569', borderRadius: '50%', width: '28px', height: '28px', fontSize: '16px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            className="bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full w-7 h-7 text-base cursor-pointer flex items-center justify-center border-none transition-colors"
           >
             ×
           </button>
         </div>
 
         {/* Category Tabs */}
-        <div style={{ display: 'flex', gap: '6px', marginBottom: '16px', overflowX: 'auto', paddingBottom: '4px' }}>
+        <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1">
           {Object.keys(ICON_CATEGORIES).map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '8px',
-                border: 'none',
-                background: activeCategory === cat ? '#2563eb' : '#f1f5f9',
-                color: activeCategory === cat ? '#ffffff' : '#64748b',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
+              className={`px-3 py-1.5 rounded-lg border-none text-xs font-semibold cursor-pointer whitespace-nowrap transition-colors ${
+                activeCategory === cat
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
             >
               {cat}
             </button>
@@ -75,17 +50,7 @@ export default function IconPickerModal({ isOpen, onClose, onSelectIcon }) {
         </div>
 
         {/* Icon Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(6, 1fr)',
-          gap: '10px',
-          maxHeight: '260px',
-          overflowY: 'auto',
-          padding: '12px',
-          background: '#f8fafc',
-          borderRadius: '12px',
-          border: '1px solid #e2e8f0',
-        }}>
+        <div className="grid grid-cols-6 gap-2.5 max-h-64 overflow-y-auto p-3 bg-slate-50 rounded-xl border border-slate-200">
           {filteredIcons.map((icon, idx) => (
             <button
               key={idx}
@@ -93,28 +58,7 @@ export default function IconPickerModal({ isOpen, onClose, onSelectIcon }) {
                 onSelectIcon(icon);
                 onClose();
               }}
-              style={{
-                fontSize: '24px',
-                height: '48px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: '#ffffff',
-                border: '1px solid #cbd5e1',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#eff6ff';
-                e.currentTarget.style.borderColor = '#2563eb';
-                e.currentTarget.style.transform = 'scale(1.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#ffffff';
-                e.currentTarget.style.borderColor = '#cbd5e1';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
+              className="text-2xl h-12 flex items-center justify-center bg-white border border-slate-300 rounded-lg cursor-pointer transition-all hover:bg-blue-50 hover:border-blue-600 hover:scale-110"
             >
               {icon}
             </button>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import styles from './Editor.module.css';
 import { UilExclamationTriangle, UilRocket } from '@iconscout/react-unicons';
 
 const WORK_POLICY_OPTIONS = ['Hybrid', 'Remote', 'On-site'];
@@ -117,65 +116,39 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-slate-900/75 backdrop-blur-md flex items-center justify-center z-[9999] p-4 sm:p-6" onClick={onClose}>
+      <div className="bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
         
         {/* Header */}
-        <div style={{
-          padding: '1.25rem 1.5rem',
-          borderBottom: '1px solid #e2e8f0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: '#f8fafc',
-        }}>
+        <div className="px-6 py-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
           <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#0f172a' }}>
+            <h2 className="text-xl font-bold m-0 text-slate-900">
               {jobToEdit ? 'Edit Job Posting' : 'Create New Job Posting'}
             </h2>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '2px 0 0 0' }}>
+            <p className="text-xs text-slate-500 m-0 mt-0.5">
               Configure role details, categorical metadata, and rich description.
             </p>
           </div>
           <button
             onClick={onClose}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              fontSize: '1.25rem',
-              color: '#64748b',
-              cursor: 'pointer',
-              padding: '4px 8px',
-              borderRadius: '6px',
-            }}
+            className="bg-transparent border-none text-xl text-slate-500 hover:text-slate-800 cursor-pointer p-1 rounded-md transition-colors"
           >
             ✕
           </button>
         </div>
 
         {/* Form Body */}
-        <div style={{ padding: '1.5rem', overflowY: 'auto', flex: 1 }}>
+        <div className="p-6 overflow-y-auto flex-1">
           {error && (
-            <div style={{
-              background: '#fef2f2',
-              border: '1px solid #fca5a5',
-              color: '#991b1b',
-              padding: '10px 14px',
-              borderRadius: '8px',
-              fontSize: '13px',
-              marginBottom: '1.25rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}>
+            <div className="bg-red-50 border border-red-300 text-red-800 p-3 rounded-lg text-xs mb-5 flex items-center gap-2">
               <UilExclamationTriangle size={16} /> {error}
             </div>
           )}
 
           {/* Job Title & Location Row */}
-          <div className={styles.modalFormGrid}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">
                 Job Title *
               </label>
               <input
@@ -183,11 +156,11 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
                 placeholder="e.g. Senior Backend Engineer"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className={styles.inputField}
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors"
               />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">
                 Location *
               </label>
               <input
@@ -195,21 +168,21 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
                 placeholder="e.g. Bangalore, India"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className={styles.inputField}
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors"
               />
             </div>
           </div>
 
           {/* Department & Salary Range Row */}
-          <div className={styles.modalFormGrid}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">
                 Department
               </label>
               <select
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
-                className={styles.selectField}
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors cursor-pointer"
               >
                 {DEPARTMENT_OPTIONS.map((dept) => (
                   <option key={dept} value={dept}>{dept}</option>
@@ -217,7 +190,7 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">
                 Salary Range
               </label>
               <input
@@ -225,22 +198,21 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
                 placeholder="e.g. USD 80K–120K / year"
                 value={salaryRange}
                 onChange={(e) => setSalaryRange(e.target.value)}
-                className={styles.inputField}
+                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors"
               />
             </div>
           </div>
 
           {/* Categorical Selects Grid */}
-          <div className={styles.modalSelectsGrid}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
             <div>
-              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>
+              <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                 Workplace
               </label>
               <select
                 value={workPolicy}
                 onChange={(e) => setWorkPolicy(e.target.value)}
-                className={styles.selectField}
-                style={{ fontSize: '12px', padding: '6px 8px' }}
+                className="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors cursor-pointer"
               >
                 {WORK_POLICY_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
@@ -249,14 +221,13 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>
+              <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                 Employment Type
               </label>
               <select
                 value={employmentType}
                 onChange={(e) => setEmploymentType(e.target.value)}
-                className={styles.selectField}
-                style={{ fontSize: '12px', padding: '6px 8px' }}
+                className="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors cursor-pointer"
               >
                 {EMPLOYMENT_TYPE_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
@@ -265,14 +236,13 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>
+              <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                 Experience Level
               </label>
               <select
                 value={experienceLevel}
                 onChange={(e) => setExperienceLevel(e.target.value)}
-                className={styles.selectField}
-                style={{ fontSize: '12px', padding: '6px 8px' }}
+                className="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors cursor-pointer"
               >
                 {EXPERIENCE_LEVEL_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
@@ -281,14 +251,13 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>
+              <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                 Job Type
               </label>
               <select
                 value={jobType}
                 onChange={(e) => setJobType(e.target.value)}
-                className={styles.selectField}
-                style={{ fontSize: '12px', padding: '6px 8px' }}
+                className="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors cursor-pointer"
               >
                 {JOB_TYPE_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
@@ -298,30 +267,30 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
           </div>
 
           {/* Job Description & Formatting Toolbar */}
-          <div style={{ marginBottom: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}>
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-semibold text-slate-600">
                 Rich Job Description
               </label>
-              <div style={{ display: 'flex', gap: '4px' }}>
+              <div className="flex gap-1">
                 <button
                   type="button"
                   onClick={() => handleInsertFormat('### Header Title')}
-                  style={{ fontSize: '11px', padding: '2px 6px', background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer' }}
+                  className="text-[11px] px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-700 hover:bg-slate-200 cursor-pointer"
                 >
                   H3 Heading
                 </button>
                 <button
                   type="button"
                   onClick={() => handleInsertFormat('- Bullet Point')}
-                  style={{ fontSize: '11px', padding: '2px 6px', background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer' }}
+                  className="text-[11px] px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-700 hover:bg-slate-200 cursor-pointer"
                 >
                   • List Item
                 </button>
                 <button
                   type="button"
                   onClick={() => handleInsertFormat('**Bold text**')}
-                  style={{ fontSize: '11px', padding: '2px 6px', background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                  className="text-[11px] px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-700 hover:bg-slate-200 cursor-pointer font-bold"
                 >
                   B
                 </button>
@@ -332,53 +301,27 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
               placeholder="Provide a detailed description of the role, responsibilities, and qualifications..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className={styles.textareaField}
-              style={{ minHeight: '140px' }}
+              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors resize-y min-h-[140px]"
             />
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div style={{
-          padding: '1rem 1.5rem',
-          background: '#f8fafc',
-          borderTop: '1px solid #e2e8f0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
           <button
             type="button"
             onClick={onClose}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '6px',
-              border: '1px solid #cbd5e1',
-              background: '#ffffff',
-              color: '#475569',
-              fontWeight: 500,
-              fontSize: '13px',
-              cursor: 'pointer',
-            }}
+            className="px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-600 font-medium text-xs hover:bg-slate-100 cursor-pointer transition-colors"
           >
             Cancel
           </button>
 
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div className="flex gap-2">
             <button
               type="button"
               disabled={isSubmitting}
               onClick={() => handleSave('DRAFT')}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '6px',
-                border: '1px solid #cbd5e1',
-                background: '#f1f5f9',
-                color: '#334155',
-                fontWeight: 600,
-                fontSize: '13px',
-                cursor: isSubmitting ? 'not-allowed' : 'pointer',
-              }}
+              className="px-4 py-2 rounded-lg border border-slate-300 bg-slate-100 text-slate-700 font-semibold text-xs hover:bg-slate-200 cursor-pointer disabled:opacity-50 transition-colors"
             >
               {isSubmitting ? 'Saving...' : 'Save as Draft'}
             </button>
@@ -387,20 +330,7 @@ export default function JobEditorModal({ isOpen, onClose, companySlug, token, jo
               type="button"
               disabled={isSubmitting}
               onClick={() => handleSave('PUBLISHED')}
-              style={{
-                padding: '8px 20px',
-                borderRadius: '6px',
-                border: 'none',
-                background: 'linear-gradient(135deg, #10b981, #059669)',
-                color: '#ffffff',
-                fontWeight: 600,
-                fontSize: '13px',
-                cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                boxShadow: '0 2px 6px rgba(16, 185, 129, 0.25)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}
+              className="px-5 py-2 rounded-lg border-none bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold text-xs shadow-md shadow-emerald-500/20 hover:from-emerald-600 hover:to-emerald-700 cursor-pointer disabled:opacity-50 inline-flex items-center gap-1.5 transition-all"
             >
               {isSubmitting ? 'Publishing...' : <><UilRocket size={14} /> Publish Live</>}
             </button>

@@ -317,132 +317,56 @@ export default function JobsManagementPage() {
   const isSomeSelected = selectedIds.length > 0 && !allSelected;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#0f172a', fontFamily: 'Inter, system-ui, sans-serif', display: 'flex', flexDirection: 'column' }}>
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
       
       {/* Toast Notification */}
       {toast && (
-        <div style={{
-          position: 'fixed',
-          top: '20px',
-          right: '20px',
-          zIndex: 99999,
-          background: toast.type === 'error' ? '#ef4444' : '#10b981',
-          color: '#ffffff',
-          padding: '12px 20px',
-          borderRadius: '8px',
-          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-          fontSize: '14px',
-          fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-        }}>
+        <div className={`fixed top-5 right-5 z-[99999] text-white px-5 py-3 rounded-lg shadow-xl text-sm font-semibold flex items-center gap-2 ${
+          toast.type === 'error' ? 'bg-red-500' : 'bg-emerald-500'
+        }`}>
           {toast.type === 'error' ? <UilExclamationTriangle size={18} /> : <UilCheckCircle size={18} />} {toast.message}
         </div>
       )}
 
       {/* Recruiter Navigation Bar */}
-      <header style={{
-        background: '#ffffff',
-        borderBottom: '1px solid #e2e8f0',
-        padding: '0 2rem',
-        height: '64px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '18px', color: '#0f172a', letterSpacing: '-0.02em' }}>
-            <span style={{ background: 'linear-gradient(135deg, #2563eb, #3b82f6)', color: '#fff', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <header className="bg-white border-b border-slate-200 px-8 h-16 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 font-extrabold text-lg text-slate-900 tracking-tight">
+            <span className="bg-gradient-to-r from-blue-600 to-blue-500 text-white w-8 h-8 rounded-lg flex items-center justify-center">
               <UilBriefcase size={18} />
             </span>
             {user?.company?.name || user?.companyName || 'Recruiter Portal'}
           </div>
 
-          <div style={{ height: '24px', width: '1px', background: '#e2e8f0' }} />
+          <div className="h-6 w-px bg-slate-200" />
 
-          <nav style={{ display: 'flex', gap: '6px' }}>
-            <Link href="/editor" style={{
-              padding: '8px 16px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#64748b',
-              textDecoration: 'none',
-              transition: 'all 0.15s',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-            }}>
+          <nav className="flex gap-1.5">
+            <Link href="/editor" className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-1.5 no-underline">
               <UilPalette size={16} /> Careers Page
             </Link>
-            <Link href="/jobs" style={{
-              padding: '8px 16px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#2563eb',
-              background: '#eff6ff',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-            }}>
+            <Link href="/jobs" className="px-4 py-2 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 flex items-center gap-1.5 no-underline">
               <UilBriefcase size={16} /> Jobs
             </Link>
           </nav>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div className="flex items-center gap-4">
           <a
             href={`/companies/${companySlug}/careers`}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              fontSize: '13px',
-              fontWeight: 600,
-              color: '#475569',
-              textDecoration: 'none',
-              padding: '6px 12px',
-              border: '1px solid #cbd5e1',
-              borderRadius: '6px',
-              background: '#ffffff',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-            }}
+            className="text-xs font-semibold text-slate-600 no-underline px-3 py-1.5 border border-slate-300 rounded-md bg-white inline-flex items-center gap-1 hover:bg-slate-50 transition-colors"
           >
             Live Site <UilExternalLinkAlt size={14} />
           </a>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              background: '#2563eb',
-              color: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '14px',
-              fontWeight: 700,
-            }}>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold">
               {user?.name ? user.name[0].toUpperCase() : 'R'}
             </div>
             <button
               onClick={logout}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#ef4444',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
+              className="bg-transparent border-none text-red-500 text-xs font-semibold cursor-pointer hover:text-red-600 transition-colors"
             >
               Logout
             </button>
@@ -451,43 +375,29 @@ export default function JobsManagementPage() {
       </header>
 
       {/* Main Workspace Container */}
-      <main style={{ flex: 1, maxWidth: '1280px', width: '100%', margin: '0 auto', padding: '2rem' }}>
+      <main className="flex-1 max-w-7xl w-full mx-auto p-8">
         
         {/* Page Title & + Create Job */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, margin: 0, color: '#0f172a', letterSpacing: '-0.02em' }}>
+            <h1 className="text-3xl font-extrabold m-0 text-slate-900 tracking-tight">
               Jobs
             </h1>
-            <p style={{ fontSize: '0.95rem', color: '#64748b', margin: '4px 0 0 0' }}>
+            <p className="text-sm text-slate-500 m-0 mt-1">
               Manage your company&apos;s open positions, track role statuses, and publish postings.
             </p>
           </div>
 
           <button
             onClick={handleOpenCreateModal}
-            style={{
-              background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '10px',
-              padding: '10px 20px',
-              fontSize: '14px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
-              transition: 'transform 0.15s, boxShadow 0.15s',
-            }}
+            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white border-none rounded-xl px-5 py-2.5 text-sm font-semibold cursor-pointer flex items-center gap-2 shadow-md shadow-blue-600/25 hover:from-blue-700 hover:to-blue-800 transition-all"
           >
             <UilPlus size={18} /> Create Job
           </button>
         </div>
 
         {/* Status Count Pills */}
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+        <div className="flex gap-2 mb-6 flex-wrap">
           {[
             { key: 'ALL', label: 'All Jobs', count: statusCounts.ALL },
             { key: 'PUBLISHED', label: 'Published', count: statusCounts.PUBLISHED },
@@ -500,30 +410,16 @@ export default function JobsManagementPage() {
               <button
                 key={tab.key}
                 onClick={() => { setStatusFilter(tab.key); setPage(1); }}
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: '20px',
-                  fontSize: '13px',
-                  fontWeight: isActive ? 700 : 500,
-                  border: isActive ? '1px solid #2563eb' : '1px solid #e2e8f0',
-                  background: isActive ? '#eff6ff' : '#ffffff',
-                  color: isActive ? '#2563eb' : '#64748b',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.15s',
-                }}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-all border ${
+                  isActive
+                    ? 'border-blue-600 bg-blue-50 text-blue-600 font-bold'
+                    : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-100'
+                }`}
               >
                 {tab.label}
-                <span style={{
-                  background: isActive ? '#bfdbfe' : '#f1f5f9',
-                  color: isActive ? '#1e40af' : '#475569',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  padding: '1px 6px',
-                  borderRadius: '10px',
-                }}>
+                <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${
+                  isActive ? 'bg-blue-200 text-blue-800' : 'bg-slate-100 text-slate-600'
+                }`}>
                   {tab.count}
                 </span>
               </button>
@@ -532,25 +428,13 @@ export default function JobsManagementPage() {
         </div>
 
         {/* Filters & Search Toolbar */}
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '12px',
-          padding: '1rem',
-          border: '1px solid #e2e8f0',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-          marginBottom: '1rem',
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
+        <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm mb-4 flex flex-wrap gap-4 items-center justify-between">
           {/* Left Controls: Search & Select Filters */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', flex: 1, minWidth: '300px' }}>
+          <div className="flex flex-wrap gap-3 flex-1 min-w-[300px]">
             
             {/* Search Input */}
-            <div style={{ position: 'relative', flex: 1, minWidth: '220px' }}>
-              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', display: 'flex', alignItems: 'center' }}>
+            <div className="relative flex-1 min-w-[220px]">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 flex items-center">
                 <UilSearch size={16} />
               </span>
               <input
@@ -558,19 +442,12 @@ export default function JobsManagementPage() {
                 placeholder="Search jobs by title, department, location..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px 8px 36px',
-                  borderRadius: '8px',
-                  border: '1px solid #cbd5e1',
-                  fontSize: '13px',
-                  outline: 'none',
-                }}
+                className="w-full pl-9 pr-8 py-2 rounded-lg border border-slate-300 text-xs outline-none focus:border-blue-600 transition-colors"
               />
               {search && (
                 <button
                   onClick={() => setSearch('')}
-                  style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '14px' }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-transparent border-none text-slate-400 cursor-pointer text-sm"
                 >
                   ✕
                 </button>
@@ -581,15 +458,7 @@ export default function JobsManagementPage() {
             <select
               value={departmentFilter}
               onChange={(e) => { setDepartmentFilter(e.target.value); setPage(1); }}
-              style={{
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: '1px solid #cbd5e1',
-                fontSize: '13px',
-                background: '#ffffff',
-                color: '#334155',
-                cursor: 'pointer',
-              }}
+              className="px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white text-slate-700 cursor-pointer"
             >
               <option value="ALL">Department: All</option>
               {availableDepartments.map((dept) => (
@@ -601,15 +470,7 @@ export default function JobsManagementPage() {
             <select
               value={locationFilter}
               onChange={(e) => { setLocationFilter(e.target.value); setPage(1); }}
-              style={{
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: '1px solid #cbd5e1',
-                fontSize: '13px',
-                background: '#ffffff',
-                color: '#334155',
-                cursor: 'pointer',
-              }}
+              className="px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white text-slate-700 cursor-pointer"
             >
               <option value="ALL">Location: All</option>
               {availableLocations.map((loc) => (
@@ -620,21 +481,12 @@ export default function JobsManagementPage() {
           </div>
 
           {/* Right Control: Sorting */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '13px', color: '#64748b', fontWeight: 500 }}>Sort by:</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-500 font-medium">Sort by:</span>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              style={{
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: '1px solid #cbd5e1',
-                fontSize: '13px',
-                background: '#ffffff',
-                color: '#334155',
-                cursor: 'pointer',
-                fontWeight: 600,
-              }}
+              className="px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white text-slate-700 cursor-pointer font-semibold"
             >
               <option value="recently_created">Recently Created</option>
               <option value="recently_updated">Recently Updated</option>
@@ -646,42 +498,19 @@ export default function JobsManagementPage() {
 
         {/* Bulk Actions Floating Bar */}
         {selectedIds.length > 0 && (
-          <div style={{
-            background: '#0f172a',
-            color: '#ffffff',
-            borderRadius: '12px',
-            padding: '12px 20px',
-            marginBottom: '1rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.3)',
-            animation: 'fadeIn 0.2s ease-in-out',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', fontWeight: 600 }}>
-              <span style={{ background: '#2563eb', padding: '2px 10px', borderRadius: '12px', fontSize: '12px' }}>
+          <div className="bg-slate-900 text-white rounded-xl px-5 py-3 mb-4 flex items-center justify-between shadow-xl">
+            <div className="flex items-center gap-3 text-sm font-semibold">
+              <span className="bg-blue-600 px-2.5 py-0.5 rounded-full text-xs">
                 {selectedIds.length} selected
               </span>
               <span>Bulk management actions:</span>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="flex gap-2">
               <button
                 disabled={bulkActionLoading}
                 onClick={() => handleBulkStatusChange('PUBLISHED')}
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: '#16a34a',
-                  color: '#ffffff',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
+                className="px-3.5 py-1.5 rounded-md border-none bg-emerald-600 text-white text-xs font-semibold cursor-pointer inline-flex items-center gap-1 hover:bg-emerald-700 transition-colors"
               >
                 <UilRocket size={14} /> Publish
               </button>
@@ -689,19 +518,7 @@ export default function JobsManagementPage() {
               <button
                 disabled={bulkActionLoading}
                 onClick={() => handleBulkStatusChange('CLOSED')}
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: '#d97706',
-                  color: '#ffffff',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
+                className="px-3.5 py-1.5 rounded-md border-none bg-amber-600 text-white text-xs font-semibold cursor-pointer inline-flex items-center gap-1 hover:bg-amber-700 transition-colors"
               >
                 <UilPauseCircle size={14} /> Close
               </button>
@@ -709,19 +526,7 @@ export default function JobsManagementPage() {
               <button
                 disabled={bulkActionLoading}
                 onClick={() => handleBulkStatusChange('ARCHIVED')}
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: '#4b5563',
-                  color: '#ffffff',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
+                className="px-3.5 py-1.5 rounded-md border-none bg-slate-600 text-white text-xs font-semibold cursor-pointer inline-flex items-center gap-1 hover:bg-slate-700 transition-colors"
               >
                 <UilArchive size={14} /> Archive
               </button>
@@ -729,19 +534,7 @@ export default function JobsManagementPage() {
               <button
                 disabled={bulkActionLoading}
                 onClick={() => setDeleteConfirmTarget({ type: 'bulk' })}
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: '#dc2626',
-                  color: '#ffffff',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
+                className="px-3.5 py-1.5 rounded-md border-none bg-red-600 text-white text-xs font-semibold cursor-pointer inline-flex items-center gap-1 hover:bg-red-700 transition-colors"
               >
                 <UilTrashAlt size={14} /> Delete
               </button>
@@ -750,33 +543,27 @@ export default function JobsManagementPage() {
         )}
 
         {/* Scalable Job Table */}
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '12px',
-          border: '1px solid #e2e8f0',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-          overflow: 'hidden',
-        }}>
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           {loading ? (
-            <div style={{ padding: '4rem', textAlign: 'center', color: '#64748b' }}>
-              <div style={{ fontSize: '24px', marginBottom: '12px', display: 'flex', justifyContent: 'center' }}>
+            <div className="p-16 text-center text-slate-500">
+              <div className="text-2xl mb-3 flex justify-center">
                 <UilSync size={24} className="animate-spin" />
               </div>
               Loading job postings...
             </div>
           ) : error ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            <div className="p-12 text-center text-red-500 text-sm flex items-center justify-center gap-2">
               <UilExclamationTriangle size={20} /> {error}
             </div>
           ) : jobs.length === 0 ? (
-            <div style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-              <div style={{ fontSize: '48px', marginBottom: '1rem', color: '#94a3b8', display: 'flex', justifyContent: 'center' }}>
+            <div className="p-16 text-center">
+              <div className="text-5xl mb-4 text-slate-400 flex justify-center">
                 <UilInbox size={48} />
               </div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 6px 0', color: '#1e293b' }}>
+              <h3 className="text-lg font-bold m-0 mb-1.5 text-slate-800">
                 No jobs found
               </h3>
-              <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 1.5rem 0', maxWidth: '400px', marginLeft: 'auto', marginRight: 'auto' }}>
+              <p className="text-sm text-slate-500 m-0 mb-6 max-w-sm mx-auto">
                 {debouncedSearch || statusFilter !== 'ALL' || departmentFilter !== 'ALL'
                   ? 'No roles match your search filters. Try clearing filters to see all jobs.'
                   : "You haven't created any job postings yet. Get started by creating your first position!"}
@@ -784,14 +571,14 @@ export default function JobsManagementPage() {
               {debouncedSearch || statusFilter !== 'ALL' || departmentFilter !== 'ALL' ? (
                 <button
                   onClick={() => { setSearch(''); setStatusFilter('ALL'); setDepartmentFilter('ALL'); setLocationFilter('ALL'); }}
-                  style={{ padding: '8px 16px', background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '8px', color: '#334155', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
+                  className="px-4 py-2 bg-slate-100 border border-slate-300 rounded-lg text-slate-700 font-semibold text-xs cursor-pointer hover:bg-slate-200 transition-colors"
                 >
                   Clear Filters
                 </button>
               ) : (
                 <button
                   onClick={handleOpenCreateModal}
-                  style={{ padding: '10px 20px', background: '#2563eb', border: 'none', borderRadius: '8px', color: '#ffffff', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}
+                  className="px-5 py-2.5 bg-blue-600 border-none rounded-lg text-white font-semibold text-sm cursor-pointer hover:bg-blue-700 transition-colors"
                 >
                   + Create Your First Job
                 </button>
@@ -799,47 +586,26 @@ export default function JobsManagementPage() {
             </div>
           ) : (
             <>
-              {/* Responsive Styles for Jobs Page */}
-              <style jsx>{`
-                .jobs-table-container {
-                  display: block;
-                }
-                .jobs-cards-container {
-                  display: none;
-                }
-                @media (max-width: 767px) {
-                  .jobs-table-container {
-                    display: none;
-                  }
-                  .jobs-cards-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                    padding: 12px;
-                  }
-                }
-              `}</style>
-
-              {/* Desktop / Tablet Table View (>= 768px) */}
-              <div className="jobs-table-container" style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+              {/* Desktop / Tablet Table View */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full border-collapse text-left text-xs">
                   <thead>
-                    <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: '#475569', fontWeight: 600 }}>
-                      <th style={{ padding: '12px 16px', width: '40px' }}>
+                    <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                      <th className="p-3 px-4 w-10">
                         <input
                           type="checkbox"
                           checked={allSelected}
                           ref={(el) => el && (el.indeterminate = isSomeSelected)}
                           onChange={handleSelectAll}
-                          style={{ cursor: 'pointer' }}
+                          className="cursor-pointer"
                         />
                       </th>
-                      <th style={{ padding: '12px 16px' }}>Job Title</th>
-                      <th style={{ padding: '12px 16px' }}>Department</th>
-                      <th style={{ padding: '12px 16px' }}>Location</th>
-                      <th style={{ padding: '12px 16px' }}>Employment Type</th>
-                      <th style={{ padding: '12px 16px' }}>Status</th>
-                      <th style={{ padding: '12px 16px', textAlign: 'right', minWidth: '220px' }}>Actions</th>
+                      <th className="p-3 px-4">Job Title</th>
+                      <th className="p-3 px-4">Department</th>
+                      <th className="p-3 px-4">Location</th>
+                      <th className="p-3 px-4">Employment Type</th>
+                      <th className="p-3 px-4">Status</th>
+                      <th className="p-3 px-4 text-right min-w-[220px]">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -850,97 +616,72 @@ export default function JobsManagementPage() {
                       return (
                         <tr
                           key={job._id}
-                          style={{
-                            borderBottom: '1px solid #f1f5f9',
-                            background: isSelected ? '#eff6ff' : '#ffffff',
-                            transition: 'background 0.15s',
-                          }}
+                          className={`border-b border-slate-100 transition-colors ${
+                            isSelected ? 'bg-blue-50/60' : 'bg-white hover:bg-slate-50/50'
+                          }`}
                         >
                           {/* Checkbox */}
-                          <td style={{ padding: '14px 16px' }}>
+                          <td className="p-3.5 px-4">
                             <input
                               type="checkbox"
                               checked={isSelected}
                               onChange={() => handleSelectOne(job._id)}
-                              style={{ cursor: 'pointer' }}
+                              className="cursor-pointer"
                             />
                           </td>
 
                           {/* Title & Clickable to Edit */}
-                          <td style={{ padding: '14px 16px' }}>
+                          <td className="p-3.5 px-4">
                             <div
                               onClick={() => handleOpenEditModal(job)}
-                              style={{
-                                fontWeight: 700,
-                                color: '#1e293b',
-                                cursor: 'pointer',
-                                display: 'inline-block',
-                              }}
+                              className="font-bold text-slate-800 cursor-pointer inline-block hover:text-blue-600 transition-colors"
                             >
-                              <span style={{ transition: 'color 0.15s' }}>{job.title}</span>
+                              <span>{job.title}</span>
                             </div>
-                            <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
+                            <div className="text-[11px] text-slate-400 mt-0.5">
                               {job.work_policy || 'Remote'} • Slug: /{job.job_slug}
                             </div>
                           </td>
 
                           {/* Department */}
-                          <td style={{ padding: '14px 16px', color: '#334155', fontWeight: 500 }}>
+                          <td className="p-3.5 px-4 text-slate-700 font-medium">
                             {job.department || 'Engineering'}
                           </td>
 
                           {/* Location */}
-                          <td style={{ padding: '14px 16px', color: '#475569' }}>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <td className="p-3.5 px-4 text-slate-600">
+                            <span className="inline-flex items-center gap-1">
                               <UilMapPin size={14} /> {job.location || 'Remote'}
                             </span>
                           </td>
 
                           {/* Employment Type */}
-                          <td style={{ padding: '14px 16px', color: '#475569' }}>
+                          <td className="p-3.5 px-4 text-slate-600">
                             {job.employment_type || 'Full time'}
                           </td>
 
                           {/* Status Badge */}
-                          <td style={{ padding: '14px 16px' }}>
-                            <span style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px',
-                              padding: '4px 10px',
-                              borderRadius: '12px',
-                              fontSize: '12px',
-                              fontWeight: 600,
-                              background: badge.bg,
-                              color: badge.text,
-                              border: `1px solid ${badge.border}`,
-                            }}>
-                              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: badge.dot }} />
+                          <td className="p-3.5 px-4">
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${
+                              job.status === 'PUBLISHED'
+                                ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                                : 'bg-slate-100 text-slate-600 border-slate-200'
+                            }`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${
+                                job.status === 'PUBLISHED' ? 'bg-emerald-500' : 'bg-slate-400'
+                              }`} />
                               {badge.label}
                             </span>
                           </td>
 
-                          {/* Inline Actions (Side-by-Side: View, Edit, Delete) */}
-                          <td style={{ padding: '14px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', justifyContent: 'flex-end' }}>
+                          {/* Inline Actions */}
+                          <td className="p-3.5 px-4 text-right whitespace-nowrap">
+                            <div className="inline-flex items-center gap-1.5 justify-end">
                               <a
                                 href={`/companies/${companySlug}/jobs/${job.job_slug}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  padding: '6px 12px',
-                                  borderRadius: '6px',
-                                  border: '1px solid #cbd5e1',
-                                  background: '#ffffff',
-                                  color: '#334155',
-                                  fontSize: '12px',
-                                  fontWeight: 600,
-                                  textDecoration: 'none',
-                                  transition: 'all 0.15s',
-                                }}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 text-xs font-semibold no-underline hover:bg-slate-50 transition-colors"
                                 title="View public job webpage"
                               >
                                 <UilEye size={14} /> View
@@ -948,20 +689,7 @@ export default function JobsManagementPage() {
 
                               <button
                                 onClick={() => handleOpenEditModal(job)}
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  padding: '6px 12px',
-                                  borderRadius: '6px',
-                                  border: '1px solid #93c5fd',
-                                  background: '#eff6ff',
-                                  color: '#1d4ed8',
-                                  fontSize: '12px',
-                                  fontWeight: 600,
-                                  cursor: 'pointer',
-                                  transition: 'all 0.15s',
-                                }}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md border border-blue-300 bg-blue-50 text-blue-700 text-xs font-semibold cursor-pointer hover:bg-blue-100 transition-colors"
                                 title="Edit job details"
                               >
                                 <UilPen size={14} /> Edit
@@ -969,20 +697,7 @@ export default function JobsManagementPage() {
 
                               <button
                                 onClick={() => setDeleteConfirmTarget({ type: 'single', id: job._id })}
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  padding: '6px 12px',
-                                  borderRadius: '6px',
-                                  border: '1px solid #fca5a5',
-                                  background: '#fef2f2',
-                                  color: '#b91c1c',
-                                  fontSize: '12px',
-                                  fontWeight: 600,
-                                  cursor: 'pointer',
-                                  transition: 'all 0.15s',
-                                }}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md border border-red-300 bg-red-50 text-red-700 text-xs font-semibold cursor-pointer hover:bg-red-100 transition-colors"
                                 title="Delete job posting"
                               >
                                 <UilTrashAlt size={14} /> Delete
@@ -996,8 +711,8 @@ export default function JobsManagementPage() {
                 </table>
               </div>
 
-              {/* Mobile Jobs Cards Container (< 768px) */}
-              <div className="jobs-cards-container">
+              {/* Mobile Jobs Cards Container */}
+              <div className="md:hidden flex flex-col gap-3 p-3">
                 {jobs.map((job) => {
                   const isSelected = selectedIds.includes(job._id);
                   const badge = STATUS_BADGES[job.status] || STATUS_BADGES.DRAFT;
@@ -1005,138 +720,73 @@ export default function JobsManagementPage() {
                   return (
                     <div
                       key={job._id}
-                      style={{
-                        background: isSelected ? '#eff6ff' : '#ffffff',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '12px',
-                        padding: '1rem',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.75rem',
-                      }}
+                      className={`border rounded-xl p-4 flex flex-col gap-3 shadow-sm ${
+                        isSelected ? 'bg-blue-50/60 border-blue-300' : 'bg-white border-slate-200'
+                      }`}
                     >
-                      {/* Top Row: Checkbox, Title & Status */}
-                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                      {/* Top Row */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2.5">
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => handleSelectOne(job._id)}
-                            style={{ cursor: 'pointer', marginTop: '3px' }}
+                            className="cursor-pointer mt-1"
                           />
                           <div>
                             <h3
                               onClick={() => handleOpenEditModal(job)}
-                              style={{
-                                fontSize: '1rem',
-                                fontWeight: 700,
-                                margin: 0,
-                                color: '#0f172a',
-                                cursor: 'pointer',
-                              }}
+                              className="text-base font-bold m-0 text-slate-900 cursor-pointer hover:text-blue-600"
                             >
                               {job.title}
                             </h3>
-                            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>
+                            <div className="text-xs text-slate-500 mt-0.5">
                               {job.department || 'Engineering'} • {job.work_policy || 'Remote'}
                             </div>
                           </div>
                         </div>
 
-                        <span style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '4px',
-                          padding: '3px 8px',
-                          borderRadius: '12px',
-                          fontSize: '11px',
-                          fontWeight: 600,
-                          background: badge.bg,
-                          color: badge.text,
-                          border: `1px solid ${badge.border}`,
-                          flexShrink: 0,
-                        }}>
-                          <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: badge.dot }} />
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold border shrink-0 ${
+                          job.status === 'PUBLISHED'
+                            ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                            : 'bg-slate-100 text-slate-600 border-slate-200'
+                        }`}>
                           {badge.label}
                         </span>
                       </div>
 
-                      {/* Location & Employment Details */}
-                      <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: '#475569', flexWrap: 'wrap' }}>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      {/* Details */}
+                      <div className="flex gap-3 text-xs text-slate-600 flex-wrap">
+                        <span className="inline-flex items-center gap-1">
                           <UilMapPin size={14} /> {job.location || 'Remote'}
                         </span>
                         <span>•</span>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <span className="inline-flex items-center gap-1">
                           <UilBriefcase size={14} /> {job.employment_type || 'Full time'}
                         </span>
                       </div>
 
-                      {/* Card Actions Row (Side-by-Side: View, Edit, Delete) */}
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'flex-end',
-                        gap: '6px',
-                        paddingTop: '8px',
-                        borderTop: '1px solid #f1f5f9',
-                      }}>
+                      {/* Card Actions Row */}
+                      <div className="flex items-center justify-end gap-1.5 pt-2 border-t border-slate-100">
                         <a
                           href={`/companies/${companySlug}/jobs/${job.job_slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            border: '1px solid #cbd5e1',
-                            background: '#ffffff',
-                            color: '#334155',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            textDecoration: 'none',
-                          }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 text-xs font-semibold no-underline"
                         >
                           <UilEye size={14} /> View
                         </a>
 
                         <button
                           onClick={() => handleOpenEditModal(job)}
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            border: '1px solid #93c5fd',
-                            background: '#eff6ff',
-                            color: '#1d4ed8',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                          }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md border border-blue-300 bg-blue-50 text-blue-700 text-xs font-semibold cursor-pointer"
                         >
                           <UilPen size={14} /> Edit
                         </button>
 
                         <button
                           onClick={() => setDeleteConfirmTarget({ type: 'single', id: job._id })}
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            border: '1px solid #fca5a5',
-                            background: '#fef2f2',
-                            color: '#b91c1c',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                          }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md border border-red-300 bg-red-50 text-red-700 text-xs font-semibold cursor-pointer"
                         >
                           <UilTrashAlt size={14} /> Delete
                         </button>
@@ -1150,26 +800,15 @@ export default function JobsManagementPage() {
 
           {/* Pagination Footer */}
           {!loading && jobs.length > 0 && (
-            <div style={{
-              padding: '12px 20px',
-              background: '#f8fafc',
-              borderTop: '1px solid #e2e8f0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '1rem',
-              fontSize: '13px',
-              color: '#64748b',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div className="px-5 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between flex-wrap gap-4 text-xs text-slate-500">
+              <div className="flex items-center gap-3">
                 <span>
                   Showing <b>{(page - 1) * limit + 1}</b> to <b>{Math.min(page * limit, totalJobs)}</b> of <b>{totalJobs}</b> positions
                 </span>
                 <select
                   value={limit}
                   onChange={(e) => { setLimit(Number(e.target.value)); setPage(1); }}
-                  style={{ padding: '4px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px' }}
+                  className="px-2 py-1 rounded-md border border-slate-300 text-xs bg-white"
                 >
                   <option value={10}>10 per page</option>
                   <option value={25}>25 per page</option>
@@ -1177,39 +816,23 @@ export default function JobsManagementPage() {
                 </select>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div className="flex items-center gap-2">
                 <button
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  style={{
-                    padding: '6px 12px',
-                    borderRadius: '6px',
-                    border: '1px solid #cbd5e1',
-                    background: page <= 1 ? '#f1f5f9' : '#ffffff',
-                    color: page <= 1 ? '#94a3b8' : '#334155',
-                    cursor: page <= 1 ? 'not-allowed' : 'pointer',
-                    fontWeight: 600,
-                  }}
+                  className="px-3 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 font-semibold cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
                 >
                   ← Previous
                 </button>
 
-                <span style={{ fontWeight: 600, color: '#334155' }}>
+                <span className="font-semibold text-slate-700">
                   Page {page} of {totalPages}
                 </span>
 
                 <button
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  style={{
-                    padding: '6px 12px',
-                    borderRadius: '6px',
-                    border: '1px solid #cbd5e1',
-                    background: page >= totalPages ? '#f1f5f9' : '#ffffff',
-                    color: page >= totalPages ? '#94a3b8' : '#334155',
-                    cursor: page >= totalPages ? 'not-allowed' : 'pointer',
-                    fontWeight: 600,
-                  }}
+                  className="px-3 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 font-semibold cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
                 >
                   Next →
                 </button>
@@ -1219,7 +842,7 @@ export default function JobsManagementPage() {
         </div>
       </main>
 
-      {/* Existing Job Creation / Editing Modal (Preserved experience!) */}
+      {/* Existing Job Creation / Editing Modal */}
       <JobEditorModal
         isOpen={isEditorModalOpen}
         onClose={() => setIsEditorModalOpen(false)}
@@ -1234,38 +857,21 @@ export default function JobsManagementPage() {
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmTarget && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(15, 23, 42, 0.75)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 10000,
-          padding: '1rem',
-        }}>
-          <div style={{
-            background: '#ffffff',
-            borderRadius: '12px',
-            maxWidth: '420px',
-            width: '100%',
-            padding: '1.5rem',
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-          }}>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '0 0 8px 0', color: '#0f172a' }}>
+        <div className="fixed inset-0 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center z-[10000] p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
+            <h3 className="text-lg font-bold m-0 mb-2 text-slate-900">
               Confirm Deletion
             </h3>
-            <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 1.5rem 0', lineHeight: 1.5 }}>
+            <p className="text-sm text-slate-500 m-0 mb-6 leading-relaxed">
               {deleteConfirmTarget.type === 'bulk'
                 ? `Are you sure you want to permanently delete ${selectedIds.length} selected job posting(s)? This action cannot be undone.`
                 : 'Are you sure you want to permanently delete this job posting? This action cannot be undone.'}
             </p>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div className="flex justify-end gap-2">
               <button
                 onClick={() => setDeleteConfirmTarget(null)}
-                style={{ padding: '8px 16px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#ffffff', color: '#475569', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
+                className="px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-600 font-semibold text-xs cursor-pointer hover:bg-slate-100 transition-colors"
               >
                 Cancel
               </button>
@@ -1277,7 +883,7 @@ export default function JobsManagementPage() {
                     handleDeleteSingle(deleteConfirmTarget.id);
                   }
                 }}
-                style={{ padding: '8px 16px', borderRadius: '6px', border: 'none', background: '#dc2626', color: '#ffffff', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}
+                className="px-4 py-2 rounded-lg border-none bg-red-600 text-white font-semibold text-xs cursor-pointer hover:bg-red-700 transition-colors"
               >
                 Delete Permanently
               </button>

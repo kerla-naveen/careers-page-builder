@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './FaqSection.module.css';
 
 export default function FaqSection({ title, subtitle, content }) {
   const faqs = content?.faqs || [
@@ -18,21 +17,23 @@ export default function FaqSection({ title, subtitle, content }) {
   ];
 
   return (
-    <section className={styles.faqSection} id="faq-section">
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>{title || 'Frequently Asked Questions'}</h2>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+    <section className="py-20 px-6 sm:px-8 bg-transparent text-[var(--brand-text,#f8fafc)]" id="faq-section">
+      <div className="max-w-[800px] mx-auto">
+        <div className="text-center mb-14">
+          <h2 className="font-outfit text-3xl sm:text-4xl font-bold mb-3 text-[var(--brand-text,#f8fafc)] tracking-tight">
+            {title || 'Frequently Asked Questions'}
+          </h2>
+          {subtitle && <p className="font-inter text-base sm:text-lg text-slate-400 leading-relaxed">{subtitle}</p>}
         </div>
 
-        <div className={styles.list}>
+        <div className="flex flex-col gap-5">
           {faqs.map((faq, index) => (
-            <div key={index} className={styles.item}>
-              <h3 className={styles.question}>
-                <span className={styles.qIcon}>❓</span>
+            <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6 transition-colors duration-200 hover:border-[var(--brand-primary,#6366f1)]/30">
+              <h3 className="font-outfit text-lg font-semibold text-[var(--brand-text,#f8fafc)] mb-3 flex items-center gap-3">
+                <span className="text-[var(--brand-primary,#6366f1)] text-xl">❓</span>
                 {faq.question}
               </h3>
-              <p className={styles.answer}>{faq.answer}</p>
+              <p className="font-inter text-sm sm:text-base text-slate-400 leading-relaxed pl-8">{faq.answer}</p>
             </div>
           ))}
         </div>
@@ -40,3 +41,4 @@ export default function FaqSection({ title, subtitle, content }) {
     </section>
   );
 }
+

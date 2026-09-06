@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import styles from './Header.module.css';
+import { getCompanyWebsiteUrl } from '../utils/urlHelper';
 
 export default function Header({ company, showRecruiterLink = false }) {
   const [scrolled, setScrolled] = useState(false);
@@ -24,35 +24,61 @@ export default function Header({ company, showRecruiterLink = false }) {
     }
   };
 
-  const websiteUrl = company.websiteUrl || company.website;
+  const websiteUrl = getCompanyWebsiteUrl(company);
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
-      <div className={styles.container}>
-        <Link href={`/companies/${company.slug || 'workable'}`} className={styles.logoLink}>
-          <div className={styles.logoContainer}>
+    <header
+      className={`sticky top-0 left-0 w-full z-40 transition-all duration-300 bg-transparent ${
+        scrolled
+          ? 'py-3.5 bg-[color-mix(in_srgb,var(--brand-bg,#0b0f19)_85%,transparent)] backdrop-blur-xl border-b border-white/10 shadow-2xl'
+          : 'py-5'
+      }`}
+    >
+      <div className="max-w-[1200px] mx-auto px-6 flex justify-between items-center">
+        <Link
+          href={`/companies/${company.slug || 'workable'}`}
+          className="no-underline flex items-center transition-opacity hover:opacity-90"
+        >
+          <div className="flex items-center gap-2">
             {company.logoUrl ? (
-              <img src={company.logoUrl} alt={`${company.name} logo`} className={styles.logoImage} />
+              <img
+                src={company.logoUrl}
+                alt={`${company.name} logo`}
+                className="h-[38px] max-w-[180px] object-contain"
+              />
             ) : (
-              <span className={styles.logoText}>{company.name}</span>
+              <span className="font-outfit font-extrabold text-2xl text-[var(--brand-accent,#38bdf8)] tracking-tight">
+                {company.name}
+              </span>
             )}
           </div>
         </Link>
 
-        <nav className={styles.nav}>
+        <nav className="flex items-center gap-4 sm:gap-6">
           {showRecruiterLink && (
-            <Link href={`/dashboard/${company.slug || 'workable'}`} className={styles.navLink} style={{ color: 'var(--brand-accent)' }}>
+            <Link
+              href={`/dashboard/${company.slug || 'workable'}`}
+              className="hidden sm:inline-flex font-inter text-sm font-medium text-[var(--brand-accent,#38bdf8)] hover:opacity-100 transition-all"
+            >
               ⚙️ Studio
             </Link>
           )}
 
           {websiteUrl && (
-            <a href={websiteUrl} target="_blank" rel="noopener noreferrer" className={styles.navLink}>
+            <a
+              href={websiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex font-inter text-sm font-medium text-[var(--brand-text,#f8fafc)] opacity-85 hover:opacity-100 hover:text-[var(--brand-accent,#38bdf8)] transition-all"
+            >
               Company Site ↗
             </a>
           )}
 
-          <button className={styles.navButton} onClick={handleViewJobsClick}>
+          <button
+            className="px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-inter font-semibold text-white bg-[var(--brand-primary,#6366f1)] border border-white/20 rounded-xl cursor-pointer transition-all hover:-translate-y-0.5 hover:brightness-110 shadow-md"
+            onClick={handleViewJobsClick}
+          >
             View All Openings
           </button>
         </nav>
@@ -60,3 +86,4 @@ export default function Header({ company, showRecruiterLink = false }) {
     </header>
   );
 }
+

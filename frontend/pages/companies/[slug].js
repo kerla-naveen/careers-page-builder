@@ -196,7 +196,7 @@ export async function getServerSideProps(context) {
   const { slug } = context.params;
 
   try {
-    const companyRes = await fetch(`http://127.0.0.1:5000/companies/${slug}`);
+    const companyRes = await fetch(`http://127.0.0.1:5000/api/companies/${slug}`);
     const companyData = await companyRes.json();
 
     if (!companyRes.ok || !companyData.success) {
@@ -207,7 +207,7 @@ export async function getServerSideProps(context) {
       };
     }
 
-    const jobsRes = await fetch(`http://127.0.0.1:5000/companies/${slug}/jobs`);
+    const jobsRes = await fetch(`http://127.0.0.1:5000/api/companies/${slug}/jobs`);
     const jobsData = await jobsRes.json();
 
     return {
