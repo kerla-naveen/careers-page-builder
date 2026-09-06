@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import CompanyLogoIcon from '../components/CompanyLogoIcon';
 
 export default function HomePage({ companies }) {
   const pageTitle = 'Careers Page Builder — Modern Employer Branding & Job Portals';
@@ -80,9 +81,7 @@ export default function HomePage({ companies }) {
               className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 text-left flex flex-col justify-between hover:border-white/20 transition-all"
             >
               <div>
-                <div className="w-14 h-14 rounded-xl overflow-hidden mb-5">
-                  <img src={c.logoUrl} alt={c.name} className="w-full h-full object-cover" />
-                </div>
+                <CompanyLogoIcon company={c} size="lg" className="mb-5" />
                 <h2 className="font-outfit text-2xl font-bold mb-2 text-slate-50">
                   {c.name}
                 </h2>

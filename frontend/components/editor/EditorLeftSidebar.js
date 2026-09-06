@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CompanyLogoIcon from '../CompanyLogoIcon';
 import { createNewSection } from '../../utils/sectionTemplates';
 import { THEME_PRESETS } from '../../utils/themePresets';
 import AddSectionModal from './AddSectionModal';
@@ -509,22 +510,33 @@ export default function EditorLeftSidebar({
                   onFocus={() => onFocusBrandingArea && onFocusBrandingArea('logo')}
                 />
               </div>
-
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-700">Company Logo</label>
-                {company?.logoUrl && (
-                  <div className="mb-2 p-2 bg-slate-50 border border-slate-200 rounded-lg flex items-center gap-2.5">
-                    <img src={company.logoUrl} alt="Logo preview" className="h-8 max-w-[80px] object-contain" />
-                    <span className="text-[11px] text-slate-500 font-medium">Live logo preview</span>
-                  </div>
-                )}
+                <label className="block text-xs font-semibold text-slate-700">Company Logo Icon</label>
+                <div className="flex items-center gap-2.5 mb-2.5 p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                  <CompanyLogoIcon company={company} size="md" />
+                  <span className="text-xs text-slate-600 font-medium">Live Logo Icon Preview</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {['💼', '⚡', '🥕', '🚀', '🏢', '🌐', '🔥', '💎', '🛡️', '🎯', '✨', '💡', '🤖', '🏆', '📈', '🎨'].map((icon) => (
+                    <button
+                      key={icon}
+                      type="button"
+                      className={`w-7 h-7 rounded-lg text-sm flex items-center justify-center border cursor-pointer transition-all ${
+                        (company?.logoUrl || '') === icon ? 'bg-blue-600 text-white border-blue-600' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                      onClick={() => handleBrandingChange('logoUrl', icon)}
+                    >
+                      {icon}
+                    </button>
+                  ))}
+                </div>
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 bg-white outline-none focus:border-blue-500"
                   value={company?.logoUrl || ''}
                   onChange={(e) => handleBrandingChange('logoUrl', e.target.value)}
                   onFocus={() => onFocusBrandingArea && onFocusBrandingArea('logo')}
-                  placeholder="https://..."
+                  placeholder="Select preset or type custom icon symbol..."
                 />
               </div>
 

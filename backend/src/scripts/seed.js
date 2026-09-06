@@ -15,7 +15,7 @@ const demoCompanies = [
   {
     name: 'Workable',
     slug: 'workable',
-    logoUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
+    logoUrl: '💼',
     bannerUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1600',
     primaryColor: '#059669',
     accentColor: '#10b981',
@@ -109,7 +109,7 @@ const demoCompanies = [
   {
     name: 'Ashby',
     slug: 'ashby',
-    logoUrl: 'https://images.unsplash.com/photo-1614680376593-902f749f7cfc?w=200&auto=format&fit=crop&q=80',
+    logoUrl: '⚡',
     bannerUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1600',
     primaryColor: '#4f46e5',
     accentColor: '#6366f1',
@@ -197,7 +197,7 @@ const demoCompanies = [
   {
     name: 'Whitecarrot',
     slug: 'whitecarrot',
-    logoUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=200&auto=format&fit=crop&q=80',
+    logoUrl: '🥕',
     bannerUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1600',
     primaryColor: '#ea580c',
     accentColor: '#f97316',

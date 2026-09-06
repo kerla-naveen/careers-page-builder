@@ -37,6 +37,8 @@ const GlobeIcon = () => (
   </svg>
 );
 
+import CompanyLogoIcon from './CompanyLogoIcon';
+
 export default function Footer({ company }) {
   const currentYear = new Date().getFullYear();
   const websiteUrl = getCompanyWebsiteUrl(company);
@@ -51,7 +53,10 @@ export default function Footer({ company }) {
       <div className="max-w-[1200px] mx-auto px-8">
         <div className="flex flex-col md:flex-row justify-between flex-wrap gap-8 mb-12">
           <div className="max-w-[400px]">
-            <span className="block font-outfit font-bold text-2xl mb-4">{company.name}</span>
+            <div className="flex items-center gap-3 mb-4">
+              <CompanyLogoIcon company={company} size="md" />
+              <span className="font-outfit font-bold text-2xl">{company.name}</span>
+            </div>
             <p className="opacity-70 leading-relaxed">
               {company.description || 'Join us and build the future.'}
             </p>

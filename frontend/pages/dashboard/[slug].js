@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import CompanyLogoIcon from '../../components/CompanyLogoIcon';
 import HeroSection from '../../components/sections/HeroSection';
 import AboutSection from '../../components/sections/AboutSection';
 import CultureSection from '../../components/sections/CultureSection';
@@ -722,12 +723,31 @@ export default function RecruiterDashboard() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Logo URL</label>
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Company Logo Icon</label>
+                  <div className="flex items-center gap-2.5 mb-1 p-2 bg-white/5 border border-white/10 rounded-xl">
+                    <CompanyLogoIcon company={company} size="md" />
+                    <span className="text-xs text-slate-300 font-medium">Live Logo Icon Preview</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {['💼', '⚡', '🥕', '🚀', '🏢', '🌐', '🔥', '💎', '🛡️', '🎯', '✨', '💡', '🤖', '🏆', '📈', '🎨'].map((icon) => (
+                      <button
+                        key={icon}
+                        type="button"
+                        className={`w-8 h-8 rounded-lg text-sm flex items-center justify-center border cursor-pointer transition-all ${
+                          (company.logoUrl || '') === icon ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white/5 border-white/10 text-slate-200 hover:bg-white/10'
+                        }`}
+                        onClick={() => handleMetaChange('logoUrl', icon)}
+                      >
+                        {icon}
+                      </button>
+                    ))}
+                  </div>
                   <input
                     type="text"
                     className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-slate-50 outline-none focus:border-indigo-500 transition-colors"
                     value={company.logoUrl || ''}
                     onChange={(e) => handleMetaChange('logoUrl', e.target.value)}
+                    placeholder="Select preset or type custom icon symbol..."
                   />
                 </div>
 
