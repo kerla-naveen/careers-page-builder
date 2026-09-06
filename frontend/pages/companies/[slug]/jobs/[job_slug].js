@@ -143,10 +143,10 @@ export default function JobDetailPage({ company, job, error }) {
         </div>
 
         {/* Job Header Hero Card */}
-        <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-7 mb-7 shadow-2xl">
+        <div className="bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_5%,transparent)] backdrop-blur-xl border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] rounded-2xl p-6 sm:p-7 mb-7 shadow-2xl">
           <div className="flex items-center justify-between mb-3">
-            <span className="font-sans text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-indigo-500/20 text-[var(--brand-accent,#38bdf8)] border border-indigo-500/40">{job.department}</span>
-            <span className="font-sans text-xs text-slate-400">
+            <span className="font-sans text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] text-[var(--brand-primary,#6366f1)] border border-[color-mix(in_srgb,var(--brand-primary,#6366f1)_35%,transparent)]">{job.department}</span>
+            <span className="font-sans text-xs text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_65%,transparent)]">
               📅 {job.posted_days_ago === 0 ? 'Posted Today' : `Posted ${job.posted_days_ago} days ago`}
             </span>
           </div>
@@ -156,37 +156,37 @@ export default function JobDetailPage({ company, job, error }) {
           {/* Role Specs / Attributes Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
             {job.location && (
-              <div className="bg-white/[0.03] border border-white/5 p-2.5 px-4 rounded-xl flex flex-col gap-1">
-                <span className="font-sans text-[11px] font-semibold uppercase tracking-wider text-slate-400">Location</span>
+              <div className="bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_5%,transparent)] border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_10%,transparent)] p-2.5 px-4 rounded-xl flex flex-col gap-1">
+                <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)]">Location</span>
                 <span className="font-sans text-sm font-semibold text-[var(--brand-text,#f8fafc)]">📍 {job.location}</span>
               </div>
             )}
 
             {job.work_policy && (
-              <div className="bg-white/[0.03] border border-white/5 p-2.5 px-4 rounded-xl flex flex-col gap-1">
-                <span className="font-sans text-[11px] font-semibold uppercase tracking-wider text-slate-400">Workplace</span>
+              <div className="bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_5%,transparent)] border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_10%,transparent)] p-2.5 px-4 rounded-xl flex flex-col gap-1">
+                <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)]">Workplace</span>
                 <span className="font-sans text-sm font-semibold text-[var(--brand-text,#f8fafc)]">🏢 {job.work_policy}</span>
               </div>
             )}
 
             {job.employment_type && (
-              <div className="bg-white/[0.03] border border-white/5 p-2.5 px-4 rounded-xl flex flex-col gap-1">
-                <span className="font-sans text-[11px] font-semibold uppercase tracking-wider text-slate-400">Employment Type</span>
+              <div className="bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_5%,transparent)] border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_10%,transparent)] p-2.5 px-4 rounded-xl flex flex-col gap-1">
+                <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)]">Employment Type</span>
                 <span className="font-sans text-sm font-semibold text-[var(--brand-text,#f8fafc)]">⏳ {job.employment_type}</span>
               </div>
             )}
 
             {job.experience_level && (
-              <div className="bg-white/[0.03] border border-white/5 p-2.5 px-4 rounded-xl flex flex-col gap-1">
-                <span className="font-sans text-[11px] font-semibold uppercase tracking-wider text-slate-400">Experience Level</span>
+              <div className="bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_5%,transparent)] border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_10%,transparent)] p-2.5 px-4 rounded-xl flex flex-col gap-1">
+                <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)]">Experience Level</span>
                 <span className="font-sans text-sm font-semibold text-[var(--brand-text,#f8fafc)]">🎯 {job.experience_level}</span>
               </div>
             )}
 
             {job.salary_range && (
-              <div className="bg-emerald-400/5 border border-emerald-400/20 p-2.5 px-4 rounded-xl flex flex-col gap-1">
-                <span className="font-sans text-[11px] font-semibold uppercase tracking-wider text-slate-400">Salary Range</span>
-                <span className="font-sans text-sm font-semibold text-emerald-400">💰 {job.salary_range}</span>
+              <div className="bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_10%,transparent)] border border-[color-mix(in_srgb,var(--brand-primary,#6366f1)_25%,transparent)] p-2.5 px-4 rounded-xl flex flex-col gap-1">
+                <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)]">Salary Range</span>
+                <span className="font-sans text-sm font-semibold text-[var(--brand-primary,#6366f1)]">💰 {job.salary_range}</span>
               </div>
             )}
           </div>
@@ -197,12 +197,12 @@ export default function JobDetailPage({ company, job, error }) {
           {/* Detailed Explanation Column */}
           <div className="flex flex-col gap-8">
             {/* Job Description */}
-            <div className="bg-white/[0.025] backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8">
+            <div className="bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_4%,transparent)] backdrop-blur-md border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] rounded-2xl p-6 sm:p-8">
               <h2 className="font-outfit text-xl font-bold text-[var(--brand-text,#f8fafc)] m-0 mb-6 flex items-center gap-3">
                 <span className="text-xl">📋</span>
                 Detailed Job Overview & Description
               </h2>
-              <div className="font-sans text-base leading-relaxed text-slate-300">
+              <div className="font-sans text-base leading-relaxed text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_85%,transparent)]">
                 {job.description ? (
                   job.description.split('\n').map((line, idx) => {
                     const trimmed = line.trim();
@@ -223,15 +223,15 @@ export default function JobDetailPage({ company, job, error }) {
 
             {/* Required Skills & Qualifications */}
             {requirementsList.length > 0 && (
-              <div className="bg-white/[0.025] backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8">
+              <div className="bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_4%,transparent)] backdrop-blur-md border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] rounded-2xl p-6 sm:p-8">
                 <h2 className="font-outfit text-xl font-bold text-[var(--brand-text,#f8fafc)] m-0 mb-6 flex items-center gap-3">
                   <span className="text-xl">⚡</span>
                   Required Skills & Qualifications
                 </h2>
                 <ul className="list-none p-0 m-0 flex flex-col gap-3.5">
                   {requirementsList.map((req, idx) => (
-                    <li key={idx} className="flex items-start gap-3.5 font-sans text-sm leading-relaxed text-slate-300">
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-sky-400/20 text-[var(--brand-accent,#38bdf8)] font-bold text-xs shrink-0 mt-0.5">✓</span>
+                    <li key={idx} className="flex items-start gap-3.5 font-sans text-sm leading-relaxed text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_85%,transparent)]">
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_20%,transparent)] text-[var(--brand-primary,#6366f1)] font-bold text-xs shrink-0 mt-0.5">✓</span>
                       <span>{req.replace(/^[•\-\*]\s*/, '')}</span>
                     </li>
                   ))}
@@ -242,31 +242,31 @@ export default function JobDetailPage({ company, job, error }) {
 
           {/* Sidebar Summary */}
           <div className="flex flex-col gap-6">
-            <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-7 lg:sticky lg:top-8">
+            <div className="bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_4%,transparent)] border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] rounded-2xl p-7 lg:sticky lg:top-8">
               <h3 className="font-outfit text-xl font-bold text-[var(--brand-text,#f8fafc)] m-0 mb-3">About {company.name}</h3>
-              <p className="font-sans text-sm leading-relaxed text-slate-400 m-0 mb-6">
+              <p className="font-sans text-sm leading-relaxed text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)] m-0 mb-6">
                 {company.description || `${company.name} is building the future of innovation.`}
               </p>
 
-              <div className="flex flex-col gap-3.5 border-t border-white/10 pt-5">
+              <div className="flex flex-col gap-3.5 border-t border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] pt-5">
                 {company.websiteUrl && (
-                  <div className="flex items-center justify-between font-sans text-xs text-slate-400">
+                  <div className="flex items-center justify-between font-sans text-xs text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)]">
                     <span>Website:</span>
-                    <a href={company.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--brand-accent,#38bdf8)] no-underline font-semibold">
+                    <a href={company.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--brand-primary,#6366f1)] no-underline font-semibold">
                       {company.websiteUrl.replace(/^https?:\/\//, '')} ↗
                     </a>
                   </div>
                 )}
                 {job.department && (
-                  <div className="flex items-center justify-between font-sans text-xs text-slate-400">
+                  <div className="flex items-center justify-between font-sans text-xs text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)]">
                     <span>Department:</span>
-                    <strong className="text-slate-200">{job.department}</strong>
+                    <strong className="text-[var(--brand-text,#f8fafc)]">{job.department}</strong>
                   </div>
                 )}
                 {job.experience_level && (
-                  <div className="flex items-center justify-between font-sans text-xs text-slate-400">
+                  <div className="flex items-center justify-between font-sans text-xs text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)]">
                     <span>Level:</span>
-                    <strong className="text-slate-200">{job.experience_level}</strong>
+                    <strong className="text-[var(--brand-text,#f8fafc)]">{job.experience_level}</strong>
                   </div>
                 )}
               </div>
@@ -277,7 +277,7 @@ export default function JobDetailPage({ company, job, error }) {
                     href={job.apply_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full py-3.5 px-5 text-center rounded-xl bg-[var(--brand-primary,#6366f1)] text-white font-sans text-sm font-semibold no-underline hover:opacity-90 hover:-translate-y-0.5 transition-all"
+                    className="block w-full py-3.5 px-5 text-center rounded-xl bg-[var(--brand-primary,#6366f1)] text-white font-sans text-sm font-semibold no-underline hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-md"
                   >
                     Apply on Recruiter Portal ↗
                   </a>

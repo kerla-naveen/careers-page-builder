@@ -189,14 +189,14 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
             </svg>
             <input
               type="text"
-              className="w-full py-3.5 pr-11 pl-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl font-inter text-base text-[var(--brand-text,#f8fafc)] outline-none transition-all focus:border-[var(--brand-accent,#38bdf8)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--brand-accent,#38bdf8)_15%,transparent)] focus:bg-white/10 placeholder:text-slate-400"
+              className="w-full py-3.5 pr-11 pl-12 bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_6%,transparent)] backdrop-blur-md border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_15%,transparent)] rounded-2xl font-inter text-base text-[var(--brand-text,#f8fafc)] outline-none transition-all focus:border-[var(--brand-primary,#6366f1)] focus:ring-4 focus:ring-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] placeholder:text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_50%,transparent)] shadow-sm"
               placeholder="Search by job title, department, or location..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
               <button
-                className="absolute right-5 top-1/2 -translate-y-1/2 bg-transparent border-0 text-slate-400 hover:text-white cursor-pointer text-base p-1"
+                className="absolute right-5 top-1/2 -translate-y-1/2 bg-transparent border-0 text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)] hover:text-[var(--brand-text,#f8fafc)] cursor-pointer text-base p-1"
                 onClick={() => setSearchTerm('')}
                 aria-label="Clear search"
               >
@@ -208,7 +208,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
           {/* Department Chips */}
           {facets.department?.length > 1 && (
             <div className="flex items-center justify-center gap-3 flex-wrap">
-              <span className="font-inter text-xs font-semibold uppercase tracking-wider text-slate-400">Department:</span>
+              <span className="font-inter text-xs font-bold uppercase tracking-wider text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)]">Department:</span>
               <div className="flex items-center justify-center gap-2 flex-wrap">
                 {facets.department.map((dept) => {
                   const isActive = selectedDepts.includes(dept);
@@ -218,7 +218,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                       className={`px-4 py-1.5 rounded-xl text-xs font-semibold font-inter cursor-pointer transition-all border ${
                         isActive
                           ? 'bg-[var(--brand-primary,#6366f1)] text-white border-[var(--brand-primary,#6366f1)] shadow-md'
-                          : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white'
+                          : 'bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_6%,transparent)] border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_15%,transparent)] text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_80%,transparent)] hover:bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] hover:text-[var(--brand-primary,#6366f1)] hover:border-[var(--brand-primary,#6366f1)]'
                       }`}
                       onClick={() => toggleFilter(dept, selectedDepts, setSelectedDepts)}
                     >
@@ -233,7 +233,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
           {/* Work Policy Chips */}
           {facets.work_policy?.length > 1 && (
             <div className="flex items-center justify-center gap-3 flex-wrap">
-              <span className="font-inter text-xs font-semibold uppercase tracking-wider text-slate-400">Workplace:</span>
+              <span className="font-inter text-xs font-bold uppercase tracking-wider text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)]">Workplace:</span>
               <div className="flex items-center justify-center gap-2 flex-wrap">
                 {facets.work_policy.map((policy) => {
                   const isActive = selectedPolicies.includes(policy);
@@ -243,7 +243,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                       className={`px-4 py-1.5 rounded-xl text-xs font-semibold font-inter cursor-pointer transition-all border ${
                         isActive
                           ? 'bg-[var(--brand-primary,#6366f1)] text-white border-[var(--brand-primary,#6366f1)] shadow-md'
-                          : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white'
+                          : 'bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_6%,transparent)] border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_15%,transparent)] text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_80%,transparent)] hover:bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] hover:text-[var(--brand-primary,#6366f1)] hover:border-[var(--brand-primary,#6366f1)]'
                       }`}
                       onClick={() => toggleFilter(policy, selectedPolicies, setSelectedPolicies)}
                     >
@@ -258,7 +258,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
           {/* Employment Type Chips */}
           {facets.employment_type?.length > 1 && (
             <div className="flex items-center justify-center gap-3 flex-wrap">
-              <span className="font-inter text-xs font-semibold uppercase tracking-wider text-slate-400">Type:</span>
+              <span className="font-inter text-xs font-bold uppercase tracking-wider text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)]">Type:</span>
               <div className="flex items-center justify-center gap-2 flex-wrap">
                 {facets.employment_type.map((type) => {
                   const isActive = selectedTypes.includes(type);
@@ -268,7 +268,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                       className={`px-4 py-1.5 rounded-xl text-xs font-semibold font-inter cursor-pointer transition-all border ${
                         isActive
                           ? 'bg-[var(--brand-primary,#6366f1)] text-white border-[var(--brand-primary,#6366f1)] shadow-md'
-                          : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white'
+                          : 'bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_6%,transparent)] border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_15%,transparent)] text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_80%,transparent)] hover:bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] hover:text-[var(--brand-primary,#6366f1)] hover:border-[var(--brand-primary,#6366f1)]'
                       }`}
                       onClick={() => toggleFilter(type, selectedTypes, setSelectedTypes)}
                     >
@@ -283,38 +283,38 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
 
         {/* Active Filter Badges Bar */}
         {totalActiveFilters > 0 && (
-          <div className="flex items-center justify-center gap-2 flex-wrap p-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl mb-8">
-            <span className="text-xs font-semibold text-slate-300">Active Filters ({totalActiveFilters}):</span>
+          <div className="flex items-center justify-center gap-2 flex-wrap p-4 bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_5%,transparent)] backdrop-blur-md border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] rounded-xl mb-8">
+            <span className="text-xs font-semibold text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_80%,transparent)]">Active Filters ({totalActiveFilters}):</span>
 
             {searchTerm && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--brand-primary,#6366f1)]/20 border border-[var(--brand-primary,#6366f1)]/40 text-[var(--brand-accent,#38bdf8)] text-xs font-medium">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] border border-[color-mix(in_srgb,var(--brand-primary,#6366f1)_35%,transparent)] text-[var(--brand-primary,#6366f1)] text-xs font-medium">
                 Search: "{searchTerm}"
-                <button onClick={() => setSearchTerm('')} className="bg-transparent border-0 text-slate-300 hover:text-white cursor-pointer ml-1">✕</button>
+                <button onClick={() => setSearchTerm('')} className="bg-transparent border-0 text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)] hover:text-[var(--brand-text,#f8fafc)] cursor-pointer ml-1">✕</button>
               </span>
             )}
 
             {selectedDepts.map((d) => (
-              <span key={d} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--brand-primary,#6366f1)]/20 border border-[var(--brand-primary,#6366f1)]/40 text-[var(--brand-accent,#38bdf8)] text-xs font-medium">
+              <span key={d} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] border border-[color-mix(in_srgb,var(--brand-primary,#6366f1)_35%,transparent)] text-[var(--brand-primary,#6366f1)] text-xs font-medium">
                 {d}
-                <button onClick={() => toggleFilter(d, selectedDepts, setSelectedDepts)} className="bg-transparent border-0 text-slate-300 hover:text-white cursor-pointer ml-1">✕</button>
+                <button onClick={() => toggleFilter(d, selectedDepts, setSelectedDepts)} className="bg-transparent border-0 text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)] hover:text-[var(--brand-text,#f8fafc)] cursor-pointer ml-1">✕</button>
               </span>
             ))}
 
             {selectedPolicies.map((p) => (
-              <span key={p} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--brand-primary,#6366f1)]/20 border border-[var(--brand-primary,#6366f1)]/40 text-[var(--brand-accent,#38bdf8)] text-xs font-medium">
+              <span key={p} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] border border-[color-mix(in_srgb,var(--brand-primary,#6366f1)_35%,transparent)] text-[var(--brand-primary,#6366f1)] text-xs font-medium">
                 {p}
-                <button onClick={() => toggleFilter(p, selectedPolicies, setSelectedPolicies)} className="bg-transparent border-0 text-slate-300 hover:text-white cursor-pointer ml-1">✕</button>
+                <button onClick={() => toggleFilter(p, selectedPolicies, setSelectedPolicies)} className="bg-transparent border-0 text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)] hover:text-[var(--brand-text,#f8fafc)] cursor-pointer ml-1">✕</button>
               </span>
             ))}
 
             {selectedTypes.map((t) => (
-              <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--brand-primary,#6366f1)]/20 border border-[var(--brand-primary,#6366f1)]/40 text-[var(--brand-accent,#38bdf8)] text-xs font-medium">
+              <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] border border-[color-mix(in_srgb,var(--brand-primary,#6366f1)_35%,transparent)] text-[var(--brand-primary,#6366f1)] text-xs font-medium">
                 {t}
-                <button onClick={() => toggleFilter(t, selectedTypes, setSelectedTypes)} className="bg-transparent border-0 text-slate-300 hover:text-white cursor-pointer ml-1">✕</button>
+                <button onClick={() => toggleFilter(t, selectedTypes, setSelectedTypes)} className="bg-transparent border-0 text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_60%,transparent)] hover:text-[var(--brand-text,#f8fafc)] cursor-pointer ml-1">✕</button>
               </span>
             ))}
 
-            <button className="text-xs font-semibold text-rose-400 hover:text-rose-300 ml-2 bg-transparent border-0 cursor-pointer" onClick={resetAllFilters}>
+            <button className="text-xs font-semibold text-rose-500 hover:text-rose-600 ml-2 bg-transparent border-0 cursor-pointer" onClick={resetAllFilters}>
               Clear All
             </button>
           </div>
@@ -324,8 +324,8 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
         <div className="relative min-h-[300px]">
           {isLoading && (
             <div className="absolute inset-0 bg-black/40 backdrop-blur-xs z-20 flex flex-col items-center justify-center gap-3 rounded-2xl">
-              <div className="w-8 h-8 border-[3px] border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-sm font-medium text-slate-200 font-inter">Updating roles from server...</span>
+              <div className="w-8 h-8 border-[3px] border-[var(--brand-primary,#6366f1)] border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm font-medium text-[var(--brand-text,#f8fafc)] font-inter">Updating roles from server...</span>
             </div>
           )}
 
@@ -334,25 +334,25 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
               {jobs.map((job, idx) => (
                 <div
                   key={job._id || idx}
-                  className="group bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:border-[var(--brand-primary,#6366f1)] hover:shadow-xl"
+                  className="group bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_5%,transparent)] backdrop-blur-md border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:border-[var(--brand-primary,#6366f1)] hover:shadow-xl"
                   style={{ transitionDelay: `${0.04 + idx * 0.03}s` }}
                 >
                   <div>
                     <div className="flex justify-between items-center gap-2 mb-4">
-                      <span className="px-3 py-1 rounded-md text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">{job.department}</span>
+                      <span className="px-3 py-1 rounded-md text-xs font-semibold bg-[color-mix(in_srgb,var(--brand-primary,#6366f1)_15%,transparent)] text-[var(--brand-primary,#6366f1)] border border-[color-mix(in_srgb,var(--brand-primary,#6366f1)_30%,transparent)]">{job.department}</span>
                       {job.posted_days_ago !== undefined && (
-                        <span className="text-xs font-medium text-slate-400 font-inter">
+                        <span className="text-xs font-medium text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_65%,transparent)] font-inter">
                           {job.posted_days_ago === 0 ? 'Just added' : `${job.posted_days_ago}d ago`}
                         </span>
                       )}
                     </div>
 
-                    <h3 className="font-outfit text-xl font-semibold text-[var(--brand-text,#f8fafc)] mb-4 leading-snug group-hover:text-[var(--brand-accent,#38bdf8)] transition-colors">{job.title}</h3>
+                    <h3 className="font-outfit text-xl font-semibold text-[var(--brand-text,#f8fafc)] mb-4 leading-snug group-hover:text-[var(--brand-primary,#6366f1)] transition-colors">{job.title}</h3>
 
-                    <div className="flex flex-wrap gap-x-4 gap-y-2 mb-6 text-xs text-slate-400 font-inter">
+                    <div className="flex flex-wrap gap-x-4 gap-y-2 mb-6 text-xs text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)] font-inter">
                       {job.location && (
                         <span className="flex items-center gap-1.5">
-                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg className="w-3.5 h-3.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                             <circle cx="12" cy="10" r="3" />
                           </svg>
@@ -362,7 +362,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
 
                       {job.work_policy && (
                         <span className="flex items-center gap-1.5">
-                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg className="w-3.5 h-3.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                           </svg>
@@ -372,7 +372,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
 
                       {job.employment_type && (
                         <span className="flex items-center gap-1.5">
-                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg className="w-3.5 h-3.5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <circle cx="12" cy="12" r="10" />
                             <polyline points="12 6 12 12 16 14" />
                           </svg>
@@ -381,7 +381,7 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                       )}
 
                       {job.salary_range && (
-                        <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                        <span className="flex items-center gap-1.5 text-[var(--brand-primary,#6366f1)] font-semibold">
                           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="12" y1="1" x2="12" y2="23" />
                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
@@ -392,12 +392,12 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-white/10 flex justify-end">
+                  <div className="pt-4 border-t border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] flex justify-end">
                     <a
                       href={`/companies/${companySlug}/jobs/${job.job_slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-accent,#38bdf8)] hover:text-white transition-colors no-underline group/link font-inter"
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-primary,#6366f1)] hover:text-[var(--brand-accent,#38bdf8)] transition-colors no-underline group/link font-inter"
                     >
                       <span>View Role Details ↗</span>
                       <svg
@@ -417,13 +417,13 @@ export default function JobsSection({ title, subtitle, jobs: initialJobs = [], c
             </div>
           ) : (
             /* Empty State */
-            <div className="text-center py-16 px-4 bg-white/5 border border-white/10 rounded-2xl max-w-[500px] mx-auto">
+            <div className="text-center py-16 px-4 bg-[color-mix(in_srgb,var(--brand-text,#f8fafc)_4%,transparent)] border border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] rounded-2xl max-w-[500px] mx-auto">
               <div className="text-4xl mb-4">🔎</div>
-              <h3 className="font-outfit text-xl font-bold text-white mb-2">No open positions match your search</h3>
-              <p className="font-inter text-sm text-slate-400 mb-6 leading-relaxed">
+              <h3 className="font-outfit text-xl font-bold text-[var(--brand-text,#f8fafc)] mb-2">No open positions match your search</h3>
+              <p className="font-inter text-sm text-[color-mix(in_srgb,var(--brand-text,#f8fafc)_70%,transparent)] mb-6 leading-relaxed">
                 We couldn't find any jobs matching your current filter criteria. Try adjusting your search query or clear selected filters.
               </p>
-              <button className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl transition-colors cursor-pointer border-0" onClick={resetAllFilters}>
+              <button className="px-6 py-2.5 bg-[var(--brand-primary,#6366f1)] text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity cursor-pointer border-0 shadow-md" onClick={resetAllFilters}>
                 Clear All Filters
               </button>
             </div>

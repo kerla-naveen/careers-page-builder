@@ -47,7 +47,7 @@ export default function Footer({ company }) {
   const instagramUrl = normalizeUrl(company.socialLinks?.instagram);
 
   return (
-    <footer className="bg-[var(--brand-bg,#0b0f19)] text-[var(--brand-text,#f8fafc)] border-t border-white/10 py-16 px-0 text-[0.95rem]" id="company-footer">
+    <footer className="bg-[var(--brand-bg,#0b0f19)] text-[var(--brand-text,#f8fafc)] border-t border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] py-16 px-0 text-[0.95rem]" id="company-footer">
       <div className="max-w-[1200px] mx-auto px-8">
         <div className="flex flex-col md:flex-row justify-between flex-wrap gap-8 mb-12">
           <div className="max-w-[400px]">
@@ -102,7 +102,7 @@ export default function Footer({ company }) {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-6 text-center opacity-60 text-xs sm:text-sm">
+        <div className="border-t border-[color-mix(in_srgb,var(--brand-text,#f8fafc)_12%,transparent)] pt-6 text-center opacity-60 text-xs sm:text-sm">
           <p>&copy; {currentYear} {company.name}. All rights reserved.</p>
         </div>
       </div>
