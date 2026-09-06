@@ -9,7 +9,14 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "https://careers-page-builder-zjj8.onrender.com",
+  ],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Connect Database
