@@ -19,13 +19,13 @@ This application enables **Recruiters** to dynamically build, customize, brand, 
 
 The database comes pre-seeded with **3 test companies** and **150 real job entries**. You can use the following test recruiter accounts to log into the Studio:
 
-| Company Name | Company Slug | Recruiter Email | Password | Live Candidate Page | Recruiter Studio Dashboard |
+| Company Name | Company Slug | Recruiter Email | Password | Candidate Page Route | Recruiter Studio Route |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Workable** | `workable` | `recruiter@workable.com` | `password123` | [View Live Page](http://localhost:3000/companies/workable) | [Open Studio](http://localhost:3000/dashboard/workable) |
-| **Ashby** | `ashby` | `recruiter@ashby.com` | `password123` | [View Live Page](http://localhost:3000/companies/ashby) | [Open Studio](http://localhost:3000/dashboard/ashby) |
-| **Whitecarrot** | `whitecarrot` | `recruiter@whitecarrot.com` | `password123` | [View Live Page](http://localhost:3000/companies/whitecarrot) | [Open Studio](http://localhost:3000/dashboard/whitecarrot) |
+| **Workable** | `workable` | `recruiter@workable.com` | `password123` | `/companies/workable` | `/dashboard/workable` |
+| **Ashby** | `ashby` | `recruiter@ashby.com` | `password123` | `/companies/ashby` | `/dashboard/ashby` |
+| **Whitecarrot** | `whitecarrot` | `recruiter@whitecarrot.com` | `password123` | `/companies/whitecarrot` | `/dashboard/whitecarrot` |
 
-> 💡 **Tip**: You can also register a brand new recruiter account at `http://localhost:3000/register`. Registering automatically generates a new company slug and initializes a default section layout!
+> 💡 **Tip**: You can also register a brand new recruiter account at the `/register` route. Registering automatically generates a new company slug and initializes a default section layout!
 
 ---
 
